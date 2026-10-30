@@ -1,0 +1,6 @@
+interface:
+  display_name: "ChatCrossfire Records"
+  short_description: "Keep hackathon session records and teammate handoffs"
+  default_prompt: "Use $chatcrossfire-records to update this session's repository record and Google Docs Records mirror."
+policy:
+  allow_implicit_invocation: true

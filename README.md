@@ -1,5 +1,24 @@
 # ChatCrossfire / 弹幕交火
 
+New local OBS dodge prototype: `npm run dodge`, then open
+[Dodge Lab](http://127.0.0.1:3020/). Equal arenas, camera colour-marker hits,
+viewer-normalized chat attacks and defection. Start with keyboard rehearsal;
+see [setup and limitations](docs/dodge-runbook.md). Live Twitch and physical OBS
+acceptance remain pending; this is separate from the native PK mode below.
+
+## 协作与最新审计 / Collaboration
+
+Fresh-clone audit and next steps (2026-10-31): [Current handoff](docs/HANDOFF.md),
+[verified status](docs/STATUS.md), [task queue and ownership](docs/TASKS.md),
+[product](docs/PRODUCT.md), [architecture](docs/ARCHITECTURE.md),
+[API contract](docs/API_CONTRACT.md). Coding agents start with [AGENTS.md](AGENTS.md).
+Session evidence lives in [records/](records/README.md) and the shared Google Doc's
+Records tab. For credential meanings and first-time setup, see the
+[configuration guide](docs/configuration-guide.md).
+Historical token/tunnel/process/artifact notes below and in `progress.md` do not
+establish availability in a new clone. Legacy `/overlay/*` pages show the separate
+debug match; they do not show native Extension PK rooms.
+
 **Your chat. Their problem.** Twitch 原生 Extension：两位主播在 Twitch 内邀请、接受和准备，后台自动开赛、管理攻击与叛变、结束并结算社区阵营战。无需第三位主持人。
 
 ## 当前推荐入口：原生 Extension

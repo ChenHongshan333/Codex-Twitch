@@ -1,0 +1,243 @@
+<style>
+#crossfire-directions{color-scheme:light dark;--cf-bg:light-dark(#f7f7f9,#101014);--cf-surface:light-dark(#ffffff,#1b1b22);--cf-inset:light-dark(#eeeeF3,#25252e);--cf-ink:light-dark(#19191f,#f4f3f7);--cf-soft:light-dark(#62626e,#aaa9b8);--cf-line:light-dark(#dcdce5,#34343f);--cf-a:#ff778b;--cf-b:#54d9d0;--cf-at:light-dark(#9a2741,#ff9cac);--cf-bt:light-dark(#096c68,#7ae9e1);font-family:"Segoe UI",Arial,sans-serif}
+#crossfire-directions *{box-sizing:border-box}
+#crossfire-directions .cf-stage{min-height:560px;padding:18px 14px;display:grid;grid-template-columns:minmax(0,1fr) 318px;gap:22px;align-items:start}
+#crossfire-directions .cf-caption{margin:0 0 10px;color:var(--cf-soft);font-size:11px;font-weight:500;letter-spacing:.7px;line-height:1.4;text-transform:uppercase}
+#crossfire-directions .cf-caption b{color:var(--cf-ink);font-weight:650}
+#crossfire-directions .cf-product{color:var(--cf-ink);font-size:13px;line-height:1.4}
+#crossfire-directions .cf-player{position:relative;aspect-ratio:16/10;border-radius:10px;overflow:hidden;background:var(--cf-bg);border:1px solid var(--cf-line)}
+#crossfire-directions .cf-stream-label{position:absolute;top:14px;left:16px;display:flex;align-items:center;gap:8px;color:var(--cf-soft);font-size:11px}
+#crossfire-directions .cf-live{width:6px;height:6px;border-radius:50%;background:var(--cf-a);display:inline-block}
+#crossfire-directions .cf-content{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--cf-soft);font-size:13px;letter-spacing:.3px;background:repeating-linear-gradient(135deg,transparent,transparent 35px,color-mix(in srgb,var(--cf-soft) 3%,transparent) 35px,color-mix(in srgb,var(--cf-soft) 3%,transparent) 36px)}
+#crossfire-directions .cf-content span{transform:translateY(20px)}
+#crossfire-directions .cf-hud{position:absolute;top:18%;left:10%;right:10%;background:var(--cf-surface);border:1px solid var(--cf-line);border-radius:9px;padding:10px 12px}
+#crossfire-directions .cf-hud-names{display:grid;grid-template-columns:minmax(0,1fr) 56px minmax(0,1fr);gap:5px;align-items:center;font-size:11px;font-weight:650}
+#crossfire-directions .cf-hud-names>span:last-child{text-align:right}
+#crossfire-directions .cf-timer{text-align:center;font-variant-numeric:tabular-nums;font-weight:700;color:var(--cf-ink)}
+#crossfire-directions .cf-a-text{color:var(--cf-at)}
+#crossfire-directions .cf-b-text{color:var(--cf-bt)}
+#crossfire-directions .cf-scoreline{display:flex;align-items:center;justify-content:space-between;margin:4px 0 7px;font-size:24px;line-height:1;font-weight:750;font-variant-numeric:tabular-nums}
+#crossfire-directions .cf-scoreline small{font-size:11px;font-weight:500;color:var(--cf-soft)}
+#crossfire-directions .cf-balance{height:5px;display:flex;gap:3px;overflow:hidden;border-radius:3px}
+#crossfire-directions .cf-balance>span{display:block;flex-basis:57%;background:var(--cf-a);transition:flex-basis .3s}
+#crossfire-directions .cf-balance>span+span{flex-basis:43%;background:var(--cf-b)}
+#crossfire-directions .cf-incoming{position:absolute;bottom:16%;left:10%;right:10%;padding:9px 12px;background:var(--cf-surface);border:1px solid var(--cf-line);border-left:3px solid var(--cf-b);border-radius:5px;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12px}
+#crossfire-directions .cf-incoming small{display:block;color:var(--cf-soft);font-size:11px;margin-bottom:2px}
+#crossfire-directions .cf-incoming strong{font-weight:650}
+#crossfire-directions .cf-incoming b{font-size:20px;font-variant-numeric:tabular-nums}
+#crossfire-directions .cf-pulse-layer{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+#crossfire-directions .cf-bullet{position:absolute;left:7%;top:54%;max-width:80%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:5px 9px;border-radius:5px;background:var(--cf-a);color:#291018;font-size:12px;font-weight:650;animation:cf-flight-a 1s ease-in forwards}
+#crossfire-directions .cf-bullet[data-side="b"]{left:auto;right:7%;background:var(--cf-b);color:#063d39;animation-name:cf-flight-b}
+#crossfire-directions .cf-bullet.cf-volley{font-size:13px;padding:7px 12px;box-shadow:0 0 18px color-mix(in srgb,var(--cf-a) 20%,transparent)}
+#crossfire-directions .cf-notice{position:absolute;top:57%;left:10%;right:10%;padding:9px 12px;background:var(--cf-surface);border:1px solid var(--cf-line);border-radius:5px;font-size:12px;color:var(--cf-ink);text-align:center}
+#crossfire-directions .cf-panel{width:318px;height:496px;background:var(--cf-bg);border:1px solid var(--cf-line);border-radius:10px;overflow:hidden;padding:12px;display:flex;flex-direction:column;gap:9px}
+#crossfire-directions .cf-panel-wrap{width:318px;max-width:100%;min-width:0}
+#crossfire-directions .cf-panel-head{display:flex;justify-content:space-between;align-items:center;gap:10px;height:24px;flex:none}
+#crossfire-directions .cf-wordmark{font-size:13px;font-weight:800;letter-spacing:-.45px;display:flex;align-items:center;gap:7px}
+#crossfire-directions .cf-wordmark i{color:var(--cf-at);width:16px;height:16px}
+#crossfire-directions .cf-pill{padding:3px 6px;font-size:11px;font-weight:600;border-radius:3px;background:var(--cf-inset);color:var(--cf-soft);white-space:nowrap}
+#crossfire-directions .cf-match{background:var(--cf-surface);border:1px solid var(--cf-line);border-radius:6px;padding:9px 10px}
+#crossfire-directions .cf-match-head{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--cf-soft);margin-bottom:8px}
+#crossfire-directions .cf-match-head strong{color:var(--cf-ink);font-size:14px;font-variant-numeric:tabular-nums}
+#crossfire-directions .cf-rivals{display:grid;grid-template-columns:minmax(0,1fr) 24px minmax(0,1fr);gap:4px;align-items:center}
+#crossfire-directions .cf-rival{display:flex;gap:7px;align-items:center;min-width:0}
+#crossfire-directions .cf-rival:last-child{flex-direction:row-reverse;text-align:right}
+#crossfire-directions .cf-avatar{width:28px;height:28px;display:grid;place-items:center;flex:none;border-radius:50%;background:color-mix(in srgb,var(--cf-a) 18%,var(--cf-surface));color:var(--cf-at);font-size:11px;font-weight:700}
+#crossfire-directions .cf-rival:last-child .cf-avatar{background:color-mix(in srgb,var(--cf-b) 18%,var(--cf-surface));color:var(--cf-bt)}
+#crossfire-directions .cf-rival strong{font-size:12px;font-weight:650;display:block}
+#crossfire-directions .cf-rival small{font-size:11px;color:var(--cf-soft);display:block}
+#crossfire-directions .cf-vs{text-align:center;color:var(--cf-soft);font-size:11px;font-weight:650}
+#crossfire-directions .cf-panel .cf-scoreline{font-size:28px;margin:8px 0 6px}
+#crossfire-directions .cf-challenge{padding:9px 10px;background:var(--cf-surface);border-left:3px solid var(--cf-b);border-radius:4px;display:flex;gap:10px;align-items:center;justify-content:space-between;min-height:55px}
+#crossfire-directions .cf-challenge small{display:block;color:var(--cf-bt);font-size:11px;font-weight:600;letter-spacing:.4px;margin-bottom:2px}
+#crossfire-directions .cf-challenge strong{font-size:12px;line-height:1.35;font-weight:650;display:block;max-width:222px}
+#crossfire-directions .cf-challenge b{font-variant-numeric:tabular-nums;font-size:18px}
+#crossfire-directions .cf-defection{display:flex;align-items:center;gap:9px;background:var(--cf-inset);border-radius:5px;padding:8px 10px;min-height:38px;font-size:11px}
+#crossfire-directions .cf-defection i{width:17px;height:17px;flex:none;color:var(--cf-at)}
+#crossfire-directions .cf-defection strong{font-weight:650;flex:1}
+#crossfire-directions .cf-defection b{color:var(--cf-ink);font-variant-numeric:tabular-nums;font-weight:500}
+#crossfire-directions .cf-command{margin-top:auto;display:flex;flex-direction:column;gap:8px}
+#crossfire-directions .cf-allegiance{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--cf-soft)}
+#crossfire-directions .cf-allegiance strong{color:var(--cf-at);font-weight:650}
+#crossfire-directions .cf-command[data-team="b"] .cf-allegiance strong{color:var(--cf-bt)}
+#crossfire-directions .cf-actions{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:8px}
+#crossfire-directions .cf-button{font-family:inherit;border-radius:5px;border:1px solid var(--cf-line);background:var(--cf-surface);color:var(--cf-ink);min-height:40px;font-size:13px;font-weight:650;display:flex;gap:7px;align-items:center;justify-content:center;padding:8px}
+#crossfire-directions .cf-button i{width:16px;height:16px}
+#crossfire-directions .cf-attack{background:var(--cf-a);color:#291018;border-color:transparent}
+#crossfire-directions .cf-command[data-team="b"] .cf-attack{background:var(--cf-b);color:#063d39}
+#crossfire-directions .cf-button:disabled{opacity:.55;cursor:not-allowed}
+#crossfire-directions .cf-button:hover:not(:disabled){filter:brightness(1.06)}
+#crossfire-directions .cf-charge{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--cf-soft)}
+#crossfire-directions .cf-pips{display:flex;gap:3px;flex:1;height:4px}
+#crossfire-directions .cf-pips span{flex:1;background:var(--cf-inset);border-radius:3px}
+#crossfire-directions .cf-pips span.filled{background:var(--cf-a)}
+#crossfire-directions .cf-command[data-team="b"] .cf-pips span.filled{background:var(--cf-b)}
+#crossfire-directions .cf-caption-line{font-size:11px;color:var(--cf-soft);line-height:1.45;margin:0;min-height:16px}
+#crossfire-directions .cf-feed{font-size:11px;color:var(--cf-soft);border-top:1px solid var(--cf-line);padding-top:9px;min-height:28px}
+#crossfire-directions .cf-feed strong{color:var(--cf-ink);font-weight:650}
+#crossfire-directions .cf-panel-foot{font-size:11px;color:var(--cf-soft);display:flex;justify-content:space-between;gap:8px}
+#crossfire-directions .cf-overlay-foot{display:flex;justify-content:space-between;color:var(--cf-soft);font-size:11px;gap:14px;margin-top:10px}
+#crossfire-directions .cf-chat-led .cf-hud{top:18%;left:22%;right:22%;padding:8px 10px}
+#crossfire-directions .cf-chat-led .cf-hud-names{grid-template-columns:minmax(0,1fr) 42px minmax(0,1fr);font-size:11px}
+#crossfire-directions .cf-chat-led .cf-hud .cf-scoreline{font-size:19px;margin:5px 0}
+#crossfire-directions .cf-chat-led .cf-hud .cf-scoreline small{display:none}
+#crossfire-directions .cf-chat-led .cf-incoming{right:26%;bottom:14%;font-size:11px}
+#crossfire-directions .cf-chat-led .cf-activity{display:flex;flex-direction:column;gap:11px;flex:1;padding:7px 0;font-size:12px;line-height:1.5;color:var(--cf-soft)}
+#crossfire-directions .cf-activity>div{display:flex;align-items:flex-start;gap:8px}
+#crossfire-directions .cf-dot{width:5px;height:5px;border-radius:50%;background:var(--cf-a);flex:none;margin-top:6px}
+#crossfire-directions .cf-dot.b{background:var(--cf-b)}
+#crossfire-directions .cf-activity strong{color:var(--cf-ink);font-weight:650}
+#crossfire-directions .cf-chat-led .cf-panel{gap:10px}
+#crossfire-directions .cf-chat-led .cf-rivals{display:none}
+#crossfire-directions .cf-chat-led .cf-panel .cf-match-head{margin:0}
+#crossfire-directions .cf-chat-led .cf-panel .cf-scoreline{font-size:25px}
+#crossfire-directions .cf-chat-led .cf-panel .cf-scoreline small{font-size:11px}
+@keyframes cf-flight-a{from{transform:translateX(0);opacity:1}to{transform:translateX(380px);opacity:0}}
+@keyframes cf-flight-b{from{transform:translateX(0);opacity:1}to{transform:translateX(-380px);opacity:0}}
+@media(prefers-reduced-motion:reduce){#crossfire-directions .cf-bullet{animation:none}#crossfire-directions .cf-balance>span{transition:none}}
+@media(max-width:760px){#crossfire-directions .cf-stage{grid-template-columns:minmax(0,1fr);min-height:960px;gap:22px;padding:10px 0}#crossfire-directions .cf-panel-wrap{justify-self:center}#crossfire-directions .cf-player{aspect-ratio:16/10}#crossfire-directions .cf-caption{padding:0 4px}#crossfire-directions .cf-hud{left:7%;right:7%;padding:8px}#crossfire-directions .cf-incoming{left:7%;right:7%;bottom:14%;padding:7px 9px}#crossfire-directions .cf-incoming strong{font-size:11px}#crossfire-directions .cf-overlay-foot{padding:0 4px}#crossfire-directions .cf-stream-label{font-size:11px;top:9px;left:10px}#crossfire-directions .cf-content span{font-size:11px;transform:translateY(19px)}#crossfire-directions .cf-chat-led .cf-hud{left:16%;right:16%}}
+@media(max-width:360px){#crossfire-directions .cf-stage{min-height:850px}#crossfire-directions .cf-player{aspect-ratio:1.2}#crossfire-directions .cf-panel{width:318px;max-width:100%}#crossfire-directions .cf-hud{top:18%}#crossfire-directions .cf-incoming{bottom:12%}#crossfire-directions .cf-content span{transform:translateY(20px)}}
+@media(max-width:330px){#crossfire-directions .cf-panel{height:auto;min-height:496px}#crossfire-directions .cf-stage{min-height:900px}}
+</style>
+<div id="crossfire-directions">
+  <div class="viz-carousel viz-dotted-background" aria-label="ChatCrossfire PK design directions">
+    <section data-variant="Arena HUD" aria-label="Arena HUD design">
+      <div class="cf-stage cf-product" id="cf-arena" aria-label="Arena HUD presentation">
+        <div class="cf-overlay-wrap">
+          <div class="cf-caption"><b>Arena HUD</b> · stream-area placement · example data</div>
+          <div class="cf-player" aria-label="Proposed native overlay above a placeholder stream">
+            <div class="cf-content"><span>Your stream stays here.</span></div>
+            <div class="cf-stream-label"><span class="cf-live"></span>demo_coral · drawing</div>
+            <div class="cf-hud">
+              <div class="cf-hud-names"><span class="cf-a-text">CORAL CREW</span><span class="cf-timer">01:24</span><span class="cf-b-text">VIOLET CREW</span></div>
+              <div class="cf-scoreline"><span data-score="a">4</span><small>COMMUNITY POINTS</small><span data-score="b">3</span></div>
+              <div class="cf-balance" aria-hidden="true"><span data-balance="a"></span><span data-balance="b"></span></div>
+            </div>
+            <div class="cf-incoming"><div><small>INCOMING FROM VIOLET</small><strong>Draw using only straight lines</strong></div><b>12s</b></div>
+            <div class="cf-pulse-layer" aria-hidden="true"></div>
+          </div>
+          <div class="cf-overlay-foot"><span>Native video overlay</span><span>Brief waves · clear stream center</span></div>
+        </div>
+        <div class="cf-panel-wrap">
+          <div class="cf-caption">Viewer panel · 318 × 496</div>
+          <div class="cf-panel">
+            <header class="cf-panel-head"><span class="cf-wordmark"><i data-lucide="swords" aria-hidden="true"></i>CROSSFIRE</span><span class="cf-pill">ROUND LIVE</span></header>
+            <div class="cf-match">
+              <div class="cf-match-head"><span>Draw your rival’s mascot</span><strong>01:24</strong></div>
+              <div class="cf-rivals"><div class="cf-rival"><span class="cf-avatar">C</span><div><strong>Coral</strong><small><span data-members="a">24</span> joined</small></div></div><span class="cf-vs">VS</span><div class="cf-rival"><span class="cf-avatar">V</span><div><strong>Violet</strong><small><span data-members="b">21</span> joined</small></div></div></div>
+              <div class="cf-scoreline"><span data-score="a">4</span><small>COMMUNITY POINTS</small><span data-score="b">3</span></div>
+              <div class="cf-balance" aria-hidden="true"><span data-balance="a"></span><span data-balance="b"></span></div>
+            </div>
+            <div class="cf-challenge"><div><small>YOUR STREAMER’S CHALLENGE</small><strong>Draw using only straight lines</strong></div><b>12s</b></div>
+            <div class="cf-defection"><i data-lucide="arrow-left-right" aria-hidden="true"></i><strong>Defection window open</strong><b>24s</b></div>
+            <div class="cf-command" data-team="a">
+              <div class="cf-allegiance"><span>YOUR ALLEGIANCE</span><strong data-allegiance>Coral Crew ↗</strong></div>
+              <div class="cf-actions"><button class="cf-button cf-attack cursor-interaction" data-action="attack" type="button"><i data-lucide="send" aria-hidden="true"></i><span data-attack-label>Attack</span></button><button class="cf-button cursor-interaction" data-action="defect" type="button"><i data-lucide="arrow-left-right" aria-hidden="true"></i><span data-defect-label>Defect</span></button></div>
+              <div class="cf-charge"><span>TEAM CHARGE</span><div class="cf-pips" aria-hidden="true"><span class="filled"></span><span class="filled"></span><span></span></div><b data-charge>2 / 3</b></div>
+              <p class="cf-caption-line" data-target>Next attack targets Violet Crew.</p>
+            </div>
+            <div class="cf-feed" aria-live="polite" data-feedback><strong>pixelpilot</strong> charged Coral’s next volley.</div>
+            <div class="cf-panel-foot"><span>Free to play</span><span>One identity across both channels</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section data-variant="Chat-led" aria-label="Chat-led design" hidden>
+      <div class="cf-stage cf-product cf-chat-led" id="cf-chat" aria-label="Chat-led presentation">
+        <div class="cf-overlay-wrap">
+          <div class="cf-caption"><b>Chat-led</b> · quieter match frame · example data</div>
+          <div class="cf-player" aria-label="Compact overlay above a placeholder stream">
+            <div class="cf-content"><span>Your stream stays here.</span></div>
+            <div class="cf-stream-label"><span class="cf-live"></span>demo_coral · drawing</div>
+            <div class="cf-hud">
+              <div class="cf-hud-names"><span class="cf-a-text">CORAL</span><span class="cf-timer">01:24</span><span class="cf-b-text">VIOLET</span></div>
+              <div class="cf-scoreline"><span data-score="a">4</span><small>POINTS</small><span data-score="b">3</span></div>
+              <div class="cf-balance" aria-hidden="true"><span data-balance="a"></span><span data-balance="b"></span></div>
+            </div>
+            <div class="cf-incoming"><div><small>INCOMING CHALLENGE</small><strong>Draw using only straight lines</strong></div><b>12s</b></div>
+            <div class="cf-pulse-layer" aria-hidden="true"></div>
+          </div>
+          <div class="cf-overlay-foot"><span>Native video overlay</span><span>Activity takes the lead</span></div>
+        </div>
+        <div class="cf-panel-wrap">
+          <div class="cf-caption">Viewer panel · 318 × 496</div>
+          <div class="cf-panel">
+            <header class="cf-panel-head"><span class="cf-wordmark"><i data-lucide="swords" aria-hidden="true"></i>CROSSFIRE</span><span class="cf-pill">ROUND LIVE</span></header>
+            <div class="cf-match"><div class="cf-match-head"><span>Draw your rival’s mascot</span><strong>01:24</strong></div><div class="cf-scoreline"><span data-score="a">4</span><small>CORAL vs VIOLET</small><span data-score="b">3</span></div><div class="cf-balance" aria-hidden="true"><span data-balance="a"></span><span data-balance="b"></span></div></div>
+            <div class="cf-activity"><div><span class="cf-dot"></span><span><strong>pixelpilot</strong> charged Coral’s next volley.</span></div><div><span class="cf-dot b"></span><span><strong>Violet hit Coral.</strong><br>Draw using only straight lines · 12s</span></div><div><span class="cf-dot"></span><span><strong>Coral volley.</strong> +1 community point.</span></div></div>
+            <div class="cf-defection"><i data-lucide="arrow-left-right" aria-hidden="true"></i><strong>Defection window open</strong><b>24s</b></div>
+            <div class="cf-command" data-team="a"><div class="cf-allegiance"><span>YOUR ALLEGIANCE</span><strong data-allegiance>Coral Crew ↗</strong></div><div class="cf-actions"><button class="cf-button cf-attack cursor-interaction" data-action="attack" type="button"><i data-lucide="send" aria-hidden="true"></i><span data-attack-label>Attack</span></button><button class="cf-button cursor-interaction" data-action="defect" type="button"><i data-lucide="arrow-left-right" aria-hidden="true"></i><span data-defect-label>Defect</span></button></div><div class="cf-charge"><span>TEAM CHARGE</span><div class="cf-pips" aria-hidden="true"><span class="filled"></span><span class="filled"></span><span></span></div><b data-charge>2 / 3</b></div><p class="cf-caption-line" data-target>Next attack targets Violet Crew.</p></div>
+            <div class="cf-feed" aria-live="polite" data-feedback>Make your chat’s next move.</div>
+            <div class="cf-panel-foot"><span>Free to play</span><span>One identity across both channels</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+<script>
+(() => {
+  const root = document.getElementById('crossfire-directions');
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const names = { a: 'Coral Crew', b: 'Violet Crew' };
+  for (const product of root.querySelectorAll('.cf-stage')) {
+    const state = { team: 'a', switched: false, scores: { a: 4, b: 3 }, charge: { a: 2, b: 2 }, cooldownUntil: 0 };
+    const appearance = { lanes: 3, motion: true };
+    const attackButton = product.querySelector('[data-action="attack"]');
+    const defectButton = product.querySelector('[data-action="defect"]');
+    const layer = product.querySelector('.cf-pulse-layer');
+    const feedback = product.querySelector('[data-feedback]');
+    function render() {
+      for (const team of ['a','b']) {
+        product.querySelectorAll(`[data-score="${team}"]`).forEach(node => node.textContent = state.scores[team]);
+        const fraction = state.scores[team] / Math.max(1, state.scores.a + state.scores.b);
+        product.querySelectorAll(`[data-balance="${team}"]`).forEach(node => node.style.flexBasis = `${fraction * 100}%`);
+      }
+      product.querySelector('.cf-command').dataset.team = state.team;
+      product.querySelector('[data-allegiance]').textContent = `${names[state.team]} ${state.team === 'a' ? '↗' : '↙'}`;
+      product.querySelector('[data-target]').textContent = `Next attack targets ${names[state.team === 'a' ? 'b' : 'a']}.`;
+      product.querySelector('[data-charge]').textContent = `${state.charge[state.team]} / 3`;
+      product.querySelectorAll('.cf-pips span').forEach((node,index) => node.classList.toggle('filled',index < state.charge[state.team]));
+      const wait = Math.max(0,Math.ceil((state.cooldownUntil - Date.now()) / 1000));
+      attackButton.disabled = wait > 0;
+      product.querySelector('[data-attack-label]').textContent = wait ? `Ready in ${wait}s` : 'Attack';
+      defectButton.disabled = state.switched;
+      product.querySelector('[data-defect-label]').textContent = state.switched ? 'Defected' : 'Defect';
+    }
+    function notice(text) {
+      layer.querySelectorAll('.cf-notice').forEach(node => node.remove());
+      const node = document.createElement('div'); node.className = 'cf-notice'; node.textContent = text; layer.append(node);
+      setTimeout(() => node.remove(),2400);
+    }
+    function wave(team,volley) {
+      if (!appearance.motion || reduced.matches) { notice(`${names[team]} ${volley ? 'released a volley · +1 point' : 'added a charge'}.`); return; }
+      const count = volley ? appearance.lanes : 1;
+      for(let index=0;index<count;index++) {
+        if(layer.querySelectorAll('.cf-bullet').length>=12)layer.querySelector('.cf-bullet').remove();
+        const node=document.createElement('div'); node.className=`cf-bullet ${volley ? 'cf-volley' : ''}`;
+        node.dataset.side=team; node.textContent=volley ? `${names[team]} → VOLLEY` : 'pixelpilot → +1 charge';
+        node.style.top=`${46+index*8}%`; node.style.animationDelay=`${index*65}ms`; layer.append(node); setTimeout(()=>node.remove(),1500);
+      }
+    }
+    attackButton.addEventListener('click',()=>{
+      if(Date.now()<state.cooldownUntil)return;
+      const team=state.team,target=team==='a'?'b':'a'; state.charge[team]++;
+      const volley=state.charge[team]===3;
+      if(volley){state.charge[team]=0;state.scores[team]++;}
+      feedback.textContent=volley ? `${names[team]} hit ${names[target]} · +1 community point.` : `pixelpilot charged an attack on ${names[target]}.`;
+      state.cooldownUntil=Date.now()+10000;wave(team,volley);render();
+      const timer=setInterval(()=>{render();if(Date.now()>=state.cooldownUntil)clearInterval(timer);},250);
+    });
+    defectButton.addEventListener('click',()=>{
+      if(state.switched)return;
+      state.team=state.team==='a'?'b':'a';state.switched=true;
+      product.querySelectorAll('[data-members="a"]').forEach(node=>node.textContent='23');
+      product.querySelectorAll('[data-members="b"]').forEach(node=>node.textContent='22');
+      feedback.textContent=`pixelpilot crossed to ${names[state.team]}. Cooldown is unchanged.`;
+      notice(`pixelpilot: Coral → Violet`);render();
+    });
+    render();
+    if(globalThis.Tweak){const tweak=new Tweak({container:product,onChange:render});tweak.addSlider(appearance,'lanes',{label:'Volley lanes',min:1,max:4,step:1});tweak.addToggle(appearance,'motion',{label:'Danmaku motion'});}
+  }
+})();
+</script>

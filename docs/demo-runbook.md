@@ -1,5 +1,10 @@
 # ChatCrossfire — 演示与联调清单
 
+> 本文件当前仍是旧版主持人 / OBS 流程。原生 Extension 的主验收流程见
+> [twitch-extension-setup.md](twitch-extension-setup.md)，更新视频脚本的任务见
+> [TASKS.md](TASKS.md)。原生 PK 自动结算，不需要第三位主持人；
+> `/overlay/*` 只读取旧版独立比赛状态，不能用于证明原生 PK 的画面或比分。
+
 ## 录制前
 
 - 两位主播确定相同的比赛主题、评分方式、三条可以实际执行的挑战。

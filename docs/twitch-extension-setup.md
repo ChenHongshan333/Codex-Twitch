@@ -1,5 +1,9 @@
 # 在 Twitch 内安装 ChatCrossfire 测试版
 
+第一次配置请先看 [configuration-guide.md](configuration-guide.md)：普通应用的
+Client ID / Client Secret、用户 OAuth token、Extension ID / shared secret 是不同配置。
+提交前还需处理官方 FAQ 中未审核 Extension 的评委访问限制，见该指南末尾。
+
 这份说明对应原生 Twitch Extension：主播在 Twitch 内发起/接受 PK，观众在扩展里加入、攻击和叛变。独立网页的四个模拟身份用于本地集成测试，不能替代本说明中的真实账号验证。
 
 ## 准备两类配置
