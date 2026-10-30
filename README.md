@@ -1,6 +1,40 @@
 # ChatCrossfire / 弹幕交火
 
-**Your chat. Their problem.** 双主播自选 PK 内容，两个 Twitch 聊天室为对方触发限时挑战；观众能在叛变窗口切换阵营。
+**Your chat. Their problem.** Twitch 原生 Extension：两位主播在 Twitch 内邀请、接受和准备，后台自动开赛、管理攻击与叛变、结束并结算社区阵营战。无需第三位主持人。
+
+## 当前推荐入口：原生 Extension
+
+```powershell
+# 正常服务，默认 3000；首页说明 Twitch 接入与本地测试
+npm start
+# 独立四角色本地联调，默认 3010
+npm run sandbox
+```
+
+打开 `http://127.0.0.1:3010/sandbox`，四个窗口分别代表两位模拟主播和两个模拟观众。A 邀请 `demo_violet`，B 接受，双方准备；后台自动倒计时并开赛。观众点击 Join / Attack，半场窗口内 Defect，时间到自动结束。可选 30 秒短局测试。此页面明确标记 **LOCAL SIMULATION**，不会创建真实 Twitch 账号或冒充原生安装已验证。
+
+真实 Twitch 原生接入需要额外的 Extension 配置，与现有聊天机器人的 OAuth 应用不同：
+
+```text
+TWITCH_EXTENSION_ID=扩展ClientID
+TWITCH_EXTENSION_SECRET=扩展的Base64共享密钥
+PUBLIC_ORIGIN=https://真实后端域名
+ENABLE_SANDBOX=0
+```
+
+使用 `npm run doctor:extension` 检查缺失配置，不会打印凭证。后端验证 Twitch Helper 提供的 JWT，只有相应频道的主播能发起/接受 PK；观众分享身份后才能参与，跨两个频道共用同一个身份、冷却和叛变次数。
+
+- [Twitch 创建、打包、安装和测试指南](docs/twitch-extension-setup.md)
+- [公网 HTTPS 后端部署指南](docs/cloud-deploy.md)
+- [项目进度与真实验证状态](progress.md)
+
+正式 ZIP：`npm run package:extension -- --backend https://实际后端域名`。没有真实 HTTPS 后端时，只能生成明确标记的本地包：`npm run package:extension -- --backend http://127.0.0.1:3010 --local`。
+
+本次已准备临时 HTTPS 测试后端和对应正式格式的前端 ZIP，实际地址、验证证据和缺失平台配置见 [progress.md](progress.md)。它仍需要 Twitch 开发者配置和两位主播安装激活，不能仅凭公网健康检查就认定真实 Twitch 已打通。
+
+自动分数为成功释放的攻击次数（community battle points），不直接判定画作好坏或外部游戏输赢。当前仍需完成 Twitch 开发者配置、第二真实频道、公网部署与真实 Twitch 内全链路验证，详见 progress.md。
+
+## 第一版调试模式（以下保留用于排错）
 
 适合画画、答题、创作和主播约定的其他比赛。主持人负责记分，主播按约定执行挑战。OBS 动画不会自动改变或控制外部游戏。
 
@@ -12,7 +46,7 @@
 npm start
 ```
 
-打开终端打印的 **Host** 链接（`http://127.0.0.1:3000/#key=…`），自动解锁本机浏览器的主持人控制。普通地址 `http://127.0.0.1:3000/` 是只读视图。Host key 不等于 Twitch token，不要把 Host 链接分享给观众。
+打开终端打印的 **Debug** 链接（`http://127.0.0.1:3000/debug#key=…`），自动解锁本机浏览器的调试控制。`/debug` 普通地址是只读视图。调试 key 不等于 Twitch token，不要把私密链接分享给观众。
 
 默认是明确标识的 **Demo** 模式，不连接 Twitch，也不发送 Twitch 聊天消息。没有 `.env` 也能运行演示。
 

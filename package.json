@@ -9,10 +9,15 @@
   "scripts": {
     "start": "node --env-file-if-exists=.env server.mjs",
     "dev": "node --watch --env-file-if-exists=.env server.mjs",
+    "sandbox": "node --env-file-if-exists=.env scripts/sandbox-server.mjs",
+    "package:extension": "node scripts/package-extension.mjs",
+    "doctor:extension": "node --env-file-if-exists=.env scripts/doctor-extension.mjs",
+    "start:public-test": "node --env-file-if-exists=.env scripts/public-test-server.mjs",
+    "verify:public": "node scripts/verify-public.mjs",
     "bot": "node --env-file=.env bot.mjs",
     "verify:twitch": "node --env-file-if-exists=.env scripts/verify-twitch.mjs",
     "test": "node --test",
-    "check": "node --check server.mjs && node --check src/engine.mjs && node --check src/twitch.mjs && node --check src/store.mjs && node --check public/app.js"
+    "check": "node --check server.mjs && node --check src/engine.mjs && node --check src/twitch.mjs && node --check src/store.mjs && node --check src/extension-auth.mjs && node --check src/extension-http.mjs && node --check src/pk-rooms.mjs && node --check src/twitch-directory.mjs && node --check public/app.js && node --check public/sandbox.js && node --check extension/app.js"
   },
   "devDependencies": {
     "jsdom": "^29.1.1"

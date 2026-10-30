@@ -9,6 +9,7 @@ export const DEFAULT_CONFIG = Object.freeze({
   durationSeconds: 300, attackThreshold: 3, userCooldownSeconds: 10,
   volleyCooldownSeconds: 20, challengeDurationSeconds: 15,
   defectionDurationSeconds: 30, autoDefection: true,
+  scoringMode: 'manual',
   challenges: ['Draw using only straight lines', 'Narrate like a supervillain', 'Do not use your favorite color'],
 });
 
@@ -46,6 +47,7 @@ export function validateConfig(input = {}) {
   bounded(config.challengeDurationSeconds, 'Challenge length', 5, 120);
   bounded(config.defectionDurationSeconds, 'Defection window', 5, 120);
   if (typeof config.autoDefection !== 'boolean') throw new RuleError('autoDefection must be a boolean.');
+  if (!['manual', 'community'].includes(config.scoringMode)) throw new RuleError('scoringMode must be manual or community.');
   if (!Array.isArray(config.challenges) || config.challenges.length < 1 || config.challenges.length > 10 ||
       config.challenges.some(text => typeof text !== 'string' || !text.trim() || text.length > 160)) {
     throw new RuleError('Provide 1–10 challenges, each 1–160 characters.');
@@ -109,14 +111,15 @@ export class MatchEngine {
     this.resumedAt = null; this.phase = 'finished'; this.windowEndsAt = null;
     for (const team of TEAMS) { this.teams[team].activeChallenge = null; this.teams[team].queuedChallenge = null; }
     this.updateResult();
-    this.record('finished', { text: 'Round complete. The host confirms the final score.' });
+    this.record('finished', { text: this.config.scoringMode === 'community' ? 'Round complete. Community battle score finalized automatically.' : 'Round complete. The host confirms the final score.' });
   }
   updateResult() {
     const a = this.teams.a.score, b = this.teams.b.score;
-    this.result = { winner: a === b ? 'tie' : a > b ? 'a' : 'b', scores: { a, b }, provisional: true };
+    this.result = { winner: a === b ? 'tie' : a > b ? 'a' : 'b', scores: { a, b }, provisional: this.config.scoringMode !== 'community' };
   }
   setScore(team, value) {
     this.requireTeam(team);
+    if (this.config.scoringMode === 'community') throw new RuleError('Community battle scores are managed automatically.');
     if (!['running', 'paused', 'finished'].includes(this.phase)) throw new RuleError('Start the match before scoring.');
     bounded(value, 'Score', 0, 9999);
     this.teams[team].score = value;
@@ -193,6 +196,10 @@ export class MatchEngine {
     if (target.activeChallenge) target.queuedChallenge = challenge;
     else target.activeChallenge = { ...challenge, endsAt: elapsed + this.config.challengeDurationSeconds * 1000 };
     this.record('volley', { team: teamId, target: targetId, challenge: challenge.text, queued: Boolean(target.queuedChallenge), text: `${this.name(teamId)} hit ${this.name(targetId)}: ${challenge.text}` });
+    if (this.config.scoringMode === 'community') {
+      team.score++;
+      this.record('community_score', { team: teamId, score: team.score, text: `${this.name(teamId)} earned a community battle point.` });
+    }
   }
   cancelChallenge(team) {
     this.requireTeam(team);
@@ -221,6 +228,7 @@ export class MatchEngine {
     for (const player of this.players.values()) counts[player.team]++;
     return {
       id: this.id, revision: this.revision, mode: this.mode, phase: this.phase,
+      scoreLabel: this.config.scoringMode === 'community' ? 'Community battle points' : 'Host-scored competition',
       config: structuredClone(this.config), serverTime: this.now(), elapsedMs: elapsed,
       remainingMs: Math.max(0, this.config.durationSeconds * 1000 - elapsed),
       windowUsed: this.windowUsed,

@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>ChatCrossfire — Twitch PK</title>
+  <link rel="stylesheet" href="styles.css">
+  <script id="twitch-extension-helper" src="https://extension-files.twitch.tv/helper/v1/twitch-ext.min.js" async></script>
+  <script src="config.js"></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <main class="extension-shell" id="extension-root">
+    <header class="brand-row"><div class="brand"><span class="brand-icon" aria-hidden="true">↗↙</span><span>CHAT<span class="brand-light">CROSSFIRE</span></span></div><span class="connection" id="connection" role="status"><i></i><span>Connecting</span></span></header>
+    <div class="simulation-banner" id="simulation-banner" hidden><span>LOCAL SIMULATION</span><strong id="simulation-persona"></strong></div>
+    <div class="channel-strip"><span id="channel-label">TWITCH NATIVE EXTENSION</span><span id="identity-label">WAITING FOR IDENTITY</span></div>
+    <section class="welcome surface" id="welcome">
+      <div class="eyebrow">YOUR CHAT. THEIR PROBLEM.</div><h1>A little rivalry.<br>A lot of chaos<span>.</span></h1><p>Challenge another streamer. Your communities bring the crossfire.</p>
+      <form id="invite-form" hidden><label for="target-login">Rival’s Twitch channel</label><div class="invite-input-row"><span aria-hidden="true">↗</span><input id="target-login" name="targetLogin" placeholder="their_channel" required minlength="3" maxlength="25" pattern="[a-zA-Z0-9_]{3,25}" autocomplete="off" autocapitalize="none" spellcheck="false"></div><label for="match-title">What’s the challenge?</label><input id="match-title" name="title" value="Draw your rival’s mascot" maxlength="100" required><div class="invite-footer"><label class="duration-select" for="round-length"><span>Round length</span><select name="durationSeconds" id="round-length"><option value="60">1 minute</option><option value="180">3 minutes</option><option value="300" selected>5 minutes</option></select></label><button class="button primary" id="invite-button" type="submit">Invite to PK <span aria-hidden="true">↗</span></button></div></form>
+      <div class="waiting-viewer" id="waiting-viewer"><span class="idle-symbol" aria-hidden="true">⇄</span><p id="welcome-note">Waiting for Twitch to connect this extension.</p></div>
+    </section>
+    <section class="room surface" id="room" hidden>
+      <div class="room-heading"><span class="phase-pill" id="phase-pill">INVITATION</span><span class="round-clock" id="round-clock" aria-label="Time remaining">05:00</span></div>
+      <div class="room-title"><span class="eyebrow">THE CHALLENGE</span><h1 id="room-title">Draw your rival’s mascot</h1><p id="room-subtitle">One shared match. Two very different loyalties.</p></div>
+      <div class="teams" id="teams"><article class="team team-a"><div class="team-header"><span class="side-tag">SIDE A ↗</span><span class="recruits"><b id="members-a">0</b> recruits</span></div><div class="team-sigil sigil-a" aria-hidden="true">◇</div><h2 id="name-a">SIDE A</h2><span class="team-login" id="login-a"></span><div class="score" id="score-a">00</div><div class="charge-label"><span>CHARGE</span><span id="charge-text-a">0 / 3</span></div><progress id="charge-a" value="0" max="3" aria-label="Side A attack charge"></progress><div class="ready-marker" id="ready-a">NOT READY</div></article><div class="versus" aria-hidden="true">VS<span>↗↙</span></div><article class="team team-b"><div class="team-header"><span class="side-tag">SIDE B ↙</span><span class="recruits"><b id="members-b">0</b> recruits</span></div><div class="team-sigil sigil-b" aria-hidden="true">✧</div><h2 id="name-b">SIDE B</h2><span class="team-login" id="login-b"></span><div class="score" id="score-b">00</div><div class="charge-label"><span>CHARGE</span><span id="charge-text-b">0 / 3</span></div><progress id="charge-b" value="0" max="3" aria-label="Side B attack charge"></progress><div class="ready-marker" id="ready-b">NOT READY</div></article></div>
+      <div class="countdown-banner" id="countdown-banner" hidden><span>BOTH SIDES READY</span><strong id="countdown-number">3</strong><p>Get ready for the crossfire.</p></div>
+      <div class="defection-window" id="defection-window" hidden><span aria-hidden="true">⇄</span><div><strong>LOYALTY IS A CHOICE</strong><p id="defection-time">Defection window open</p></div><span class="window-cta">SWITCH<br>SIDES</span></div>
+      <div class="challenge-box" id="challenge-box"><span class="challenge-icon" aria-hidden="true">⌁</span><div><span class="eyebrow" id="challenge-label">YOUR STREAMER’S CHALLENGE</span><strong id="challenge-text">Clear skies. For now.</strong><small id="queued-challenge"></small></div><span class="challenge-seconds" id="challenge-seconds"></span></div>
+      <div class="result-box" id="result-box" hidden><span class="eyebrow" id="result-label">COMMUNITY BATTLE · FINAL RESULT</span><h2 id="result-title">Round complete</h2><p id="result-detail"></p></div>
+      <div class="streamer-controls" id="streamer-controls" hidden><div class="role-caption">STREAMER CONTROLS <span id="streamer-side"></span></div><div class="invite-message" id="invite-message"></div><div class="action-row"><button class="button primary" id="accept-button" data-action="accept" hidden>Accept challenge ↗</button><button class="button secondary" id="decline-button" data-action="decline" hidden>Decline</button><button class="button primary" id="ready-button" data-action="ready" hidden>I’m ready ↗</button><button class="button secondary" id="pause-button" data-action="pause" hidden>Pause</button><button class="button secondary" id="resume-button" data-action="resume" hidden>Resume ↗</button><button class="button text-button" id="leave-button" data-action="leave" hidden>Leave PK</button></div><p class="automation-note" id="automation-note">Both streamers ready up. The backend handles the rest.</p></div>
+      <div class="viewer-controls" id="viewer-controls"><div class="role-caption"><span id="viewer-caption">YOUR COMMUNITY, YOUR MOVE</span><span class="my-team" id="my-team"></span></div><div class="identity-link" id="identity-link" hidden><p>Link your Twitch identity to play. Your allegiance follows you between chats.</p><button class="button primary" id="link-identity-button">Connect identity ↗</button></div><div class="viewer-action-row" id="viewer-action-row"><button class="button secondary" id="join-button" data-command="!join"><span aria-hidden="true">+</span> Join side</button><button class="button attack-button" id="attack-button" data-command="!attack"><span aria-hidden="true">↗</span> Attack</button><button class="button secondary switch-button" id="switch-button" data-command="!switch"><span aria-hidden="true">⇄</span> Defect</button></div><p class="play-hint" id="play-hint">Join once. Attack your rival. Defect when the window opens.</p></div>
+      <div class="event-feed" id="event-feed" aria-live="polite" aria-relevant="additions"></div><div class="effects" id="effects" aria-hidden="true"></div>
+    </section>
+    <p class="feedback" id="feedback" role="status" aria-live="polite" hidden></p>
+    <footer><span>COMMUNITY-POWERED PK</span><span id="score-explainer">Community battle scores are automatic. Streamers judge their own creative challenge.</span></footer>
+  </main>
+  <noscript>ChatCrossfire requires JavaScript to join a live PK.</noscript>
+</body>
+</html>

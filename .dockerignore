@@ -1,0 +1,12 @@
+.git
+.env
+.env.*
+node_modules
+data
+artifacts
+test
+docs
+scripts
+*.log
+progress.md
+README.md
