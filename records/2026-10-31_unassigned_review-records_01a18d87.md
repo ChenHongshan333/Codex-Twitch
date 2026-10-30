@@ -9,7 +9,7 @@
 - Session label: `unassigned_review-records` (provisional; no chat rename performed)
 - Purpose: repository audit, planning, source review, configuration explanation, records skill, and now user-authorized OBS dodge implementation
 - Submission role: supporting audit plus actual new feature development; representative must still confirm the main submission session separately, including the peer's unidentified original implementation session
-- Repository: `codex/integrator-danmaku-dodge`, base `dd440d63a63616c28e7de50b080ea1e396bcdf9b`; prior documentation and new implementation changes uncommitted
+- Repository: `codex/integrator-danmaku-dodge`, base `dd440d63a63616c28e7de50b080ea1e396bcdf9b`; implementation, prior documentation and records committed as `245cec9` and pushed to the matching origin branch
 - Google mirror: earlier records synced and read back 2026-10-31 in document `1x_30AXx2-QcIlqXfVeT-18YsWaFR7mQIaJNL9Q7lmvk`, Records tab `t.v5dw10hrs0ha`; all four prior tab bodies unchanged. Latest design follow-up sync is pending because Google Drive tools are no longer available.
 
 ## Codex contribution and decisions
@@ -154,12 +154,15 @@ Google mirror remains pending connector availability.
 User explicitly authorized pushing the work to the existing remote. Confirmed
 `origin` is `https://github.com/ChenHongshan333/Codex-Twitch.git` and remote master
 is still `dd440d6`. Re-ran `npm run check`, `npm test` (101 pass),
-`git diff --check` and the 11-document link check successfully. Preparing a
-scoped commit of the prototype plus the earlier collaboration docs/records/skill
-on `codex/integrator-danmaku-dodge`. No master merge, deployment or submission.
+`git diff --check` and the 11-document link check successfully. Created commit
+`245cec9` of the prototype plus earlier collaboration docs/records/skill and
+successfully ran `git push --set-upstream origin codex/integrator-danmaku-dodge`.
+Git reported the new remote branch and configured upstream tracking. This
+documentation follow-up records that observed success. No master merge,
+deployment or submission.
 Private `.env`, runtime data, browser artifacts, logs and recordings are excluded.
-Google Records mirror remains pending connector availability. Push outcome will
-be recorded after verification.
+Google Records mirror remains pending connector availability. Publication is
+Git CLI evidence, separate from live Twitch/OBS acceptance.
 
 ### OBS dodge implementation — user authorized 2026-10-31
 

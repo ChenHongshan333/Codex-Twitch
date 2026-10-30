@@ -8,18 +8,20 @@ Updated 2026-10-31 (Asia/Singapore; audit started October 30). Read this first, 
 ### Latest: implemented local OBS dodge mode
 
 Publication follow-up: user explicitly requested pushing to the configured
-GitHub remote on 2026-10-31. Remote `origin` is
-`https://github.com/ChenHongshan333/Codex-Twitch.git`; its master still points to
-the audited base. Preparing a normal push of the feature branch, with no merge
-or deployment. Fresh pre-push syntax, all 101 tests, documentation links and
-whitespace checks passed. Credentials and local artifacts remain excluded.
+GitHub remote on 2026-10-31. Commit `245cec9` contains the prototype and the
+collaboration docs/records/skill; `git push --set-upstream origin
+codex/integrator-danmaku-dodge` succeeded. The branch tracks its GitHub upstream.
+This follow-up documents that successful publication. No master merge or
+deployment. Fresh pre-push syntax, all 101 tests, documentation links and
+staged whitespace checks passed. Credentials and local artifacts were excluded.
 
 User authorized starting engineering work after confirming tracked-marker hits
 and normalization by concurrent viewers. Branch is now
 `codex/integrator-danmaku-dodge`, base
-`dd440d63a63616c28e7de50b080ea1e396bcdf9b`. All prior uncommitted documentation
-was preserved; new implementation is uncommitted too. No push/deployment or live
-credential change was performed. Older audit-only statements below are historical.
+`dd440d63a63616c28e7de50b080ea1e396bcdf9b`. Earlier uncommitted documentation
+was preserved and committed with the implementation as `245cec9`. Publication
+is recorded above; no deployment or live credential change was performed.
+Older audit-only statements below are historical.
 
 `npm run dodge` starts the new standalone loopback app on port 3020. It has
 equal 960×540 arenas, camera colour-marker tracking, authoritative swept hits,

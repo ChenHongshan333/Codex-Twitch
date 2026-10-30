@@ -2,7 +2,9 @@
 
 ## Latest implementation update — 2026-10-31
 
-Branch `codex/integrator-danmaku-dodge`, base `dd440d6`; local changes uncommitted.
+Branch `codex/integrator-danmaku-dodge`, base `dd440d6`; implementation and
+collaboration records committed as `245cec9` and pushed to the matching origin
+branch at the user's request. No master merge or deployment.
 New separate [OBS dodge mode](dodge-runbook.md) implemented and running on 3020.
 Fresh syntax checks pass; entire suite **101 tests pass**; diff whitespace checks
 pass. Browser rehearsal verifies both directions, automatic damage, movement,
