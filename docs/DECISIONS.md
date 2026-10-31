@@ -69,7 +69,7 @@ to a current task. Brainstorm claims of market novelty remain unverified.
 | Twitch installation | Local rehearsal needs a browser/Node, not the Twitch desktop app. Actual input needs OAuth/channel setup; OBS is needed to verify broadcast composition | Configuration and runbook |
 | Hackathon integration | Earlier official review found actual Twitch connection required; native Extension optional. Simulated-only footage is not live Twitch acceptance | Source notes and product; reverify live rules before submission |
 | Judge access | Unreviewed Extension installation restriction was found in earlier FAQ review. Final delivery route and durable access remain unresolved | Product, tasks, source notes |
-| Publish/merge/deploy | Prototype and initial records pushed to feature branch at `b5c81e1`; master unchanged. No PR merge/deployment/submission authorized by a design/plan alone | Handoff and record; check current Git state |
+| Publish/merge/deploy | Prototype/initial records published through `b5c81e1`; knowledge map/skill/setup docs published as `9950029`, all on the feature branch. Master unchanged. No PR merge/deployment/submission authorized by a design/plan alone | Handoff and record; check current Git state |
 
 ## Open acceptance work
 

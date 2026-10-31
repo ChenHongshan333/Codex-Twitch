@@ -5,7 +5,7 @@
 Current follow-up: official Twitch CLI `v1.1.24` installed per user with release
 checksum verified; version/help and user PATH checks passed. No OAuth keys/tokens
 generated or entered. User requested publishing the agent knowledge documentation
-and skill; preparing a docs-only feature-branch update from `b5c81e1`.
+and skill; docs-only commit `9950029` was successfully pushed to the feature branch.
 
 Local setup follow-up: `.env` now exists as an unchanged template copy with no
 credentials entered; Git ignores it. CLI was initially missing, now installed. Local
@@ -14,8 +14,8 @@ values were read/displayed and no live accounts were changed.
 
 Documentation follow-up: added [agent knowledge map](AGENT_MAP.md),
 [decision register](DECISIONS.md) and navigation skill; startup/ownership docs
-now cover dodge as well as native PK. These changes are local, uncommitted and
-unpublished; documentation/skill checks are tracked in the current record.
+now cover dodge as well as native PK. These changes are published in `9950029`;
+documentation/skill checks are tracked in the current record.
 Runtime verification below is unchanged and attributed to the preceding turn.
 
 Branch `codex/integrator-danmaku-dodge`, base `dd440d6`; implementation and

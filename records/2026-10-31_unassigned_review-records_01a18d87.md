@@ -9,7 +9,7 @@
 - Session label: `unassigned_review-records` (provisional; no chat rename performed)
 - Purpose: repository audit, planning, source review, configuration explanation, records skill, and now user-authorized OBS dodge implementation
 - Submission role: supporting audit plus actual new feature development; representative must still confirm the main submission session separately, including the peer's unidentified original implementation session
-- Repository: `codex/integrator-danmaku-dodge`, base `dd440d63a63616c28e7de50b080ea1e396bcdf9b`; implementation/records published through `b5c81e1`; newer agent knowledge docs/skill edits are local and uncommitted
+- Repository: `codex/integrator-danmaku-dodge`, base `dd440d63a63616c28e7de50b080ea1e396bcdf9b`; implementation/records published through `b5c81e1`; agent knowledge docs/skill/setup guidance published as `9950029`
 - Google mirror: earlier records synced and read back 2026-10-31 in document `1x_30AXx2-QcIlqXfVeT-18YsWaFR7mQIaJNL9Q7lmvk`, Records tab `t.v5dw10hrs0ha`; all four prior tab bodies unchanged. Latest design follow-up sync is pending because Google Drive tools are no longer available.
 
 ## Codex contribution and decisions
@@ -169,6 +169,14 @@ CLI config location and team credential guidance. Rechecked official auth/token
 references. Prepared publishing the accumulated knowledge docs/navigation skill
 on `codex/integrator-danmaku-dodge` from `b5c81e1`, with only docs/skill changes.
 Google record mirror remains pending connector availability.
+
+Publication/check outcome: `git push origin codex/integrator-danmaku-dodge`
+succeeded for documentation commit `9950029` (16 files). Navigation skill
+validator passed; link/whitespace validation passed for 157 local links in 15
+documents; staged diff whitespace passed. `.env` and installation downloads/
+evidence were verified ignored and were not staged. No app tests were rerun for
+this docs-only publication; prior 101-test result stays attributed. This final
+record/handoff update documents the successful push; master remains untouched.
 
 ### Environment setup guidance follow-up
 

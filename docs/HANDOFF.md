@@ -16,11 +16,12 @@ No keys/tokens were generated, no CLI credentials configured/read, and `.env`
 was preserved. Open a new terminal, or use the explicit path in the configuration
 guide. Token setup belongs to the user; tokens are secrets, not device-bound.
 
-Preparing a docs-only commit/push on `codex/integrator-danmaku-dodge`, starting
-from `b5c81e1`. Includes map, decision register, navigation skill and related
-documentation fixes. Earlier notes saying those edits were local describe the
-prior handoff. Application code is unchanged; checks are documentation/skill
-validation plus CLI installation checks. Google mirror still pending.
+Published docs-only commit `9950029` on `codex/integrator-danmaku-dodge`, starting
+from `b5c81e1`; Git push succeeded. Includes map, decision register, navigation
+skill and related documentation fixes. Earlier notes saying those edits were
+local describe the prior handoff. Application code is unchanged; checks are
+documentation/skill validation plus CLI installation checks. Google mirror still
+pending. View the feature branch on GitHub; master is unchanged.
 
 ### Local environment preparation
 
@@ -43,7 +44,8 @@ confirmed ideas, engineering defaults, candidates and pending acceptance.
 Added the project `chatcrossfire-navigation` skill, linked through AGENTS.md;
 the existing records skill still owns session evidence/mirroring. Updated stale
 native-only scope language and marked earlier design/source notes as history.
-These follow-up docs/skill edits are local and not yet committed or pushed.
+These follow-up docs/skill edits were local at the previous handoff; they are
+now committed and pushed as `9950029`.
 No application code changed; the 101-test result below is inherited from the
 verified implementation/publication turn, not rerun for prose.
 Navigation skill validation passed; 153 local links/whitespace checks across
