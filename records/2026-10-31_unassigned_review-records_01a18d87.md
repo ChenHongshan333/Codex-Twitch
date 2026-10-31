@@ -14,6 +14,30 @@
 
 ## Codex contribution and decisions
 
+### Requested PR and merge to the default branch
+
+User explicitly authorized PR creation and merge. Started clean at `29cd122`
+on `codex/integrator-danmaku-dodge`; refreshed origin. GitHub default branch is
+`master`, base `dd440d63a63616c28e7de50b080ea1e396bcdf9b`; used it for the user's
+primary-branch request rather than creating/renaming `main`. GitHub connector
+returned repository 404; authenticated local `gh` provided WRITE access and was
+used for [PR #1](https://github.com/ChenHongshan333/Codex-Twitch/pull/1).
+
+Fresh checks for integration: `npm run check` PASS; `npm test` **111 passed,
+zero failures/skips**; `git diff --check origin/master...HEAD` PASS;
+`node artifacts/check-agent-knowledge.mjs` PASS, 181 local links in 19 documents.
+These are local synthetic/syntax/document checks, not new browser/live evidence.
+PR metadata reports CLEAN/MERGEABLE, empty review decision and no check runs;
+no repository workflow is present. No protections or checks were bypassed.
+
+PR describes the full prototype/UI/docs scope and explicitly distinguishes
+implemented marker-snapshot aim from the pending horizontal-support design.
+This record is written before final merge; PR #1 supplies the canonical remote
+merge outcome. Current instruction authorizes normal merge, with expected-head
+protection and source branch retained. No deployment, credential change or real
+broadcast. Remaining work: design balance agreement, horizontal implementation,
+actual Twitch/OBS proof and Google Records mirror when access is restored.
+
 ### Horizontal support correction and quiet-stream balance discussion
 
 2026-10-31, clean start at `7f422f8a208ad83f50eb1a359ed8f64d0c6769f8`, same

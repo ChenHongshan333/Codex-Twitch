@@ -5,6 +5,24 @@ Updated 2026-10-31 (Asia/Singapore; audit started October 30). Read this first, 
 
 ## What this session did
 
+### Pull request and default-branch integration
+
+User explicitly requested opening a PR and merging to the primary branch.
+GitHub confirms the default is `master` (there is no `main` target in this
+workflow). [PR #1](https://github.com/ChenHongshan333/Codex-Twitch/pull/1) contains
+the OBS prototype, UI/tests, collaboration docs and pending horizontal design
+from `codex/integrator-danmaku-dodge`, base `dd440d6`. The PR is the canonical
+remote integration/status record. This handoff entry is written before the
+final merge action; it does not claim an observed merge result.
+
+Fresh merge preparation at `29cd122`: `npm run check` PASS; `npm test` **111/111**,
+zero failures/skips; `git diff --check origin/master...HEAD` PASS; knowledge-doc
+check **181 links / 19 documents** PASS. GitHub reports clean/mergeable, no review
+decision and no check runs; these local checks are not GitHub CI. No new browser,
+Twitch or physical OBS acceptance. Merge is user-authorized; no deployment.
+Next: agree on quiet/free/paid balance, implement the horizontal lane model when
+requested, and obtain real Twitch/OBS evidence. Google mirror remains pending.
+
 ### Horizontal support model — design correction
 
 From clean feature-branch base `7f422f8`, user clarified community-support-driven

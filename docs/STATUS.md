@@ -2,6 +2,13 @@
 
 ## Latest implementation update — 2026-10-31
 
+Integration request: user authorized PR creation and merge. GitHub's default
+branch is `master`; [PR #1](https://github.com/ChenHongshan333/Codex-Twitch/pull/1)
+is the remote delivery/status record for this feature branch. Fresh local syntax,
+**111/111 tests**, diff and 181-link documentation checks pass. At preparation
+GitHub reports clean/mergeable with no check runs or review decision. This entry
+precedes the final merge action; no deployment or new live acceptance is claimed.
+
 Design correction from `7f422f8`: user requests collective audience support and
 horizontal, non-aimed danmaku. Current prototype does not yet meet that revised
 direction. Low-support balance is a proposal in the design discussion; no runtime
