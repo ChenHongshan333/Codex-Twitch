@@ -1,5 +1,11 @@
 # OBS dodge mode
 
+Design correction pending implementation: the user wants collective audience
+support and horizontal Bilibili-style scrolling instead of marker-directed aim.
+Low-support balance is under discussion in the [design notes](design/physical-danmaku-discussion.md).
+The commands and rules below describe the existing prototype; they do not yet
+implement the proposed lane/baseline model.
+
 This separate local prototype implements the user's physical-danmaku direction.
 It does not change native PK rooms, the four-role sandbox, or legacy OBS state.
 It runs on one computer; two remote streamers and VTuber software adapters still

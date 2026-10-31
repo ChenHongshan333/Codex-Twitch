@@ -14,6 +14,42 @@
 
 ## Codex contribution and decisions
 
+### Horizontal support correction and quiet-stream balance discussion
+
+2026-10-31, clean start at `7f422f8a208ad83f50eb1a359ed8f64d0c6769f8`, same
+feature branch and session identity. Applied repository navigation/records skills.
+User clarified attacks arise from audience support, with horizontal Bilibili-like
+scrolling rather than aiming at the marker, and asked how to balance few gifts
+or supporters. Arena HUD is the observed selected design variant. Read current
+docs and the activity/spawn/controller paths: ordinary chat is already admitted,
+but spawning aims at a marker snapshot and controller language implies attacks.
+
+Recorded the confirmed no-aim/community-support correction and separate candidate
+balance: free support fills a pooled meter; normalize by concurrent viewers with
+a floor and shared user limits; optional gift emphasis; equal neutral quiet waves
+and capped support-driven density. Specific rates, neutral collisions and paid
+gameplay influence are proposals, not accepted implementation requirements.
+Updated product/decisions/design/runbook/status/tasks/handoff. No runtime/API,
+credentials, tests, stream or deployment changes; no new commit/push this turn.
+
+Reopened official Twitch EventSub subscription types (chat message, Cheer and
+gift-sub entries) as input references; source reading does not establish live
+integration. Existing 111-test and browser outcomes are inherited from earlier
+work, not rerun to validate this new design. Fresh documentation checks:
+`node artifacts/check-agent-knowledge.mjs` PASS (181 local links, 19 documents);
+`git diff --check` PASS.
+Next: user discussion of quiet/free/paid balance, then implement/test on explicit
+instruction. Google mirror pending: no Google writer discovered and document
+control returned no connected sessions; maintain this local section for later sync.
+
+Publication follow-up: user explicitly requested pushing the pending design notes
+to their branch. Verified current branch `codex/integrator-danmaku-dodge`, HEAD
+`7f422f8a208ad83f50eb1a359ed8f64d0c6769f8`, with only the nine expected design/
+handoff/record Markdown files modified. Rechecking documentation links/whitespace
+before committing and pushing. No application changes, new gameplay verification,
+merge or deployment are part of this publication request. Google mirror remains
+pending access as documented above.
+
 Read the prior ChatGPT planning conversation
 `6ae4ba2a-0b2c-83ec-8337-4f9699f33359` as background. That is not this Codex session.
 Inspected the actual cloned implementation, identified separate native/sandbox/

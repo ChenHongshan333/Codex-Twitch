@@ -5,6 +5,21 @@ Updated 2026-10-31 (Asia/Singapore; audit started October 30). Read this first, 
 
 ## What this session did
 
+### Horizontal support model — design correction
+
+From clean feature-branch base `7f422f8`, user clarified community-support-driven
+horizontal Bilibili-style danmaku, without marker-directed aim, and asked about
+few gifts/supporters. Recorded confirmed correction separately from proposed
+free-support, neutral-floor and capped-density tuning in the design discussion,
+product, decisions and runbook. Arena HUD remains the selected visual direction.
+Current code still aims at markers; no runtime/API or test changes this turn.
+The 111-test result below belongs to the preceding unit-test turn, not a fresh
+run here. Local documentation checks only. User subsequently requested publishing
+these notes to `codex/integrator-danmaku-dodge`; commit/push pending. No merge or
+deployment. Next: agree on free/paid influence and quiet baseline,
+then implement/test the lane scheduler when requested. Google mirror pending:
+no Google writer or connected document session available.
+
 ### Additional dodge unit tests
 
 User requested unit tests and a push to the current feature branch. From clean

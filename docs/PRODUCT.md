@@ -7,6 +7,13 @@ not imply that live Twitch acceptance has passed.
 
 ## Intended experience
 
+Latest user correction (after unit-test publication): OBS dodge should turn
+community support into Bilibili-style horizontal scrolling messages, without
+marker-directed aiming. Quiet/low-gift balance is being discussed; free support,
+a neutral baseline and capped support-driven density are recommendations, not
+implemented or accepted settings. See [latest design notes](design/physical-danmaku-discussion.md).
+Current prototype still uses marker-snapshot trajectories.
+
 Submission-route clarification confirmed with the user on 2026-10-31:
 **publishing a native Twitch Extension is optional**. Next acceptance work is
 real Twitch chat/EventSub/API input driving the OBS dodge experience, then

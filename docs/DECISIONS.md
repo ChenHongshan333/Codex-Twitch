@@ -13,6 +13,14 @@ what actually works. Use [agent map](AGENT_MAP.md) to find the relevant code.
 
 ## Product and gameplay
 
+Latest user correction: audience support should create collective pressure;
+OBS danmaku should scroll horizontally like Bilibili without targeting the marker.
+This supersedes earlier aimed-trajectory design defaults, while current code
+still implements them. Low-support balance proposals (free contributions, neutral
+baseline, capped density and gift emphasis) await agreement; see the latest
+[design discussion](design/physical-danmaku-discussion.md). No implementation was
+requested by the balance question, and no runtime/contract changed in this turn.
+
 | Idea / decision | Status and consequence | Detail / provenance |
 | --- | --- | --- |
 | Cross-channel audience interference | Core idea; implemented in native PK and local dodge using different rules | [Product](PRODUCT.md), [original ideation summary](../records/sources-2026-10-31.md) |

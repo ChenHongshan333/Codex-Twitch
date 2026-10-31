@@ -9,7 +9,7 @@ Google tab mirrors the session identity, contribution, checks, blockers, and nex
 
 | Record | Session identity | Kind |
 | --- | --- | --- |
-| [Current review, records and dodge implementation](2026-10-31_unassigned_review-records_01a18d87.md) | `01a18d87-3294-76d2-88a8-b5aa16e5daaf` (observed Codex app thread) | Audit, knowledge map, skills, OBS prototype, UI smoke and unit coverage |
+| [Current review, records and dodge implementation](2026-10-31_unassigned_review-records_01a18d87.md) | `01a18d87-3294-76d2-88a8-b5aa16e5daaf` (observed Codex app thread) | Audit, knowledge map, skills, OBS prototype, UI smoke, unit coverage and horizontal-support design |
 | [Prior application implementation](2026-10-30_chenhongshan333_native-pk.md) | Original development session ID still needed from its owner | Historical Git/progress reconstruction |
 | [Reviewed document and official sources](sources-2026-10-31.md) | No session claim | Redacted source and decision notes |
 | [Skill validation](skill-validation-2026-10-31.md) | Synthetic exercise only | Baseline and skill application checks |

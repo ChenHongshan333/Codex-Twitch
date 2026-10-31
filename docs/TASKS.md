@@ -9,6 +9,7 @@ Use the [agent map](AGENT_MAP.md) for task-to-code/test routing and
 
 | Task | Priority | Proposed owner | Depends on | State |
 | --- | --- | --- | --- | --- |
+| Horizontal community-support dodge revision | P0 revised direction | Integrator/rules/frontend, implementation owner not yet assigned | [Latest design correction](design/physical-danmaku-discussion.md); agreement on quiet/free/paid balance | Confirmed horizontal/no-aim direction; balance proposals under discussion, implementation not started |
 | 0. Resolve judge access/delivery setup | P0 | Representative + integrator | Real Twitch accounts and a reproducible judging setup | Chat/OBS accepted for next evidence run; final judge access still open; Extension publication optional |
 | 1. CI + packaging regression coverage | P0 | Integrator | Current passing baseline | Ready |
 | 2. Twitch accounts + HTTPS/Hosted Test | P0 | Account/deployment owner + integrator | Private setup values and two channels | Setup blocked |
