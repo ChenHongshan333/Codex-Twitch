@@ -13,9 +13,11 @@ decision register, tasks and [readiness](hackathon-readiness.md). Current next
 milestone is actual Twitch chat/EventSub/API → app → OBS evidence and the Twitch/
 Codex demo video. Native PK is preserved as an optional path. Final judge access,
 accounts/live acceptance and submission materials are still pending; the
-simulator does not complete those requirements. Preparing a documentation-only
-update on `codex/integrator-danmaku-dodge` from `addc634` for peer access. No app
-code, runtime, credentials, broadcast or deployment changed. Google mirror pending.
+simulator does not complete those requirements. Documentation-only commit
+`893ab65` was pushed to `codex/integrator-danmaku-dodge` for peer access, based
+on `addc634`. Link/whitespace validation passed (166 local links, 16 documents).
+No app code, runtime, credentials, broadcast or deployment changed. Google mirror
+pending. Older local-only notes below describe previous handoff states.
 
 ### Hackathon requirement recheck
 

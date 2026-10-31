@@ -9,7 +9,7 @@
 - Session label: `unassigned_review-records` (provisional; no chat rename performed)
 - Purpose: repository audit, planning, source review, configuration explanation, records skill, and now user-authorized OBS dodge implementation
 - Submission role: supporting audit plus actual new feature development; representative must still confirm the main submission session separately, including the peer's unidentified original implementation session
-- Repository: `codex/integrator-danmaku-dodge`, base `dd440d63a63616c28e7de50b080ea1e396bcdf9b`; implementation/records published through `b5c81e1`; agent knowledge docs/skill/setup guidance published as `9950029`
+- Repository: `codex/integrator-danmaku-dodge`, base `dd440d63a63616c28e7de50b080ea1e396bcdf9b`; prototype/agent documentation published through `addc634`; Twitch delivery clarification/checklist published as `893ab65`
 - Google mirror: earlier records synced and read back 2026-10-31 in document `1x_30AXx2-QcIlqXfVeT-18YsWaFR7mQIaJNL9Q7lmvk`, Records tab `t.v5dw10hrs0ha`; all four prior tab bodies unchanged. Latest design follow-up sync is pending because Google Drive tools are no longer available.
 
 ## Codex contribution and decisions
@@ -160,8 +160,8 @@ access and submission materials remain open. Included preceding account/testing
 clarifications in this topical docs update, preserving existing local edits.
 
 Documentation-only work from `addc634` on `codex/integrator-danmaku-dodge`;
-preparing commit/push for peer access under the user's prior request to publish
-related collaboration docs. No source code, API, credentials, stream, deployment
+committed as `893ab65` and successfully pushed for peer access under the user's
+request to publish related collaboration docs. No source code, API, credentials, stream, deployment
 or submission action changed. Prior 101 tests remain attributed, not rerun for
 prose. Google Records mirror remains pending because connector access is absent.
 Validation passed: 166 local links/whitespace checks in 16 documents and

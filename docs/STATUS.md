@@ -5,19 +5,20 @@
 Peer clarification accepted: native Extension publication is optional. Next
 acceptance milestone is real Twitch chat/EventSub/API driving OBS and recorded
 Twitch/Codex footage. Native PK remains an optional route; judging access and
-actual live acceptance remain pending. This follow-up changes documentation only.
+actual live acceptance remain pending. Documentation commit `893ab65` was pushed
+to the feature branch. Link/whitespace checks passed; no application code changed.
 
 Submission gate rechecked: **actual Twitch integration/demo evidence pending**.
 Simulation is not a substitute for the required Twitch connection and video.
 See [readiness](hackathon-readiness.md). Existing EventSub/API/OBS code still
 needs real two-channel acceptance; judge access, video and main session selection
 remain open. Recommendation is chat/OBS evidence first; no deployment authorized
-or performed. Checklist/docs updated locally, not pushed in this review.
+or performed. This checklist was initially local and is now included in `893ab65`.
 
 Testing constraint: user reports no Twitch account. Credential-free local
 simulation remains available; user-token authorization is deferred. Giving the
 app a token would not broadcast camera/video. No account, stream or credentials
-were created/changed during this clarification. Local docs updated; no new push.
+were created/changed during that clarification. Those notes are now in `893ab65`.
 
 Current follow-up: official Twitch CLI `v1.1.24` installed per user with release
 checksum verified; version/help and user PATH checks passed. No OAuth keys/tokens
