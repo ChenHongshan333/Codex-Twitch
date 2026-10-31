@@ -6,7 +6,8 @@ Unit-test follow-up from `13b0aa4`: eight new deterministic dodge rule tests;
 focused dodge suites **25/25**, full suite **111/111**, syntax and whitespace
 checks pass. Covers movement/collision, pause/cooldowns, normalization, audience
 recovery, barrage timing, knockout/reset and snapshot isolation. No runtime/API
-change. User-authorized feature-branch push pending; Google mirror pending access.
+change. Tests/records published as `9463d0d` on the feature branch; 177 local
+documentation links checked. Google mirror pending access.
 Browser/live acceptance status below is unchanged by these unit tests.
 
 Fresh smoke/UI follow-up from `8c7425c`: redesigned local dodge controller using

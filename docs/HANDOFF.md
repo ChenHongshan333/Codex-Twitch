@@ -17,7 +17,8 @@ snapshots. Runtime code, dependencies and API contracts are unchanged.
 Fresh focused dodge suites: **25/25**; full `npm test`: **111/111**;
 `npm run check` and `git diff --check` pass. Browser evidence below belongs to
 the previous UI work; no new real Twitch/physical OBS acceptance was performed.
-Publication is authorized and pending the commit/push step. Google Records mirror
+Tests/records committed as `9463d0d` and pushed to the matching origin branch.
+177 local documentation links and staged whitespace checks pass. Google Records mirror
 remains pending: no Google writer or connected document session is available.
 Next: account owner/integrator completes real two-channel Twitch/OBS acceptance
 and mirrors the local session record when Google access returns.

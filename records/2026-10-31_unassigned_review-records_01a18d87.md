@@ -9,7 +9,7 @@
 - Session label: `unassigned_review-records` (provisional; no chat rename performed)
 - Purpose: repository audit, planning, source review, configuration explanation, records skill, and now user-authorized OBS dodge implementation
 - Submission role: supporting audit plus actual new feature development; representative must still confirm the main submission session separately, including the peer's unidentified original implementation session
-- Repository: `codex/integrator-danmaku-dodge`, base `dd440d63a63616c28e7de50b080ea1e396bcdf9b`; prototype/agent docs published earlier; delivery clarification through `8c7425c`; battle-room UI/tests/smoke review published as `e860205`
+- Repository: `codex/integrator-danmaku-dodge`, base `dd440d63a63616c28e7de50b080ea1e396bcdf9b`; prototype/agent docs published earlier; delivery clarification through `8c7425c`; battle-room UI/tests/smoke review published as `e860205`; additional unit coverage published as `9463d0d`
 - Google mirror: earlier records synced and read back 2026-10-31 in document `1x_30AXx2-QcIlqXfVeT-18YsWaFR7mQIaJNL9Q7lmvk`, Records tab `t.v5dw10hrs0ha`; all four prior tab bodies unchanged. Latest design follow-up sync is pending because Google Drive tools are no longer available.
 
 ## Codex contribution and decisions
@@ -173,8 +173,9 @@ time and reran; this was a test expectation correction, not a production bug.
 
 Earlier real-browser smoke remains attributed to the UI section below; these
 tests do not establish real Twitch, physical webcam/OBS or remote acceptance.
-Commit/push authorized by this user request, pending publication step. No merge
-or deployment. Google mirror pending: tool discovery found no Google Docs writer;
+Commit `9463d0d` was successfully pushed to the matching origin branch under
+this user request. 177 local links in 19 knowledge documents and staged whitespace
+checks passed. No merge or deployment. Google mirror pending: tool discovery found no Google Docs writer;
 document control returned no connected sessions. Local record/index/handoff are
 updated. Next action: account owner/integrator arranges actual Twitch/OBS proof;
 mirror this summary to the existing Records tab when access is restored.
