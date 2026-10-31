@@ -3,6 +3,8 @@
 Checked against source at `b5c81e1` on 2026-10-31. This is a navigation cache,
 not proof that code stayed unchanged. Start with [AGENTS.md](../AGENTS.md) and
 the current part of [handoff](HANDOFF.md); earlier handoff sections are history.
+Dodge controller/test pointers were refreshed with UI commit `e860205`; the
+runtime graph and backend contracts remain unchanged by that frontend update.
 
 ## Read according to the task
 

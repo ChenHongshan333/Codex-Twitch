@@ -29,7 +29,8 @@ left in lobby for Start rehearsal. It loaded no `.env`; user port-3020 state was
 preserved. Source assets now contain the new UI; reload existing tabs to see it.
 Browser artifacts are ignored under `output/playwright/`. Local processes do
 not transfer with a clone. Google Records mirror remains pending connector
-access. Current UI changes are prepared for peer review; no deployment/merge.
+access. UI/test/review commit `e860205` was pushed to the shared feature branch;
+177 documentation links and staged whitespace checks passed. No deployment/merge.
 
 ### Peer-facing delivery clarification
 

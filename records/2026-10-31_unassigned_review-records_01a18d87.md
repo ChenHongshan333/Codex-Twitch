@@ -9,7 +9,7 @@
 - Session label: `unassigned_review-records` (provisional; no chat rename performed)
 - Purpose: repository audit, planning, source review, configuration explanation, records skill, and now user-authorized OBS dodge implementation
 - Submission role: supporting audit plus actual new feature development; representative must still confirm the main submission session separately, including the peer's unidentified original implementation session
-- Repository: `codex/integrator-danmaku-dodge`, base `dd440d63a63616c28e7de50b080ea1e396bcdf9b`; prototype/agent documentation published through `addc634`; Twitch delivery clarification/checklist published as `893ab65`
+- Repository: `codex/integrator-danmaku-dodge`, base `dd440d63a63616c28e7de50b080ea1e396bcdf9b`; prototype/agent docs published earlier; delivery clarification through `8c7425c`; battle-room UI/tests/smoke review published as `e860205`
 - Google mirror: earlier records synced and read back 2026-10-31 in document `1x_30AXx2-QcIlqXfVeT-18YsWaFR7mQIaJNL9Q7lmvk`, Records tab `t.v5dw10hrs0ha`; all four prior tab bodies unchanged. Latest design follow-up sync is pending because Google Drive tools are no longer available.
 
 ## Codex contribution and decisions
@@ -185,7 +185,10 @@ dodge-focus-barrage, dodge-after-desktop/mobile/overlay/camera, dodge-final-lobb
 See docs/design/2026-10-31-dodge-ui-review.md for Shiro findings and local ship
 call. Real Twitch/OBS hardware/remote/VTuber acceptance remains pending, as does
 Google record mirror. Credentials were not read/changed; no stream or deployment
-started. Current feature-branch work is prepared for peer review/publication.
+started. Feature-branch UI/tests/review committed as `e860205` and successfully
+pushed to origin. 177 local documentation links in 19 documents and staged
+whitespace checks passed. Runtime/schema/backend boundaries remain unchanged;
+no master merge/deployment. This handoff follow-up records the verified push.
 
 ### Peer-facing optional Extension clarification
 

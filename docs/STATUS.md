@@ -9,6 +9,8 @@ gameplay/defection/barrage/tracking-loss/reconnect/transparent output checks pas
 as do 320–1440 px layouts and generated-camera checks. See
 [UI review](design/2026-10-31-dodge-ui-review.md). These are local/synthetic
 results; real Twitch, hardware OBS, remote transport and VTuber adapters are open.
+UI/test/review changes published as `e860205` on the feature branch; 177 local
+documentation links and whitespace checks passed. No master merge/deployment.
 
 Peer clarification accepted: native Extension publication is optional. Next
 acceptance milestone is real Twitch chat/EventSub/API driving OBS and recorded
