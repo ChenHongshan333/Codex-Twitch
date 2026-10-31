@@ -3,9 +3,10 @@ import { EventEmitter } from 'node:events';
 const EVENTSUB = 'wss://eventsub.wss.twitch.tv/ws';
 
 export class TwitchBridge extends EventEmitter {
-  constructor({ token = '', fetchImpl = fetch, WebSocketImpl = WebSocket, retryBaseMs = 1500 } = {}) {
+  constructor({ token = '', fetchImpl = fetch, WebSocketImpl = WebSocket, retryBaseMs = 1500, supportOnly = false, moderationEvents = false } = {}) {
     super(); this.token = token.trim(); this.fetch = fetchImpl; this.WebSocket = WebSocketImpl;
     this.retryBaseMs = retryBaseMs; this.epoch = 0; this.sockets = new Set();
+    this.supportOnly = supportOnly; this.moderationEvents = moderationEvents;
     this.seen = new Set(); this.replies = new Map(); this.retryCount = 0;
     this.status = { state: 'disabled', message: 'Twitch is off. Demo inputs are simulated.', channels: [], login: null };
   }
@@ -32,7 +33,7 @@ export class TwitchBridge extends EventEmitter {
   async validate() {
     const auth = await this.request('https://id.twitch.tv/oauth2/validate', { validate: true });
     if (!auth.user_id || !auth.client_id || !auth.login) throw new Error('A Twitch USER access token is required.');
-    if (!auth.scopes?.includes('user:read:chat')) throw new Error('Token is missing user:read:chat. Authorize again.');
+    if (this.supportOnly ? !auth.scopes?.some(scope => ['bits:read', 'channel:read:subscriptions'].includes(scope)) : !auth.scopes?.includes('user:read:chat')) throw new Error(this.supportOnly ? 'Broadcaster token needs bits:read or channel:read:subscriptions.' : 'Token is missing user:read:chat. Authorize again.');
     if (this.identity && (auth.user_id !== this.identity.user_id || auth.client_id !== this.identity.client_id)) throw new Error('Twitch token identity changed. Restart the server.');
     this.identity = auth;
   }
@@ -103,9 +104,14 @@ export class TwitchBridge extends EventEmitter {
         previous.intentional = true; clearTimeout(previous.watchdog); previous.socket.close(); this.sockets.delete(previous);
       } else {
         await Promise.all(this.channels.map(async channel => {
-          await this.request('https://api.twitch.tv/helix/eventsub/subscriptions', { body: {
-            type: 'channel.chat.message', version: '1',
-            condition: { broadcaster_user_id: channel.id, user_id: this.identity.user_id },
+          const types = this.supportOnly ? [
+            ...(this.identity.scopes.includes('bits:read') ? ['channel.cheer'] : []),
+            ...(this.identity.scopes.includes('channel:read:subscriptions') ? ['channel.subscription.gift'] : []),
+          ] : ['channel.chat.message', ...(this.moderationEvents ? ['channel.chat.message_delete', 'channel.chat.clear', 'channel.chat.clear_user_messages'] : [])];
+          if (this.supportOnly && channel.id !== this.identity.user_id) throw new Error('Support token must belong to its configured broadcaster.');
+          for (const type of types) await this.request('https://api.twitch.tv/helix/eventsub/subscriptions', { body: {
+            type, version: '1',
+            condition: { broadcaster_user_id: channel.id, ...(!this.supportOnly ? { user_id: this.identity.user_id } : {}) },
             transport: { method: 'websocket', session_id: message.payload.session.id },
           } });
           if (connection.epoch === this.epoch) channel.subscribed = true;
@@ -113,7 +119,7 @@ export class TwitchBridge extends EventEmitter {
       }
       if (connection.epoch !== this.epoch) return;
       this.retryCount = 0;
-      this.report('connected', this.channels.length === 2 ? 'Both Twitch chats connected.' : 'One Twitch chat connected. Configure the second channel for a full PK.', { channels: this.channels });
+      this.report('connected', this.supportOnly ? 'Broadcaster support events connected.' : this.channels.length === 2 ? 'Both Twitch chats connected.' : 'One Twitch chat connected. Configure the second channel for a full PK.', { channels: this.channels });
     } else if (type === 'session_reconnect') {
       if (connection.migrating) return;
       const url = new URL(message.payload.session.reconnect_url);
@@ -132,7 +138,19 @@ export class TwitchBridge extends EventEmitter {
       const id = chat.message_id ?? message.metadata.message_id;
       if (!id || this.seen.has(id)) return;
       this.seen.add(id); if (this.seen.size > 5000) this.seen.delete(this.seen.values().next().value);
-      this.emit('chat', { userId: chat.chatter_user_id, name: chat.chatter_user_name || chat.chatter_user_login, channelTeam: channel.team, text: chat.message.text, channelId: channel.id });
+      this.emit('chat', { id, isCheer: Boolean(chat.cheer), userId: chat.chatter_user_id, name: chat.chatter_user_name || chat.chatter_user_login, channelTeam: channel.team, text: chat.message.text, channelId: channel.id });
+    } else if (type === 'notification') {
+      const kind = message.metadata.subscription_type, event = message.payload.event;
+      const channel = this.channels.find(channel => channel.id === event.broadcaster_user_id);
+      const id = message.metadata.message_id;
+      if (!channel || !id || this.seen.has(id)) return;
+      this.seen.add(id); if (this.seen.size > 5000) this.seen.delete(this.seen.values().next().value);
+      if (this.supportOnly && ['channel.cheer', 'channel.subscription.gift'].includes(kind)) this.emit('activity', {
+        id, userId: event.is_anonymous ? null : event.user_id, channelTeam: channel.team,
+        kind: kind === 'channel.cheer' ? 'cheer' : 'gift', units: kind === 'channel.cheer' ? Math.ceil(event.bits / 100) : event.total,
+        text: kind === 'channel.cheer' ? (event.message || 'Cheer!') : `${Math.min(9999, event.total)} gift subs!`,
+      });
+      if (this.moderationEvents && kind.startsWith('channel.chat.')) this.emit('moderation', { channelTeam: channel.team });
     }
   }
   fail(error, epoch) {

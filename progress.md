@@ -1,5 +1,11 @@
 # ChatCrossfire / 弹幕交火 — 项目进度
 
+> 新克隆协作审计（2026-10-31，Asia/Singapore）：最新状态见
+> [docs/STATUS.md](docs/STATUS.md)，接手说明见 [docs/HANDOFF.md](docs/HANDOFF.md)，
+> 后续计划见 [docs/TASKS.md](docs/TASKS.md)。本文件下方保留历史开发记录；
+> “当前运行”、临时域名、凭证和 artifacts 是原环境的记录，不代表本次克隆已具备。
+> 本次本地复核 84/84 测试通过，但缺少 .env 和真实平台验收证据。
+
 最后更新：2026-10-30（北京时间）
 
 ## 项目目标

@@ -98,3 +98,31 @@ test('stopping while channel lookup is in flight cannot create a late connection
   bridge.stop(); finishLookup(); await pending;
   assert.equal(FakeSocket.instances.length, before); assert.equal(bridge.status.state, 'disabled');
 });
+
+test('optional broadcaster support subscriptions are scoped, deduped and anonymous gifts stay anonymous', async t => {
+  const calls = [], events = [];
+  const bridge = new TwitchBridge({ token: 'syntheticSupportToken', supportOnly: true, WebSocketImpl: FakeSocket, fetchImpl: async (url, options) => {
+    calls.push({ url, options });
+    return { ok: true, json: async () => url.includes('/validate') ? { user_id: 'channel-a', client_id: 'app', login: 'coral', scopes: ['bits:read', 'channel:read:subscriptions'] } : url.includes('/helix/users?') ? { data: [{ id: 'channel-a', login: 'coral' }] } : { data: [] } };
+  } });
+  t.after(() => bridge.stop(false)); bridge.on('activity', event => events.push(event));
+  await bridge.start({ a: 'coral' }); const socket = FakeSocket.instances.at(-1); socket.sendEvent(welcome('support')); await nextTurn();
+  const subscriptions = calls.filter(call => call.url.endsWith('/subscriptions')).map(call => JSON.parse(call.options.body));
+  assert.deepEqual(subscriptions.map(sub => sub.type), ['channel.cheer', 'channel.subscription.gift']);
+  assert.ok(subscriptions.every(sub => !('user_id' in sub.condition)));
+  const gift = { metadata: { message_type: 'notification', subscription_type: 'channel.subscription.gift', message_id: 'gift-id' }, payload: { event: { broadcaster_user_id: 'channel-a', user_id: 'ignore-me', is_anonymous: true, total: 10 } } };
+  socket.sendEvent(gift); socket.sendEvent(gift); await nextTurn();
+  assert.equal(events.length, 1); assert.equal(events[0].userId, null); assert.equal(events[0].units, 10);
+});
+
+test('a support token cannot subscribe to another broadcaster or manufacture paid activity there', async t => {
+  let subscribed = 0;
+  const bridge = new TwitchBridge({ token: 'syntheticWrongOwner', supportOnly: true, WebSocketImpl: FakeSocket, retryBaseMs: 60000, fetchImpl: async url => {
+    if (url.endsWith('/subscriptions')) subscribed++;
+    return { ok: true, json: async () => url.includes('/validate') ? { user_id: 'other-owner', client_id: 'app', login: 'other', scopes: ['bits:read'] } : { data: [{ id: 'channel-a', login: 'coral' }] } };
+  } });
+  t.after(() => bridge.stop(false)); await bridge.start({ a: 'coral' });
+  FakeSocket.instances.at(-1).sendEvent(welcome('wrong-owner')); await nextTurn();
+  assert.equal(subscribed, 0); assert.equal(bridge.status.state, 'reconnecting');
+  assert.match(bridge.status.message, /must belong/);
+});
