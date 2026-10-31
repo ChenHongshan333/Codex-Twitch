@@ -15,7 +15,7 @@ Use the [agent map](AGENT_MAP.md) for task-to-code/test routing and
 | 3. Real browser validation | P0 | Frontend lane | Local sandbox; Hosted Test for final platform checks | Local portion ready |
 | 4. Native demo + English delivery docs | P0 | Frontend/demo lane | Product/contract; real results before final recording | Drafting ready |
 | 5. Real two-channel acceptance + release evidence | P0 | Integrator + account owner | Tasks 2–4; CI before release | Waiting |
-| OBS physical danmaku prototype + battle-room UI | P0 user scope | Current session, integrator/rules/frontend | [Implementation plan](superpowers/plans/2026-10-31-dodge-mode.md), [design review](design/2026-10-31-dodge-ui-review.md) | Fresh local smoke: 103 tests + Chrome + synthetic camera; physical/live/remote follow-up pending |
+| OBS physical danmaku prototype + battle-room UI | P0 user scope | Current session, integrator/rules/frontend | [Implementation plan](superpowers/plans/2026-10-31-dodge-mode.md), [design review](design/2026-10-31-dodge-ui-review.md) | Fresh full suite: 111 tests, including eight added dodge unit cases; prior Chrome/synthetic-camera smoke passed; physical/live/remote follow-up pending |
 | Real Twitch proof for chosen dodge delivery | P0 submission | Account owner + integrator, people not yet assigned | Authorized channels/tokens; explicit broadcast setup | Required: [readiness checklist](hackathon-readiness.md); simulator does not complete this task |
 
 Latest scope steering: [physical / VTuber danmaku](design/physical-danmaku-discussion.md)

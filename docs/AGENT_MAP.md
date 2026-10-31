@@ -5,6 +5,10 @@ not proof that code stayed unchanged. Start with [AGENTS.md](../AGENTS.md) and
 the current part of [handoff](HANDOFF.md); earlier handoff sections are history.
 Dodge controller/test pointers were refreshed with UI commit `e860205`; the
 runtime graph and backend contracts remain unchanged by that frontend update.
+Dodge engine test coverage was expanded from base `13b0aa4`: controlled marker
+movement, pause/cooldown boundaries, audience windows/recovery, interrupted lead,
+knockout/reset and snapshot isolation. The existing engine test pointer applies;
+no runtime edge or contract changed.
 
 ## Read according to the task
 

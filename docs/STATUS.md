@@ -2,6 +2,13 @@
 
 ## Latest implementation update — 2026-10-31
 
+Unit-test follow-up from `13b0aa4`: eight new deterministic dodge rule tests;
+focused dodge suites **25/25**, full suite **111/111**, syntax and whitespace
+checks pass. Covers movement/collision, pause/cooldowns, normalization, audience
+recovery, barrage timing, knockout/reset and snapshot isolation. No runtime/API
+change. User-authorized feature-branch push pending; Google mirror pending access.
+Browser/live acceptance status below is unchanged by these unit tests.
+
 Fresh smoke/UI follow-up from `8c7425c`: redesigned local dodge controller using
 Shiro fix/re-review and Playwright, with actual one-click rehearsal and safer
 readiness/disconnect controls. Syntax and **103/103 tests** pass; fresh Chrome

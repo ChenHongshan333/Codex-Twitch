@@ -149,6 +149,36 @@ Google mirror remains pending connector availability.
 
 ## Verification
 
+### Additional unit tests and authorized branch publication
+
+User requested more unit tests followed by a push on the existing branch.
+Started clean at `13b0aa4c492ce0b4f1b627090cd0f3744a2886cc` on
+`codex/integrator-danmaku-dodge`; applied navigation and records skills.
+Added eight deterministic engine cases using injected time/randomness and a
+movable-marker fixture: warning/locked trajectory dodge, swept marker crossing,
+paused shared cooldown, frozen/smoothed normalization, offline fractional-credit
+removal, interrupted sustained lead, knockout/reset isolation and detached
+snapshots. No runtime/UI, dependency, credential or API contract changes.
+
+Initial focused run: 17/18; the new dodge test expected an offscreen projectile
+to be culled before it reached the configured margin. Extended simulated travel
+time and reran; this was a test expectation correction, not a production bug.
+
+| Command/check | Result | Evidence class/provenance |
+| --- | --- | --- |
+| `node --test test/danmaku.test.mjs test/dodge-ui.test.mjs test/dodge-http.test.mjs` | PASS, 25 tests | Fresh local synthetic unit/HTTP/jsdom, this follow-up |
+| `npm run check` | PASS | Fresh JavaScript syntax, this follow-up |
+| `npm test` | PASS, 111 tests, no failures/skips | Fresh automated synthetic suite, this follow-up |
+| `git diff --check` | PASS | Fresh whitespace check, this follow-up |
+
+Earlier real-browser smoke remains attributed to the UI section below; these
+tests do not establish real Twitch, physical webcam/OBS or remote acceptance.
+Commit/push authorized by this user request, pending publication step. No merge
+or deployment. Google mirror pending: tool discovery found no Google Docs writer;
+document control returned no connected sessions. Local record/index/handoff are
+updated. Next action: account owner/integrator arranges actual Twitch/OBS proof;
+mirror this summary to the existing Records tab when access is restored.
+
 ### Fresh smoke test, UI redesign and Codex-use rule
 
 Base `8c7425c`, same feature branch, initially clean. User asked for a smoke test,

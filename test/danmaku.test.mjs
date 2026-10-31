@@ -5,10 +5,12 @@ import { DanmakuEngine, sweptHit } from '../src/danmaku.mjs';
 function rig(config = {}) {
   let time = 0;
   const game = new DanmakuEngine({ now: () => time, random: () => .5, config });
-  const markers = () => { for (const side of ['a', 'b']) game.marker(side, { x: 480, y: 270 }); };
+  const points = { a: { x: 480, y: 270 }, b: { x: 480, y: 270 } };
+  const markers = () => { for (const side of ['a', 'b']) game.marker(side, points[side]); };
   game.audience({ a: 100, b: 100 }, 'synthetic'); markers(); game.start();
   return { game, advance(ms) { for (let left = ms; left > 0;) { const dt = Math.min(50, left); time += dt; markers(); game.tick(); left -= dt; } },
-    jump(ms) { time += ms; game.tick(); }, markers };
+    jump(ms) { time += ms; game.tick(); }, markers,
+    move(side, point) { points[side] = point; game.marker(side, point); } };
 }
 const chat = (userId, channelTeam = 'a', extra = {}) => ({ id: `msg-${userId}`, userId, channelTeam, text: 'hello', kind: 'chat', ...extra });
 
@@ -101,4 +103,126 @@ test('deletion clears queued/in-flight/replayed text without undoing past hits',
   game.moderate(); const state = game.snapshot();
   assert.equal(state.health.b, health); assert.equal(state.bullets.length, 0);
   assert.deepEqual(state.pending, { a: 0, b: 0 }); assert.equal(state.pressure.barrage, null);
+});
+
+test('warnings hold shots still and moving away dodges without a homing correction', () => {
+  const { game, advance, move } = rig();
+  game.activity(chat('aim')); advance(20);
+  const announced = game.snapshot().bullets[0];
+  advance(799);
+  const warning = game.snapshot();
+  assert.equal(warning.bullets[0].x, announced.x);
+  assert.equal(warning.health.b, 5);
+  move('b', { x: 480, y: 80 }); advance(1000);
+  const flying = game.snapshot().bullets[0];
+  assert.ok(flying.x > announced.x);
+  assert.equal(flying.vx, announced.vx); assert.equal(flying.vy, announced.vy);
+  assert.equal(flying.y, announced.y);
+  advance(4000);
+  assert.equal(game.snapshot().health.b, 5);
+  assert.equal(game.snapshot().bullets.length, 0);
+});
+
+test('a marker crossing a projectile between samples is hit even when both endpoints miss', () => {
+  const { game, advance, move } = rig();
+  game.activity(chat('crossing')); advance(20);
+  move('b', { x: 480, y: 100 }); advance(2400);
+  const before = game.snapshot();
+  assert.equal(before.health.b, 5);
+  assert.ok(Math.abs(before.bullets[0].y - before.markers.b.y) > 28);
+  move('b', { x: 480, y: 440 }); advance(50);
+  const after = game.snapshot();
+  assert.ok(Math.abs(before.bullets[0].y - after.markers.b.y) > 28);
+  assert.equal(after.health.b, 4);
+  assert.equal(after.bullets.length, 0);
+  assert.equal(after.events.filter(event => event.type === 'hit').length, 1);
+});
+
+test('operator pause freezes projectiles and shared cooldown until gameplay resumes', () => {
+  const { game, advance, jump, markers } = rig();
+  game.activity(chat('paused-viewer')); advance(100); game.pause();
+  const before = game.snapshot(); jump(10000);
+  assert.equal(game.snapshot().elapsedMs, before.elapsedMs);
+  assert.deepEqual(game.snapshot().bullets, before.bullets);
+  assert.equal(game.activity(chat('paused-viewer', 'b', { id: 'while-paused' })).ok, false);
+  assert.throws(() => game.resume(), /Recover both markers/);
+  markers(); game.resume(); advance(1899);
+  assert.equal(game.activity(chat('paused-viewer', 'b', { id: 'too-soon' })).ok, false);
+  advance(1);
+  const admitted = game.activity(chat('paused-viewer', 'b', { id: 'cooldown-end' }));
+  assert.equal(admitted.ok, true); assert.equal(admitted.team, 'a');
+  assert.equal(game.snapshot().elapsedMs, 2000);
+});
+
+test('audience updates are smoothed but weighting stays frozen until the next window', () => {
+  const { game, advance } = rig();
+  game.audience({ a: 1000, b: 100 }, 'twitch', { reset: true });
+  assert.equal(game.activity(chat('first')).normalized, 1 / 1000);
+  game.audience({ a: 2000, b: 100 }, 'twitch');
+  assert.equal(game.snapshot().pressure.audience.a.value, 1300);
+  assert.equal(game.activity(chat('same-window')).normalized, 1 / 1000);
+  advance(8000);
+  const next = game.snapshot().pressure;
+  assert.equal(next.denominator.a, 1300);
+  assert.equal(next.previous.a, 2 / 1000); assert.equal(next.current.a, 0);
+  assert.equal(game.activity(chat('next-window')).normalized, 1 / 1300);
+});
+
+test('an offline stream discards fractional shot credit before audience recovery', () => {
+  const { game } = rig();
+  game.audience({ a: 1000, b: 100 }, 'twitch', { reset: true });
+  for (let i = 0; i < 9; i++) game.activity(chat(`before-offline-${i}`));
+  assert.equal(game.snapshot().pending.a, 0);
+  game.audience({ a: 1000, b: 0 }, 'twitch');
+  assert.equal(game.snapshot().pressure.enabled, false);
+  game.audience({ a: 1000, b: 100 }, 'twitch', { reset: true });
+  game.activity(chat('recovered'));
+  assert.equal(game.snapshot().pending.a, 0);
+  for (let i = 0; i < 9; i++) game.activity(chat(`after-recovery-${i}`));
+  assert.equal(game.snapshot().pending.a, 1);
+});
+
+test('tying the pressure resets the sustained-lead clock before a barrage can fire', () => {
+  const { game, advance } = rig({ windowMs: 20000 });
+  for (let i = 0; i < 3; i++) game.activity(chat(`early-a-${i}`));
+  advance(4000);
+  for (let i = 0; i < 3; i++) game.activity(chat(`tie-b-${i}`, 'b'));
+  for (let i = 0; i < 3; i++) game.activity(chat(`new-a-${i}`));
+  advance(4999);
+  assert.equal(game.snapshot().pressure.barrage, null);
+  advance(1);
+  assert.equal(game.snapshot().pressure.barrage, 'a');
+  assert.equal(game.snapshot().events.filter(event => event.type === 'barrage').length, 1);
+});
+
+test('a knockout settles before the deadline and reset isolates the next round', () => {
+  const { game, advance, markers } = rig({ health: 1 });
+  game.activity(chat('knockout')); advance(3000);
+  const settled = game.snapshot();
+  assert.equal(settled.phase, 'finished'); assert.equal(settled.result.winner, 'a');
+  assert.deepEqual(settled.result.health, { a: 1, b: 0 });
+  assert.ok(settled.elapsedMs < settled.config.durationMs);
+  assert.equal(game.activity(chat('after-finish')).ok, false);
+  advance(1000); assert.equal(game.snapshot().elapsedMs, settled.elapsedMs);
+  assert.throws(() => game.start(), /Reset before starting/);
+  game.reset();
+  const lobby = game.snapshot();
+  assert.notEqual(lobby.id, settled.id); assert.equal(lobby.phase, 'lobby');
+  assert.equal(lobby.result, null); assert.deepEqual(lobby.health, { a: 1, b: 1 });
+  assert.deepEqual(lobby.shots, { a: 0, b: 0 }); assert.equal(lobby.bullets.length, 0);
+  game.audience({ a: 100, b: 100 }, 'synthetic'); markers(); game.start();
+  assert.equal(game.activity(chat('knockout')).ok, true);
+});
+
+test('mutating a snapshot cannot alter authoritative state or subsequent collisions', () => {
+  const { game, advance } = rig();
+  game.activity(chat('snapshot')); advance(100);
+  const snapshot = game.snapshot(), expected = structuredClone(snapshot);
+  snapshot.config.radius = 500;
+  snapshot.health.b = 0; snapshot.markers.b.y = 20;
+  snapshot.bullets[0].vy = 1000; snapshot.bullets[0].text = 'changed';
+  snapshot.pressure.audience.a.value = 1; snapshot.pressure.denominator.a = 1;
+  snapshot.events[0].type = 'changed'; snapshot.events.push({ type: 'hit' });
+  assert.deepEqual(game.snapshot(), expected);
+  advance(2900); assert.equal(game.snapshot().health.b, 4);
 });

@@ -5,6 +5,23 @@ Updated 2026-10-31 (Asia/Singapore; audit started October 30). Read this first, 
 
 ## What this session did
 
+### Additional dodge unit tests
+
+User requested unit tests and a push to the current feature branch. From clean
+base `13b0aa4` on `codex/integrator-danmaku-dodge`, added eight controlled-clock
+cases in `test/danmaku.test.mjs`: warning/locked aim and dodging, swept marker
+crossing, pause/cooldown boundaries, frozen/smoothed audience weighting, offline
+credit removal, interrupted barrage lead, knockout/reset isolation and detached
+snapshots. Runtime code, dependencies and API contracts are unchanged.
+
+Fresh focused dodge suites: **25/25**; full `npm test`: **111/111**;
+`npm run check` and `git diff --check` pass. Browser evidence below belongs to
+the previous UI work; no new real Twitch/physical OBS acceptance was performed.
+Publication is authorized and pending the commit/push step. Google Records mirror
+remains pending: no Google writer or connected document session is available.
+Next: account owner/integrator completes real two-channel Twitch/OBS acceptance
+and mirrors the local session record when Google access returns.
+
 ### Fresh smoke test and battle-room UI
 
 User requested smoke testing, rejected the UI and asked about Codex exclusivity.
