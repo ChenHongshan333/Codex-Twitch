@@ -6,6 +6,14 @@ viewer-normalized chat attacks and defection. Start with keyboard rehearsal;
 see [setup and limitations](docs/dodge-runbook.md). Live Twitch and physical OBS
 acceptance remain pending; this is separate from the native PK mode below.
 
+**Hackathon delivery clarification (2026-10-31): publishing a Twitch Extension
+is optional.** Our next acceptance milestone is the app connected to real Twitch
+chat/EventSub/API activity, rendered through OBS, followed by a demo showing the
+project working on Twitch and development with Codex. The local simulator is
+for development and is not that evidence. Native Extension PK remains an optional
+existing route. See the [peer readiness checklist](docs/hackathon-readiness.md)
+and [official FAQ](https://twitchcon-codex.devpost.com/resources).
+
 ## 协作与最新审计 / Collaboration
 
 Fresh-clone audit and next steps (2026-10-31): [Current handoff](docs/HANDOFF.md),
@@ -24,7 +32,7 @@ debug match; they do not show native Extension PK rooms.
 
 **Your chat. Their problem.** Twitch 原生 Extension：两位主播在 Twitch 内邀请、接受和准备，后台自动开赛、管理攻击与叛变、结束并结算社区阵营战。无需第三位主持人。
 
-## 当前推荐入口：原生 Extension
+## 原生 Extension 入口（可选路线）
 
 ```powershell
 # 正常服务，默认 3000；首页说明 Twitch 接入与本地测试

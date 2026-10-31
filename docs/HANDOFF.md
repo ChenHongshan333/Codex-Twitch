@@ -5,6 +5,44 @@ Updated 2026-10-31 (Asia/Singapore; audit started October 30). Read this first, 
 
 ## What this session did
 
+### Peer-facing delivery clarification
+
+User accepted the explanation that Twitch Extension publication is optional and
+asked to record it for peers. Made it prominent in README, AGENTS.md, product,
+decision register, tasks and [readiness](hackathon-readiness.md). Current next
+milestone is actual Twitch chat/EventSub/API → app → OBS evidence and the Twitch/
+Codex demo video. Native PK is preserved as an optional path. Final judge access,
+accounts/live acceptance and submission materials are still pending; the
+simulator does not complete those requirements. Preparing a documentation-only
+update on `codex/integrator-danmaku-dodge` from `addc634` for peer access. No app
+code, runtime, credentials, broadcast or deployment changed. Google mirror pending.
+
+### Hackathon requirement recheck
+
+User correctly emphasized the Devpost requirements after account-free testing
+guidance. Reopened overview/rules/FAQ and linked Twitch developer/chatbot sources
+on 2026-10-31. Actual Twitch operation and corresponding demo footage remain
+required; local simulation is only a development stage. Added
+[readiness checklist](hackathon-readiness.md) and a P0 real-Twitch-proof task.
+Recommend chat/OBS evidence path given the unreviewed-Extension judge restriction;
+no final route selection, account creation, broadcast, token generation or
+deployment occurred. Need an account owner to arrange authorized test channels
+and actual viewer counts/chat/overlay acceptance. Published source code is not
+proof this has passed. Current checklist/docs are local and uncommitted; Google
+mirror pending. Code/tests unchanged; runtime results remain inherited.
+
+### Account/testing clarification
+
+User reports having no Twitch account. Local simulation/camera/OBS preview needs
+none; skip user-token authorization for now. Real user-token consent needs a
+Twitch login, which the user or a teammate must supply on their own authorized
+setup. Token entry does not start broadcasting; the app has no video ingest
+publisher, and camera frames stay local. Actual viewer-normalized acceptance
+needs live channels, which can broadcast test cards rather than people. CLI
+mock API/EventSub servers are an additional future test option, not already
+wired into this bridge. No credentials read, no `.env` change, and no broadcast
+started. This clarification is documented locally; no new push in this turn.
+
 ### CLI installation and documentation publication follow-up
 
 User explicitly requested the missing agent-map/docs be pushed, and Twitch CLI

@@ -149,6 +149,62 @@ Google mirror remains pending connector availability.
 
 ## Verification
 
+### Peer-facing optional Extension clarification
+
+User accepted that Extension publication is optional and asked to record this in
+Markdown for peers. Updated README, AGENTS.md, product, decision register, task
+queue, readiness checklist and handoff/status. Accepted next evidence milestone:
+real Twitch chat/EventSub/API → app → OBS, plus Twitch/Codex demonstration footage.
+Kept native PK as an optional existing route; live acceptance, accounts, judging
+access and submission materials remain open. Included preceding account/testing
+clarifications in this topical docs update, preserving existing local edits.
+
+Documentation-only work from `addc634` on `codex/integrator-danmaku-dodge`;
+preparing commit/push for peer access under the user's prior request to publish
+related collaboration docs. No source code, API, credentials, stream, deployment
+or submission action changed. Prior 101 tests remain attributed, not rerun for
+prose. Google Records mirror remains pending because connector access is absent.
+Validation passed: 166 local links/whitespace checks in 16 documents and
+`git diff --check`; `.env` remains ignored. No runtime tests needed for prose.
+
+### Hackathon Twitch requirement recheck
+
+Reopened the user-linked Devpost overview, official rules and FAQ, Twitch
+developer homepage and Example Chatbot guide on 2026-10-31. Confirmed actual
+Twitch connection/functionality, repository/setup/judge access, feature/Codex-use
+description, main Codex session, Twitch + Codex video and English materials are
+submission concerns. Extension optional; FAQ warns of 5–14-day review and no
+judge installation of unreviewed versions. Added a local readiness matrix and
+P0 real-Twitch-proof task, linked from startup map/configuration. Clarified the
+prior account-free guidance only concerned development, not final acceptance.
+
+Recommended using the implemented chat/OBS route for a real two-channel
+evidence run, with authorized Twitch accounts and test-card broadcasts if faces
+are unwanted. These are our acceptance recommendations, not assertions that the
+rules require every developer to have a Twitch account or a remote deployment.
+No accounts/tokens/streams/deployment/submission changed; no new runtime tests
+were run. The existing 101-test/browser evidence remains synthetic/local.
+Current checklist and clarification docs are local/uncommitted; no new push.
+Google mirror pending. Deadline conversion discrepancy between page PST header
+and FAQ UTC text remains; use countdown and earlier internal target.
+Documentation validation passed: 162 local links and whitespace in 16 documents,
+plus `git diff --check`. No live integration result is implied by these checks.
+
+### Account-free testing and broadcast clarification
+
+User reports no Twitch account and asks whether authorization broadcasts them.
+Reviewed the local tracker and Twitch/dodge input routes: token usage reads
+events/counts, tracker sends coordinates only, and no video publishing path
+exists. Rechecked official Twitch user-token, mock API, mock WebSocket and video
+broadcast guides. Explained local simulation needs no Twitch account or real
+stream, real OAuth consent needs an account, and real viewer-count acceptance
+can use live test-card channels without showing people. CLI mock tools are not
+currently wired to this project's hardcoded live endpoints. No secret/config
+values were read; no `.env` edit, account creation, token generation or broadcast
+action occurred. Clarification docs/record saved locally; no new commit/push.
+Google mirror remains pending connector access. These are code/source-review
+and documentation checks, not new runtime/live Twitch acceptance.
+
 ### Twitch CLI install and requested knowledge-doc publication
 
 User asked to push the agent-map/related docs and install Twitch CLI, leaving

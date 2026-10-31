@@ -24,6 +24,26 @@ and `src/twitch-directory.mjs`, not an additional Twitch platform rule.
 
 ## Start locally without any credentials
 
+No Twitch account is needed for local simulation or local camera/OBS preview.
+Leave `DODGE_LIVE=0` and skip CLI authorization for this stage. A real User Access
+Token requires a Twitch account to sign in and consent; app credentials alone
+are not a user account. A teammate can perform the live-channel acceptance work
+on their own authorized setup while others develop in simulation.
+
+This is development guidance. The hackathon still requires an actual Twitch
+connection and footage of the project functioning on Twitch. Account-free
+simulation does not finish that requirement; use the
+[readiness checklist](hackathon-readiness.md) before claiming submission readiness.
+
+Giving this backend an API token does not start a video broadcast. It receives
+chat/support events and viewer counts; the tracker keeps video frames in the
+browser and sends only coordinates. Publishing video is a separate encoder/OBS
+action. For real-stream testing, use a test card/animation instead of a webcam
+if desired; normal viewer-count acceptance still needs live channels. Twitch's
+[broadcast guide](https://dev.twitch.tv/docs/video-broadcast/) describes the
+separate video ingest path. CLI mock servers exist, but the current live bridge
+is not configured to use their endpoints; built-in synthetic rehearsal works now.
+
 For the current OBS dodge prototype, `npm run dodge` uses synthetic input with
 `DODGE_LIVE=0`. No token, Extension credentials or public origin is needed. The
 local `.env` was created from `.env.example` on 2026-10-31, with no credentials

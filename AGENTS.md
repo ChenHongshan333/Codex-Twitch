@@ -37,6 +37,10 @@ mirror; do not claim success. Record naming `[NAME]_[CONTENT]` is a team convent
   then the backend starts and settles a community battle automatically. No
   third host is required. The user also authorized a separate OBS dodge prototype;
   its health, marker and audience rules are in `docs/dodge-runbook.md`.
+- The current acceptance milestone is real Twitch chat/EventSub/API plus OBS
+  demonstration. Publishing a Twitch Extension is optional, not a submission
+  prerequisite. Keep native PK intact; see `docs/hackathon-readiness.md` for the
+  actual Twitch/video/judge-access gaps. Simulation alone does not close them.
 - Keep participation free. Streamers choose the activity; this app does not
   control arbitrary games or judge artwork. Native scores count released volleys.
 - The backend owns identity, room membership, allegiance, cooldowns, timers, and

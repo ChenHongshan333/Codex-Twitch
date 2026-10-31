@@ -7,6 +7,13 @@ not imply that live Twitch acceptance has passed.
 
 ## Intended experience
 
+Submission-route clarification confirmed with the user on 2026-10-31:
+**publishing a native Twitch Extension is optional**. Next acceptance work is
+real Twitch chat/EventSub/API input driving the OBS dodge experience, then
+recording working Twitch interaction and Codex development. Existing native PK
+remains available as a separate optional route; it is not being removed or
+declared reviewed. See [hackathon readiness](hackathon-readiness.md).
+
 Latest design discussion (2026-10-31): the user now proposes an **OBS physical /
 VTuber dodge mode** with equal arenas, message/gift danmaku, and automatic
 tracked-marker collisions. This supersedes the earlier visualization-only scope
@@ -51,7 +58,7 @@ Either streamer can pause/resume or leave. No third host is needed.
 The legacy debug mode has manual scoring and a 300-second default round. It is
 useful for diagnosis but does not define native scoring or native room state.
 
-## Release acceptance
+## Native Extension acceptance (if choosing this route)
 
 Two real Twitch channels must use one HTTPS backend and the same packaged
 Extension version. Both streamers and test viewers must be allowlisted and the
@@ -69,7 +76,8 @@ English setup/testing instructions and an accurate demo must accompany delivery.
 Native PK remains implemented; the user subsequently authorized building the
 separate physical OBS dodge mode. The local dodge slice is implemented, while
 remote coordination, VTuber adapters and live/hardware acceptance remain open.
-The final submission delivery route is still a judge-access decision. Keep the
+The chat/OBS route is accepted for the next evidence run; final judge access and
+delivery setup remain open. Keep the
 host/debug flow for diagnosis. Other speculative mechanics are candidates,
 not implied requirements. See the consolidated [decision register](DECISIONS.md).
 

@@ -29,6 +29,7 @@ flowchart TD
 | Accounts, tokens, Extension setup | [Configuration](configuration-guide.md), [Extension setup](twitch-extension-setup.md) | App secret, user token and Extension secret are interchangeable |
 | Collaboration and task assignment | [Tasks](TASKS.md), [AGENTS.md](../AGENTS.md) | Lane names launch agents or grant file ownership automatically |
 | Actual completion/evidence | [Status](STATUS.md), latest [record](../records/README.md) | Passing mocks establishes real Twitch/OBS acceptance |
+| Hackathon Twitch proof and submission gaps | [Readiness](hackathon-readiness.md) | Local simulation alone establishes a submission-ready Twitch connection |
 | Hackathon sources/ideation provenance | [Redacted sources](../records/sources-2026-10-31.md) | Setup credentials can be copied or published |
 
 ## Four runtime boundaries

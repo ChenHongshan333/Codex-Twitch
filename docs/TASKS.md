@@ -9,13 +9,14 @@ Use the [agent map](AGENT_MAP.md) for task-to-code/test routing and
 
 | Task | Priority | Proposed owner | Depends on | State |
 | --- | --- | --- | --- | --- |
-| 0. Resolve judge access/delivery route | P0 | Representative + integrator | Extension review status and official FAQ restriction | Decision needed |
+| 0. Resolve judge access/delivery setup | P0 | Representative + integrator | Real Twitch accounts and a reproducible judging setup | Chat/OBS accepted for next evidence run; final judge access still open; Extension publication optional |
 | 1. CI + packaging regression coverage | P0 | Integrator | Current passing baseline | Ready |
 | 2. Twitch accounts + HTTPS/Hosted Test | P0 | Account/deployment owner + integrator | Private setup values and two channels | Setup blocked |
 | 3. Real browser validation | P0 | Frontend lane | Local sandbox; Hosted Test for final platform checks | Local portion ready |
 | 4. Native demo + English delivery docs | P0 | Frontend/demo lane | Product/contract; real results before final recording | Drafting ready |
 | 5. Real two-channel acceptance + release evidence | P0 | Integrator + account owner | Tasks 2–4; CI before release | Waiting |
 | OBS physical danmaku prototype | P0 user scope | Current session, integrator/rules/frontend | [Implementation plan](superpowers/plans/2026-10-31-dodge-mode.md) | Local slice verified: 101 tests + Chrome + synthetic camera; physical/live/remote follow-up pending |
+| Real Twitch proof for chosen dodge delivery | P0 submission | Account owner + integrator, people not yet assigned | Authorized channels/tokens; explicit broadcast setup | Required: [readiness checklist](hackathon-readiness.md); simulator does not complete this task |
 
 Latest scope steering: [physical / VTuber danmaku](design/physical-danmaku-discussion.md)
 now includes automatic tracked-marker hits and viewer normalization. The user
@@ -23,10 +24,11 @@ authorized starting implementation: see [runbook](dodge-runbook.md) for the
 separate local mode. Remote coordination, VTuber adapters, real Twitch/OBS
 acceptance and competitive tuning remain follow-ups.
 
-The official FAQ says judges cannot install an unreviewed Extension. Task 0
-establishes whether an approved version exists or a different accessible route
-is required. Preserve native behavior until that product/delivery decision is
-explicit. Record the decision in both `records/` and the Google Records tab.
+The official FAQ says judges cannot install an unreviewed Extension. The user
+accepted that publication is optional and that our next milestone is actual
+Twitch chat/API/EventSub driving OBS. Task 0 finalizes judging access for that
+route; native PK remains intact as a separate optional path. Record the decision
+in both `records/` and the Google Records tab when access is available.
 
 ## File ownership
 
