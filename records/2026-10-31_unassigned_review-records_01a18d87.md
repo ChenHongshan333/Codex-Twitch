@@ -9,7 +9,7 @@
 - Session label: `unassigned_review-records` (provisional; no chat rename performed)
 - Purpose: repository audit, planning, source review, configuration explanation, records skill, and now user-authorized OBS dodge implementation
 - Submission role: supporting audit plus actual new feature development; representative must still confirm the main submission session separately, including the peer's unidentified original implementation session
-- Repository: `codex/integrator-danmaku-dodge`, base `dd440d63a63616c28e7de50b080ea1e396bcdf9b`; implementation, prior documentation and records committed as `245cec9` and pushed to the matching origin branch
+- Repository: `codex/integrator-danmaku-dodge`, base `dd440d63a63616c28e7de50b080ea1e396bcdf9b`; implementation/records published through `b5c81e1`; newer agent knowledge docs/skill edits are local and uncommitted
 - Google mirror: earlier records synced and read back 2026-10-31 in document `1x_30AXx2-QcIlqXfVeT-18YsWaFR7mQIaJNL9Q7lmvk`, Records tab `t.v5dw10hrs0ha`; all four prior tab bodies unchanged. Latest design follow-up sync is pending because Google Drive tools are no longer available.
 
 ## Codex contribution and decisions
@@ -148,6 +148,69 @@ attribution and hit scoring remain open. No gameplay code or tests changed;
 Google mirror remains pending connector availability.
 
 ## Verification
+
+### Twitch CLI install and requested knowledge-doc publication
+
+User asked to push the agent-map/related docs and install Twitch CLI, leaving
+credential generation to them. Used official Twitch CLI Windows manual-download
+instructions and GitHub `twitchdev/twitch-cli` release `v1.1.24`. Downloaded the
+x64 ZIP and checksums, verified SHA-256
+`6053F3FAB02AA1349F25EFA550D14E11033C10C775787367CA4FD88D96B1CE70`, checked archive
+entry paths, and installed into `%LOCALAPPDATA%\Programs\TwitchCLI`. Added only
+that directory to existing user PATH, preserving other entries. Version returned
+`twitch-cli/1.1.24`; token help and persisted user PATH checks passed. No OAuth
+flow, key/token generation, credential input/read or `.env` edit occurred.
+Installer/download evidence is ignored under `artifacts/twitch-cli-install/`.
+
+Explained that a locally stored token is not device-bound; peers use their own
+tokens or synthetic simulation rather than receive the user's credential. Updated
+configuration docs with installed version, explicit executable path, private
+CLI config location and team credential guidance. Rechecked official auth/token
+references. Prepared publishing the accumulated knowledge docs/navigation skill
+on `codex/integrator-danmaku-dodge` from `b5c81e1`, with only docs/skill changes.
+Google record mirror remains pending connector availability.
+
+### Environment setup guidance follow-up
+
+Confirmed `.env` absent without reading any private values. Created it from the
+public template only, preserving all defaults and adding no credentials.
+`git check-ignore .env` confirmed it remains excluded. `Get-Command twitch`
+found no CLI on PATH. Read the dodge launcher/template and existing configuration
+guide; rechecked official Twitch CLI install and token command pages. Documented
+the minimum four live-dodge settings, optional broadcaster support tokens, and
+native Extension-only settings that can remain blank for local OBS mode. User
+must obtain a User Access Token privately; no OAuth flow or live credential/account
+change was performed. Existing simulation server was not restarted. These are
+configuration/document checks, not live Twitch acceptance. Google mirror pending
+connector availability; local follow-up docs remain uncommitted.
+
+### Agent knowledge and documentation completeness follow-up
+
+User asked whether ideas, guidelines, collaboration details and graph-like agent
+skills were documented. Audited the existing docs against this chat, redacted
+ideation source notes and current source entry points at `b5c81e1`. Added
+`docs/AGENT_MAP.md`: documentation and runtime graphs, task → symbol → test
+routing, narrow reading rules and a Git freshness check. Added
+`docs/DECISIONS.md` to distinguish confirmed choices, defaults, alternatives and
+unverified follow-up work. Added repository `chatcrossfire-navigation` skill
+with automatic discovery enabled, alongside the existing records skill.
+
+Updated AGENTS.md, README, ownership, current product scope and historical
+design/source wording so future agents do not mistake older native-only or
+visualization-only assumptions for current dodge scope. Corrected an overly
+broad source-normalization anti-manipulation claim. No source credential values
+were read/copied and no application code changed. Docs/skill changes are local,
+uncommitted and not pushed; earlier prototype publication at `b5c81e1` remains
+intact. Google mirror remains pending connector availability. Skill validation,
+local link/route-symbol review and whitespace checks are the appropriate checks;
+the earlier 101 application tests are inherited, not freshly rerun for prose.
+
+Verification: bundled `skill-creator/scripts/quick_validate.py` returned
+`Skill is valid!`; `node artifacts/check-agent-knowledge.mjs` passed 153 local
+links and whitespace in 14 knowledge/skill documents; `git diff --check` passed.
+Manually traced camera/mirroring, native readiness and support-input tasks through
+the map to their source/test boundaries. This is documentation/skill structure
+and routing review, not an independent agent-behavior or gameplay test.
 
 ### Remote publication request — 2026-10-31
 

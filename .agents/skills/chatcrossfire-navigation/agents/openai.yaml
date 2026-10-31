@@ -1,0 +1,6 @@
+interface:
+  display_name: "ChatCrossfire Navigation"
+  short_description: "Find project decisions, source owners and focused tests"
+  default_prompt: "Use $chatcrossfire-navigation to find the relevant decisions, runtime boundary, source files and tests for this ChatCrossfire task."
+policy:
+  allow_implicit_invocation: true

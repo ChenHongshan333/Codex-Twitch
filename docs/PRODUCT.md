@@ -66,14 +66,12 @@ English setup/testing instructions and an accurate demo must accompany delivery.
 
 ## Scope decisions and deferred ideas
 
-Continue the native Extension as the primary release route because that is the
-latest implemented direction. Keep the host/debug flow for local diagnosis.
-A chat/OBS-first release remains a possible explicit product pivot, with manual
-control and different acceptance criteria. A new bullet-hell game would add a
-separate interaction model and is deferred along with AI-generated challenges,
-paid mechanics, opponent-only voting, automatic external-game scoring, audience
-normalization, and multi-instance persistence. These are planning recommendations,
-not new user-approved feature commitments.
+Native PK remains implemented; the user subsequently authorized building the
+separate physical OBS dodge mode. The local dodge slice is implemented, while
+remote coordination, VTuber adapters and live/hardware acceptance remain open.
+The final submission delivery route is still a judge-access decision. Keep the
+host/debug flow for diagnosis. Other speculative mechanics are candidates,
+not implied requirements. See the consolidated [decision register](DECISIONS.md).
 
 ## Submission reference
 

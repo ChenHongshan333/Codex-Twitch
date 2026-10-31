@@ -12,6 +12,9 @@ Fresh-clone audit and next steps (2026-10-31): [Current handoff](docs/HANDOFF.md
 [verified status](docs/STATUS.md), [task queue and ownership](docs/TASKS.md),
 [product](docs/PRODUCT.md), [architecture](docs/ARCHITECTURE.md),
 [API contract](docs/API_CONTRACT.md). Coding agents start with [AGENTS.md](AGENTS.md).
+For selective reading, use the [agent knowledge map](docs/AGENT_MAP.md) and
+[idea/decision register](docs/DECISIONS.md). The map links each task to its
+owning code, dependent boundaries and verification, with a freshness check.
 Session evidence lives in [records/](records/README.md) and the shared Google Doc's
 Records tab. For credential meanings and first-time setup, see the
 [configuration guide](docs/configuration-guide.md).

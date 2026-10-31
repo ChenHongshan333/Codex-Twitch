@@ -24,6 +24,37 @@ and `src/twitch-directory.mjs`, not an additional Twitch platform rule.
 
 ## Start locally without any credentials
 
+For the current OBS dodge prototype, `npm run dodge` uses synthetic input with
+`DODGE_LIVE=0`. No token, Extension credentials or public origin is needed. The
+local `.env` was created from `.env.example` on 2026-10-31, with no credentials
+added; it is ignored by Git. Other clones must create their own file only if absent.
+
+For actual Twitch input in this mode, fill only these first:
+
+```dotenv
+TWITCH_OAUTH_TOKEN=your_user_access_token
+DODGE_CHANNEL_A=first_channel_login
+DODGE_CHANNEL_B=second_channel_login
+DODGE_LIVE=1
+```
+
+Use channel login names, without `@` or a Twitch URL. Keep `DODGE_PORT=3020`.
+Obtain a user token with `user:read:chat` through the private authorization steps
+below; Client ID/Client Secret alone are not that token. Both streams need to be
+live for the viewer-count-normalized attacks. Restart `npm run dodge` after edits;
+an already running process does not reload `.env`.
+
+`DODGE_SUPPORT_TOKEN_A`/`_B` are optional broadcaster-owned user tokens with
+`bits:read` and/or `channel:read:subscriptions`; leave blank for initial chat
+testing. Leave `TWITCH_EXTENSION_ID`, `TWITCH_EXTENSION_SECRET` and
+`PUBLIC_ORIGIN` unset for this local OBS mode. Those settings belong to native
+Extension/public-backend setup, not the minimum dodge setup. Full details:
+[dodge runbook](dodge-runbook.md). The app Client ID/secret are entered privately
+into the authorization tool; this backend does not read separate app credential
+variables from `.env`.
+
+The native four-role rehearsal also works without credentials:
+
 ```powershell
 npm ci
 npm run sandbox
@@ -35,8 +66,16 @@ The sandbox launcher fixes loopback and disables public origin for that process.
 
 ## Obtain the user token privately
 
-One documented route is the official [Twitch CLI](https://dev.twitch.tv/docs/cli/),
-which was not installed/on PATH when checked in this session.
+One documented route is the official [Twitch CLI](https://dev.twitch.tv/docs/cli/).
+Installed on this Windows machine on 2026-10-31: `twitch-cli/1.1.24`, from the
+official Windows x64 release, with its published SHA-256 checksum verified.
+It is in `%LOCALAPPDATA%\Programs\TwitchCLI`, added to the user PATH. Other
+teammates install their own copy. Open a new terminal for PATH changes; if the
+current app still has an older environment, use the explicit path:
+
+```powershell
+& "$env:LOCALAPPDATA\Programs\TwitchCLI\twitch.exe" version
+```
 
 1. Install the CLI using its official Windows/manual instructions. In your
    application's OAuth redirect settings include `http://localhost:3000`, as
@@ -63,6 +102,22 @@ the existing verifier once privately configured.
 
 Create `.env` from `.env.example` only when it is absent. Preserve an existing
 file. There is no need to add an unsupported app Client Secret variable.
+
+## Tokens and collaborating with teammates
+
+A user access token is tied to the authorizing Twitch account/application and
+its granted scopes. It is stored locally, but is not restricted to that computer:
+someone who copies it can use its granted access elsewhere. Treat access tokens,
+refresh tokens and Client Secrets like passwords, as the official
+[Twitch authentication guidance](https://dev.twitch.tv/docs/authentication/) says.
+
+Do not send your personal token, `.env` or CLI credential configuration to peers.
+Teammates can use credential-free simulation or obtain their own user tokens;
+each broadcaster authorizes their own support-event access. For a shared hosted
+backend, use deliberately managed server credentials/OAuth consent rather than
+passing personal tokens around. No token or key was generated during CLI install.
+The observed Windows CLI default config is
+`%APPDATA%\twitch-cli\.twitch-cli.env`; keep that file private as well.
 
 ## Other settings you can leave at defaults
 

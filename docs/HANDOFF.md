@@ -5,6 +5,50 @@ Updated 2026-10-31 (Asia/Singapore; audit started October 30). Read this first, 
 
 ## What this session did
 
+### CLI installation and documentation publication follow-up
+
+User explicitly requested the missing agent-map/docs be pushed, and Twitch CLI
+installed so they can enter credentials themselves. Installed official CLI
+`v1.1.24` under `%LOCALAPPDATA%\Programs\TwitchCLI`, verified the archive against
+the release SHA-256 checksum and added that directory to user PATH. `twitch
+version` returned `twitch-cli/1.1.24`; token help and persisted user PATH passed.
+No keys/tokens were generated, no CLI credentials configured/read, and `.env`
+was preserved. Open a new terminal, or use the explicit path in the configuration
+guide. Token setup belongs to the user; tokens are secrets, not device-bound.
+
+Preparing a docs-only commit/push on `codex/integrator-danmaku-dodge`, starting
+from `b5c81e1`. Includes map, decision register, navigation skill and related
+documentation fixes. Earlier notes saying those edits were local describe the
+prior handoff. Application code is unchanged; checks are documentation/skill
+validation plus CLI installation checks. Google mirror still pending.
+
+### Local environment preparation
+
+User asked what to fill in `.env`. It was absent; created a copy of
+`.env.example` without adding credentials or changing defaults. `git check-ignore
+.env` confirms exclusion. Existing secret values were not read or displayed.
+At that earlier check `twitch` CLI was not on PATH; it is now installed as above.
+Rechecked official CLI install/token documentation;
+see [configuration guide](configuration-guide.md) for minimum live-dodge settings
+and the separate native Extension requirements. Live OAuth consent/account setup
+has not been performed. Restart dodge after private edits; current process stays
+in synthetic mode until restarted with `DODGE_LIVE=1`. Google mirror pending.
+
+### Agent knowledge follow-up
+
+At `b5c81e1`, reviewed the documentation against this chat and source entry
+points. Added [agent map](AGENT_MAP.md) with documentation/runtime dependency
+graphs and task-to-symbol/test routing, plus [decisions](DECISIONS.md) consolidating
+confirmed ideas, engineering defaults, candidates and pending acceptance.
+Added the project `chatcrossfire-navigation` skill, linked through AGENTS.md;
+the existing records skill still owns session evidence/mirroring. Updated stale
+native-only scope language and marked earlier design/source notes as history.
+These follow-up docs/skill edits are local and not yet committed or pushed.
+No application code changed; the 101-test result below is inherited from the
+verified implementation/publication turn, not rerun for prose.
+Navigation skill validation passed; 153 local links/whitespace checks across
+14 knowledge documents and `git diff --check` passed. Google mirror still pending.
+
 ### Latest: implemented local OBS dodge mode
 
 Publication follow-up: user explicitly requested pushing to the configured

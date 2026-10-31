@@ -1,8 +1,8 @@
 # Physical / VTuber danmaku — design discussion
 
-2026-10-31. Status: user-described direction, with automatic tracked-marker hits
-confirmed through clarification. No implementation or final numerical rules yet.
-This supersedes the earlier visualization-only assumption for the new mode.
+2026-10-31. Historical discussion before implementation: automatic tracked-marker
+hits were confirmed, and numerical rules were still open. This superseded the
+earlier visualization-only assumption for the new mode.
 
 Follow-up: user authorized implementation. These notes preserve the design
 discussion; implemented first-pass defaults and evidence now live in the
@@ -21,11 +21,12 @@ discussion; implemented first-pass defaults and evidence now live in the
   each stream (interpreting the user's "streamers watching" as viewers), not
   follower counts, chat-connected users, or only players who joined the game.
 
-The earlier prototype only animates charges/volleys and changes allegiance. The
-repository has no camera tracker, avatar-position adapter, physical arena,
-projectile collision engine, or hit-derived result. These require new gameplay
-work, not merely integrating the Arena HUD CSS. Existing OBS routes use legacy
-state; they cannot silently become views of native PK rooms.
+At discussion time the prototype only animated charges/volleys and allegiance.
+Camera tracking, collision/health and a physical arena required new gameplay,
+not merely Arena HUD CSS; these now exist in the local dodge mode. A specific
+avatar-position adapter remains pending. Legacy OBS routes cannot silently
+become native-room views. The proposals below preserve the original reasoning;
+the current implemented defaults are in the runbook linked above.
 
 ## Proposed foundation (agent recommendations, not agreed constants)
 
@@ -88,8 +89,9 @@ be tested and chosen before implementation.
 
 For defection, propose normalizing an accepted event by its verified source
 stream's audience before routing its contribution to the viewer's current
-allegiance. This prevents visiting another channel from reweighting an identical
-attack using a smaller team's denominator. Team pressure can sum those normalized
+allegiance. Defection alone therefore does not change that event's denominator.
+Posting in another source chat can change weighting; this is not a complete
+anti-manipulation guarantee. Team pressure can sum those normalized
 contributions. This source-attribution detail is an agent recommendation; the
 user confirmed audience normalization, not this precise allocation formula.
 
@@ -122,7 +124,6 @@ them from allegiance-dependent input. These extensions require agreement/tests.
 
 ## Next design decision
 
-Audience normalization is selected. Settle pressure thresholds/weights,
-marker/input prototype and hit outcomes,
-followed by a reviewable mode design and implementation plan. Keep existing
-native/legacy gameplay intact while the replacement/new mode is being designed.
+The original next step was to settle rules and build a prototype. That local
+slice is now implemented; use the current handoff for live/physical/remote and
+VTuber follow-ups. Preserve native/legacy behavior while extending the new mode.

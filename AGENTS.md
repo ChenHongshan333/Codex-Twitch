@@ -7,6 +7,14 @@ Read `docs/HANDOFF.md`, `docs/STATUS.md`, `docs/PRODUCT.md`, and
 `docs/TASKS.md` links the current plan. Check `git status --short`, branch, and
 commit before changing files. Preserve other people's uncommitted work.
 
+Use [docs/AGENT_MAP.md](docs/AGENT_MAP.md) to select the runtime mode, source
+symbols, tests and relevant document sections. Apply the repository navigation
+skill at `.agents/skills/chatcrossfire-navigation/SKILL.md` for continuation,
+triage and handoff. [docs/DECISIONS.md](docs/DECISIONS.md) distinguishes user
+choices, engineering defaults, candidate ideas and pending work. Read relevant
+source and callers before editing; do not repeat a whole-repository audit by
+default. Check changes since the map's reviewed commit and refresh stale entries.
+
 The code and fresh verification establish current behavior. `progress.md` is
 historical evidence from another environment; its running processes, credentials,
 tunnel URL, and ignored artifacts do not transfer with a clone.
@@ -25,9 +33,10 @@ mirror; do not claim success. Record naming `[NAME]_[CONTENT]` is a team convent
 
 ## Product and invariants
 
-- The primary product is a native Twitch Extension: A invites B, B accepts, both
-  ready, then the backend starts and settles a community battle automatically.
-  No third host is required.
+- Preserve native Twitch Extension PK: A invites B, B accepts, both ready,
+  then the backend starts and settles a community battle automatically. No
+  third host is required. The user also authorized a separate OBS dodge prototype;
+  its health, marker and audience rules are in `docs/dodge-runbook.md`.
 - Keep participation free. Streamers choose the activity; this app does not
   control arbitrary games or judge artwork. Native scores count released volleys.
 - The backend owns identity, room membership, allegiance, cooldowns, timers, and
@@ -36,6 +45,11 @@ mirror; do not claim success. Record naming `[NAME]_[CONTENT]` is a team convent
   match across both channels and both button/chat inputs.
 - Native rooms, sandbox rooms, and the legacy debug match are separate. Legacy
   `/overlay/a`, `/overlay/b`, and `/cue/*` do not display a native PK room.
+- OBS dodge uses its own server and `DanmakuEngine`, not native/legacy state.
+  Its `/overlay/*` routes are on the dodge server. Local marker/operator inputs
+  are trusted local controls; live user identity/team/audience input comes only
+  from Twitch. Synthetic endpoints are unavailable in live mode. Keep this
+  prototype loopback-only until remote authentication/transport is designed.
 - Production uses verified Twitch JWTs. Local persona minting stays loopback-only
   and disabled publicly. Do not weaken CORS/Host checks to make setup pass.
 - State is in one long-running Node process. Do not add replicas or promise match
@@ -54,12 +68,14 @@ npm run check
 npm test
 npm start
 npm run sandbox
+npm run dodge
 npm run doctor:extension
 node scripts/package-extension.mjs --backend http://127.0.0.1:3010 --local --check
 ```
 
 `npm start`: landing/debug on 3000 by default. `npm run sandbox`: explicit local
-four-role simulation on 3010. `doctor:extension` exits 1 when setup is incomplete;
+four-role simulation on 3010. `npm run dodge`: separate local OBS prototype on
+3020, synthetic input by default. `doctor:extension` exits 1 when setup is incomplete;
 this is not a failing unit test. Create `.env` from `.env.example` only if absent;
 fill secrets privately. Never overwrite an existing `.env`.
 

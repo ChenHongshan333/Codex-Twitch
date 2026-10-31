@@ -1,9 +1,10 @@
 # ChatCrossfire PK / danmaku presentation design
 
-Status: **Arena HUD selected via concept carousel**, 2026-10-31; implementation
-plan pending. The user chose to visualize the
-existing attack and defection mechanics first. This is a presentation proposal;
-the product frontend has not been changed and this is not a new dodging game.
+Status: **Arena HUD selected via concept carousel**, 2026-10-31. This native PK
+presentation proposal originally covered existing attack/defection visualization;
+native integration remains pending. The user later expanded the request to a
+separate [OBS dodge mode](../../dodge-runbook.md), which is now implemented
+locally. This older spec does not define that mode's health or collision rules.
 
 ## Intent
 
