@@ -6,7 +6,7 @@ Design correction from `7f422f8`: user requests collective audience support and
 horizontal, non-aimed danmaku. Current prototype does not yet meet that revised
 direction. Low-support balance is a proposal in the design discussion; no runtime
 or API changed, no tests rerun. Follow-up user request authorizes pushing these
-notes to the existing feature branch; publication pending. Prior 111-test
+notes to the existing feature branch; published as `be0f193`. Prior 111-test
 pass remains valid evidence of the existing aimed prototype, not the new design.
 
 Unit-test follow-up from `13b0aa4`: eight new deterministic dodge rule tests;

@@ -15,7 +15,7 @@ product, decisions and runbook. Arena HUD remains the selected visual direction.
 Current code still aims at markers; no runtime/API or test changes this turn.
 The 111-test result below belongs to the preceding unit-test turn, not a fresh
 run here. Local documentation checks only. User subsequently requested publishing
-these notes to `codex/integrator-danmaku-dodge`; commit/push pending. No merge or
+these notes to `codex/integrator-danmaku-dodge`; published as `be0f193`. No merge or
 deployment. Next: agree on free/paid influence and quiet baseline,
 then implement/test the lane scheduler when requested. Google mirror pending:
 no Google writer or connected document session available.

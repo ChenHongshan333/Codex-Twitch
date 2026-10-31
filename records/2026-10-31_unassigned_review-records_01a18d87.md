@@ -45,8 +45,9 @@ control returned no connected sessions; maintain this local section for later sy
 Publication follow-up: user explicitly requested pushing the pending design notes
 to their branch. Verified current branch `codex/integrator-danmaku-dodge`, HEAD
 `7f422f8a208ad83f50eb1a359ed8f64d0c6769f8`, with only the nine expected design/
-handoff/record Markdown files modified. Rechecking documentation links/whitespace
-before committing and pushing. No application changes, new gameplay verification,
+handoff/record Markdown files modified. Documentation checks passed: 181 local
+links in 19 documents, `git diff --check` and staged whitespace checks. Committed
+as `be0f193` and successfully pushed to the matching origin branch. No application changes, new gameplay verification,
 merge or deployment are part of this publication request. Google mirror remains
 pending access as documented above.
 
