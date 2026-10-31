@@ -6,6 +6,10 @@ viewer-normalized chat attacks and defection. Start with keyboard rehearsal;
 see [setup and limitations](docs/dodge-runbook.md). Live Twitch and physical OBS
 acceptance remain pending; this is separate from the native PK mode below.
 
+The battle-room UI now offers **Start rehearsal**, focus views and a match
+activity column. [Fresh smoke/design review](docs/design/2026-10-31-dodge-ui-review.md)
+records 103 passing tests and Chrome gameplay checks; real Twitch remains pending.
+
 **Hackathon delivery clarification (2026-10-31): publishing a Twitch Extension
 is optional.** Our next acceptance milestone is the app connected to real Twitch
 chat/EventSub/API activity, rendered through OBS, followed by a demo showing the

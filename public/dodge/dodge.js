@@ -2,7 +2,7 @@ const $ = id => document.getElementById(id);
 const sides = ['a', 'b'];
 const colours = { a: '#ff826e', b: '#bda4ff' };
 const overlay = $('overlay'), overlaySide = location.pathname.split('/').pop();
-let state, receivedAt = 0, demoTimer, demoStep = 0;
+let state, receivedAt = 0, demoTimer, demoStep = 0, connected = false, starting = false, feedCursor = '';
 const positions = { a: { x: 480, y: 270 }, b: { x: 480, y: 270 } }, keys = new Set();
 
 async function post(path, body) {
@@ -11,53 +11,103 @@ async function post(path, body) {
   if (!response.ok) throw new Error(result.error || result.reason || 'Action failed');
   return result;
 }
-function notice(message) { if ($('notice')) $('notice').textContent = message; }
-function receive(next) { state = next; receivedAt = performance.now(); if (!overlay) renderControls(); }
+function notice(message) { if ($('notice') && $('notice').textContent !== message) $('notice').textContent = message; }
+function receive(next) { state = next; connected = true; receivedAt = performance.now(); if (!overlay) renderControls(); }
 async function poll() {
   try {
     const response = await fetch('/api/dodge/state', { signal: AbortSignal.timeout(2500) });
     if (!response.ok) throw new Error('Connection failed');
     receive(await response.json()); if ($('connection')) $('connection').textContent = 'LOCAL CONNECTION OK';
-  } catch { if ($('connection')) $('connection').textContent = 'DISCONNECTED · MATCH VIEW STALE'; }
+  } catch { connected = false; if ($('connection')) $('connection').textContent = 'Disconnected · view is stale'; if (!overlay && state) renderControls(); }
   setTimeout(poll, 100);
 }
 function renderControls() {
-  const seconds = Math.ceil(state.remainingMs / 1000);
+  const seconds = Math.ceil((state.phase === 'lobby' ? Number($('duration').value) * 1000 : state.remainingMs) / 1000);
   $('timer').textContent = `${String(Math.floor(seconds / 60)).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`;
   $('phase').textContent = state.phase.toUpperCase();
+  $('round-caption').textContent = state.result ? 'Round complete' : state.switchOpen ? 'Defection is open' : state.phase === 'paused' ? 'Waiting to resume' : state.phase === 'running' ? 'Dodge incoming messages' : 'Make your next move';
+  const synthetic = state.inputSource === 'synthetic';
+  $('rehearsal-intro').hidden = !synthetic || state.phase !== 'lobby';
+  $('quick-start').disabled = !connected || starting;
+  $('simulator-controls').hidden = !synthetic;
+  $('test-label').hidden = !synthetic;
+  $('live-chat-help').hidden = synthetic;
+  $('activity-title').textContent = synthetic ? 'Rehearsal chat' : 'Twitch activity';
   $('duration').disabled = state.phase !== 'lobby';
-  $('source').textContent = state.inputSource === 'twitch' ? 'TWITCH INPUT' : 'SYNTHETIC REHEARSAL';
+  $('source').textContent = synthetic ? 'LOCAL REHEARSAL' : 'TWITCH INPUT';
   $('count-source').textContent = `${state.pressure.source.toUpperCase()} COUNTS`;
   $('twitch-status').textContent = [state.twitch.message, ...Object.entries(state.support).map(([side, status]) => `${side === 'a' ? 'Coral' : 'Violet'} support: ${status.message}`)].join(' ');
   for (const side of sides) {
     $(`health-${side}`).textContent = `${state.health[side]} / ${state.config.health} HP`;
     $(`tracking-${side}`).textContent = state.tracking[side] ? '● MARKER TRACKING' : '○ MARKER OFFLINE';
+    const pips = $(`health-pips-${side}`);
+    if (pips.dataset.health !== String(state.health[side])) {
+      pips.replaceChildren(...Array.from({ length: state.config.health }, (_, index) => { const pip = document.createElement('i'); if (index < state.health[side]) pip.className = 'filled'; return pip; }));
+      pips.dataset.health = String(state.health[side]);
+    }
   }
   if (state.reason) notice(state.reason);
   if (state.result) notice(state.result.winner === 'tie' ? 'Round complete · draw' : `Round complete · ${state.result.winner === 'a' ? 'Coral' : 'Violet'} wins`);
   const totals = state.pressure.current, sum = totals.a + totals.b;
   const bars = $('pressure').children;
   bars[0].style.width = `${sum ? totals.a / sum * 100 : 50}%`; bars[1].style.width = `${sum ? totals.b / sum * 100 : 50}%`;
+  $('barrage-label').textContent = !state.pressure.enabled ? 'Counts unavailable' : state.pressure.barrage ? `${state.pressure.barrage === 'a' ? 'Coral' : 'Violet'} barrage` : !sum || totals.a === totals.b ? 'Even ground' : `${totals.a > totals.b ? 'Coral' : 'Violet'} leads`;
   const denominator = state.pressure.denominator;
   $('pressure-detail').textContent = !state.pressure.enabled ? 'Admission suspended · waiting for fresh live viewer counts on both sides.' :
     `${state.pressure.barrage ? `${state.pressure.barrage === 'a' ? 'CORAL' : 'VIOLET'} BARRAGE · ` : ''}A ${totals.a.toFixed(3)} / B ${totals.b.toFixed(3)} units per viewer · denominators ${Math.round(denominator.a)} / ${Math.round(denominator.b)} · ${(state.pressure.windowRemainingMs / 1000).toFixed(1)}s in bucket`;
   $('switch-status').textContent = state.switchOpen ? 'DEFECTION OPEN · switch once; cooldown stays, future messages attack your former side.' : 'Defection opens around halftime. One switch per viewer.';
   document.querySelectorAll('[data-action]').forEach(button => {
-    button.disabled = ({ start: state.phase !== 'lobby', pause: state.phase !== 'running', resume: state.phase !== 'paused', reset: false })[button.dataset.action];
+    button.disabled = !connected || ({ start: state.phase !== 'lobby' || !state.tracking.a || !state.tracking.b, pause: state.phase !== 'running', resume: state.phase !== 'paused' || !state.tracking.a || !state.tracking.b, reset: false })[button.dataset.action];
   });
-  $('switch').disabled = !state.switchOpen || state.inputSource === 'twitch';
-  for (const form of [$('audience-form'), $('attack-form')]) for (const item of form.elements) item.disabled = state.inputSource === 'twitch';
-  $('demo').disabled = state.inputSource === 'twitch' || state.phase !== 'running';
+  for (const form of [$('audience-form'), $('attack-form')]) for (const item of form.elements) item.disabled = !connected || !synthetic;
+  $('switch').disabled = !connected || !state.switchOpen || !synthetic;
+  $('attack-form').querySelector('button[type="submit"]').disabled = !connected || !synthetic || state.phase !== 'running';
+  $('demo').disabled = !connected || !synthetic || state.phase !== 'running';
+  $('stop-demo').disabled = !demoTimer;
+  renderFeed();
+}
+function renderFeed() {
+  const cursor = `${state.id}:${state.events.at(-1)?.id ?? 0}`;
+  if (cursor === feedCursor) return;
+  feedCursor = cursor;
+  const feed = $('activity-feed'), wasAtBottom = feed.scrollTop + feed.clientHeight >= feed.scrollHeight - 20;
+  const teamName = side => side === 'a' ? 'Coral' : 'Violet';
+  const rows = [];
+  for (const event of state.events.slice(-12)) {
+    let team = event.from ?? event.target, text;
+    if (event.type === 'shot') text = `sent a message attack to ${teamName(event.target)}.`;
+    else if (event.type === 'hit') text = `was hit. ${event.health} health remaining.`;
+    else if (event.type === 'defected') text = `lost a viewer to ${teamName(event.to)}. Future attacks change sides.`;
+    else if (event.type === 'barrage') text = 'triggered a barrage!';
+    else { team = null; text = ({ started: 'Round started. Move your marker to dodge.', paused: 'Round paused.', resumed: 'Round resumed.', finished: 'Round complete.', moderated: 'Moderator removed queued and visible messages.' })[event.type]; }
+    if (!text) continue;
+    const row = document.createElement('div'); row.className = `feed-row${team ? ` ${team}` : ''}`;
+    const time = document.createElement('time'); time.textContent = `${Math.floor(event.at / 60000)}:${String(Math.floor(event.at / 1000) % 60).padStart(2, '0')}`; row.append(time);
+    if (team) { const name = document.createElement('strong'); name.textContent = teamName(team); row.append(name, document.createTextNode(' ')); }
+    row.append(document.createTextNode(text)); rows.push(row);
+  }
+  if (rows.length) feed.replaceChildren(...rows);
+  else { const empty = document.createElement('div'); empty.className = 'feed-empty'; const title = document.createElement('strong'); title.textContent = 'The next move starts in chat.'; const copy = document.createElement('p'); copy.textContent = 'Accepted attacks, hits and defections appear here when a round begins.'; empty.append(title, copy); feed.replaceChildren(empty); }
+  if (wasAtBottom) feed.scrollTop = feed.scrollHeight;
 }
 function drawArena(canvas, side) {
   const ctx = canvas.getContext('2d'); ctx.clearRect(0, 0, 960, 540);
   if (!state) return;
   const stale = performance.now() - receivedAt > 1000;
   if (!overlay) {
-    ctx.strokeStyle = '#262c39'; ctx.lineWidth = 1;
-    for (let x = 0; x <= 960; x += 60) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, 540); ctx.stroke(); }
-    for (let y = 0; y <= 540; y += 60) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(960, y); ctx.stroke(); }
-    ctx.fillStyle = '#717a91'; ctx.font = '12px system-ui'; ctx.textAlign = 'left'; ctx.fillText('960 × 540 · EQUAL PLAY AREA', 24, 30);
+    ctx.fillStyle = '#141820'; ctx.fillRect(0, 0, 960, 540);
+    ctx.strokeStyle = '#303440'; ctx.lineWidth = 1;
+    ctx.strokeRect(30, 30, 900, 480);
+    ctx.beginPath(); ctx.moveTo(30, 450); ctx.lineTo(930, 450); ctx.stroke();
+    const p = state.markers[side] ?? { x: 480, y: 270 };
+    if ($(`input-${side}`).value !== 'camera') {
+      ctx.save(); ctx.translate(p.x, p.y); ctx.globalAlpha = state.tracking[side] ? 1 : .45;
+      ctx.fillStyle = '#2b303d'; ctx.strokeStyle = '#6a7084'; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.arc(0, -79, 25, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(-22, -42); ctx.quadraticCurveTo(-58, -35, -61, 24); ctx.lineTo(-45, 78); ctx.lineTo(-25, 75); ctx.lineTo(-20, 112); ctx.lineTo(20, 112); ctx.lineTo(25, 75); ctx.lineTo(45, 78); ctx.lineTo(61, 24); ctx.quadraticCurveTo(58, -35, 22, -42); ctx.closePath(); ctx.fill(); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(-14, 112); ctx.lineTo(-24, 174); ctx.moveTo(14, 112); ctx.lineTo(24, 174); ctx.stroke(); ctx.restore();
+    }
+    ctx.fillStyle = '#a5a8b7'; ctx.font = '13px system-ui'; ctx.textAlign = 'left'; ctx.fillText('960 × 540 · REHEARSAL TARGET', 47, 58);
   }
   ctx.strokeStyle = colours[side]; ctx.lineWidth = 2; ctx.strokeRect(1, 1, 958, 538);
   for (const b of state.bullets) if (b.target === side) {
@@ -89,7 +139,7 @@ function drawArena(canvas, side) {
     ctx.fillText(`${side === 'a' ? 'CORAL' : 'VIOLET'}  ${state.health[side]}/${state.config.health} HP  ·  ${Math.ceil(state.remainingMs / 1000)}s`, 28, 46);
   }
   if (state.phase !== 'running' || stale || !state.tracking[side]) {
-    const message = stale ? 'CONNECTION LOST' : state.phase === 'paused' ? 'PAUSED · RECOVER MARKERS' : state.phase === 'finished' ? `ROUND OVER · ${state.result.winner === 'tie' ? 'DRAW' : state.result.winner.toUpperCase() + ' WINS'}` : 'READY YOUR MARKER';
+    const message = stale ? 'CONNECTION LOST' : state.phase === 'paused' ? (state.tracking.a && state.tracking.b ? 'PAUSED · RESUME WHEN READY' : 'PAUSED · RECOVER MARKERS') : state.phase === 'finished' ? `ROUND OVER · ${state.result.winner === 'tie' ? 'DRAW' : state.result.winner.toUpperCase() + ' WINS'}` : 'READY YOUR MARKER';
     ctx.fillStyle = '#101116cc'; ctx.fillRect(210, 233, 540, 74); ctx.fillStyle = '#f3f0fa'; ctx.font = 'bold 20px system-ui'; ctx.textAlign = 'center'; ctx.fillText(message, 480, 278);
   }
 }
@@ -99,6 +149,23 @@ function animate() {
   requestAnimationFrame(animate);
 }
 if (!overlay) {
+  $('quick-start').addEventListener('click', async () => {
+    if (starting || !connected || state?.inputSource !== 'synthetic' || state.phase !== 'lobby') return;
+    starting = true; $('quick-start').disabled = true;
+    try {
+      for (const side of sides) { positions[side] = { x: 480, y: 270 }; $(`input-${side}`).value = 'keyboard'; }
+      await Promise.all(sides.map(side => post('marker', { side, ...positions[side] })));
+      $('duration').value = '60'; receive(await post('action', { action: 'start', durationSeconds: 60 }));
+      $('demo').click();
+    } catch (error) { notice(error.message); }
+    finally { starting = false; if (state) renderControls(); }
+  });
+  document.querySelectorAll('button[data-view]').forEach(button => button.addEventListener('click', () => {
+    $('arena-grid').dataset.view = button.dataset.view;
+    document.querySelectorAll('button[data-view]').forEach(item => item.setAttribute('aria-pressed', String(item === button)));
+  }));
+  document.querySelector('a[href="#setup"]').addEventListener('click', () => { $('setup').open = true; });
+  $('duration').addEventListener('change', () => { if (state) renderControls(); });
   document.querySelectorAll('[data-action]').forEach(button => button.addEventListener('click', async () => {
     try { receive(await post('action', { action: button.dataset.action, ...(button.dataset.action === 'start' ? { durationSeconds: Number($('duration').value) } : {}) })); notice(`Round ${button.dataset.action}`); if (button.dataset.action === 'reset') stopDemo(); }
     catch (error) { notice(error.message); }

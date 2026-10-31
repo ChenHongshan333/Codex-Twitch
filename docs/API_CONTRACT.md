@@ -27,6 +27,13 @@ Successful mutations return the snapshot, except activity returns
 `{ok:false,reason,state}`; invalid requests 400/413/415; boundary violations 403;
 unknown routes and synthetic routes in live mode 404. Reset creates a new match ID.
 
+Controller follow-up: **Start rehearsal** is synthetic-only and sends existing
+marker calls for both sides followed by a 60-second start action; it starts local
+test messages. Focus controls change preview layout only. The practice figure is
+controller-only; OBS stays transparent. No new endpoint or snapshot schema was
+added. Start/Resume wait for fresh markers; disconnected and paused play controls
+are disabled in the UI, while the backend still enforces all game rules.
+
 Snapshot fields: `id,phase,reason,config,elapsedMs,remainingMs,health,markers,
 tracking,invulnerable,pressure,switchOpen,pending,shots,bullets,events,result,
 inputSource,twitch,support`. Phases are lobby/running/paused/finished. Result is

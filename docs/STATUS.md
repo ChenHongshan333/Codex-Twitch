@@ -2,6 +2,14 @@
 
 ## Latest implementation update — 2026-10-31
 
+Fresh smoke/UI follow-up from `8c7425c`: redesigned local dodge controller using
+Shiro fix/re-review and Playwright, with actual one-click rehearsal and safer
+readiness/disconnect controls. Syntax and **103/103 tests** pass; fresh Chrome
+gameplay/defection/barrage/tracking-loss/reconnect/transparent output checks pass,
+as do 320–1440 px layouts and generated-camera checks. See
+[UI review](design/2026-10-31-dodge-ui-review.md). These are local/synthetic
+results; real Twitch, hardware OBS, remote transport and VTuber adapters are open.
+
 Peer clarification accepted: native Extension publication is optional. Next
 acceptance milestone is real Twitch chat/EventSub/API driving OBS and recorded
 Twitch/Codex footage. Native PK remains an optional route; judging access and

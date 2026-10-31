@@ -149,6 +149,44 @@ Google mirror remains pending connector availability.
 
 ## Verification
 
+### Fresh smoke test, UI redesign and Codex-use rule
+
+Base `8c7425c`, same feature branch, initially clean. User asked for a smoke test,
+disliked the initial UI and requested design-skill use. Applied Shiro fix mode
+and its anti-pattern guidance plus Playwright browser skill. Rechecked UI-TARS
+repository: GUI-agent research/automation, not a ready visual-design skill; no
+UI-TARS runtime was installed. Rechecked official hackathon FAQ: other AI tools
+are allowed; actual Codex building use/contribution evidence remain required.
+
+Baseline fresh syntax/all 101 tests and actual Chrome local smoke passed.
+Reworked public/dodge index/styles/script: compact battle layout, health pips,
+bounded text-only event feed, one-click 60-second synthetic rehearsal, focus
+views, labelled practice figures and collapsed setup details. No native Extension
+UI, engine rules, auth, API endpoint/schema or production dependency changed.
+Added two meaningful jsdom/local-HTTP regression tests for quick start, focus,
+readiness/disconnection and hiding synthetic controls for Twitch-source UI.
+
+Fresh final checks: `npm run check` PASS; `npm test` **103 passed, no failures or
+skips**; `git diff --check` PASS. Corrected Start-before-marker-refresh caught
+by the first long browser run, then reran successfully. Final Chrome smoke:
+both directions hit 5→4, moving out of a shot avoided damage, defection retained
+cooldown and redirected next attack, Coral barrage activated, tracking loss froze
+time, recovery/resume and request-interruption reconnect passed. No page script
+errors; intentional HTTP409 cooldown and aborted polling were negative checks.
+No horizontal overflow at 320/390/768/1024/1440, reduced-motion transition 0s,
+focus/setup controls, keyboard skip-to-battle, and transparent overlay alpha 0
+passed. Generated canvas camera mapped mirrored x≈729/unmirrored x≈230 and
+expired its marker on stop; no physical webcam was activated.
+
+Isolated server 3030/session14262 loaded no `.env`, was left in lobby for user
+inspection and did not reset existing user server 3020. Local evidence under
+ignored output/playwright: dodge-before, dodge-defection-smoke,
+dodge-focus-barrage, dodge-after-desktop/mobile/overlay/camera, dodge-final-lobby.
+See docs/design/2026-10-31-dodge-ui-review.md for Shiro findings and local ship
+call. Real Twitch/OBS hardware/remote/VTuber acceptance remains pending, as does
+Google record mirror. Credentials were not read/changed; no stream or deployment
+started. Current feature-branch work is prepared for peer review/publication.
+
 ### Peer-facing optional Extension clarification
 
 User accepted that Extension publication is optional and asked to record this in

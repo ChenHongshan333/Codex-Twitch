@@ -5,6 +5,32 @@ Updated 2026-10-31 (Asia/Singapore; audit started October 30). Read this first, 
 
 ## What this session did
 
+### Fresh smoke test and battle-room UI
+
+User requested smoke testing, rejected the UI and asked about Codex exclusivity.
+Rechecked official FAQ: other AI/tools allowed, while actual Codex building use
+and evidence remain required. Applied Shiro in fix mode and Playwright skill;
+UI-TARS was rechecked as GUI automation research, not a design skill. Reworked
+the dodge controller around the selected Arena HUD hierarchy: compact match
+strip, equal arenas/health, chat/activity column, one-click synthetic rehearsal,
+focus previews and expandable setup. Practice figures are explicitly test targets;
+native Extension UI, backend rules and API schema are unchanged.
+
+Base `8c7425c` on `codex/integrator-danmaku-dodge`. Fresh `npm run check`,
+`npm test` **103/103**, and `git diff --check` passed. Chrome smoke passed both
+hits, dodge, cooldown-retaining defection, barrage, lost-tracking pause/resume,
+reconnect, five responsive widths, reduced motion, keyboard skip and transparent
+OBS output. Generated-camera mirror/loss check also passed. No actual Twitch,
+physical webcam/OBS or remote acceptance was performed. See
+[review/evidence](design/2026-10-31-dodge-ui-review.md).
+
+Isolated synthetic server session 14262 remains at `http://127.0.0.1:3030/`,
+left in lobby for Start rehearsal. It loaded no `.env`; user port-3020 state was
+preserved. Source assets now contain the new UI; reload existing tabs to see it.
+Browser artifacts are ignored under `output/playwright/`. Local processes do
+not transfer with a clone. Google Records mirror remains pending connector
+access. Current UI changes are prepared for peer review; no deployment/merge.
+
 ### Peer-facing delivery clarification
 
 User accepted the explanation that Twitch Extension publication is optional and

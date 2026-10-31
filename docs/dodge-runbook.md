@@ -13,10 +13,18 @@ npm run dodge
 ```
 
 Open [the controller](http://127.0.0.1:3020/). Choose rehearsal keyboard markers
-for both sides and a 60-second round. Start, then use **Run both-side demo** or
+for both sides and a 60-second round, or click **Start rehearsal** to set these
+up and begin test messages automatically. Manual setup: Start, then **Run both-side demo** or
 send a message in the test form. Focus an arena and use WASD / arrow keys, or
 drag the marker. The demo sends a synthetic event every 2.5 seconds, alternating
 sides. It does not start a Twitch stream.
+
+The battle room places match status, health and activity beside the arenas.
+Use Focus Coral/Violet to inspect a larger preview; Both arenas restores the
+equal split. Stream setup & fair play expands audience/camera/OBS instructions.
+Start/Resume wait for both markers; synthetic event submission is disabled while
+paused/disconnected and hidden in live mode. The practice figure only illustrates
+the local hit marker; it is not an external VTuber avatar or a live video feed.
 
 A projectile enters the opposite arena and travels toward a position snapshot.
 Move after its warning to dodge. Hits automatically reduce health. At the middle

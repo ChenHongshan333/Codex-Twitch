@@ -7,6 +7,15 @@ readiness checklist, not certification of eligibility or a completed submission.
 Code baseline `addc634`; runtime evidence remains the earlier 101 synthetic tests,
 browser rehearsal and generated-camera checks. No live Twitch acceptance yet.
 
+Follow-up UI smoke on 2026-10-31: 103 tests plus fresh Chrome and generated-camera
+checks passed; see [design review](design/2026-10-31-dodge-ui-review.md). These are
+local checks and do not close the Twitch evidence gate.
+
+Codex does not have to be the exclusive tool. The FAQ explicitly allows other
+AI tools alongside frameworks/libraries/templates, while requiring the project
+to be built with Codex. Record and show the actual Codex contribution; a design
+skill used by Codex is compatible with that workflow.
+
 ## Required evidence and current gaps
 
 | Requirement relevant to this project | What we have | What remains |
