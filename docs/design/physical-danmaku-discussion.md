@@ -7,45 +7,43 @@ from audience support for a streamer, presented as collective community pressure
 Messages should float horizontally like Bilibili danmaku, without aiming at the
 tracked body/avatar marker. The selected visual direction remains Arena HUD.
 The user also asks how the game stays active when few people give gifts/support.
-These supersede the earlier marker-aimed trajectory recommendation below.
-Current code still aims at a marker snapshot; this correction is not implemented.
+These supersede the earlier marker-aimed trajectory recommendation below. The
+user clarified that the dodge arena itself is the PK game, not a transparent
+layer over an arbitrary streamer activity. Horizontal lanes now replace aiming;
+markers determine collisions only. See the [current runbook](../dodge-runbook.md).
 
-Working interpretation to make explicit: supporting A adds pressure to B's
-arena, and vice versa; viewers support their community rather than choose an
-opponent/aim point. Existing once-per-match defection can redirect future support
-without changing already scrolling messages. That interaction needs review in
-the next implementation; the user did not remove the defection requirement.
+Supporting A adds pressure to B's arena, and vice versa. Viewers support their
+community rather than select an opponent or aim point. Existing once-per-match
+defection redirects future messages without changing already scrolling ones.
 
-Proposed balance model, not yet accepted or implemented:
+Implemented baseline and remaining tuning proposals:
 
-- Both arenas use the same horizontal scroll direction, speed, fixed message
-  bounds and lane geometry. Team colours identify which community supplied text.
-  Lane selection never follows the marker. Preserve readable reaction time and
-  a feasible dodge route, including during a capped 5–10-second surge.
-- Free chat/cheers/emotes fill a pooled support meter; optional Bits/gift subs
-  receive visual emphasis. Recommend spending affects presentation rather than
-  damage, collision size or uncapped projectile counts. Exact eligible free
-  messages and any paid gameplay weight remain open product choices.
+- Both arenas use the same horizontal direction, fixed message bounds, cycling
+  lanes and speed. Team colours identify the community that supplied each
+  message. Lane selection never follows the marker. Reaction time and surge
+  difficulty still need competitive playtesting.
+- Ordinary chat is the free core input. Optional Cheers/gifts use capped event
+  weights and the same cooldown, normalization, pressure and queue rules; payment
+  does not guarantee a bullet or increase damage. Visual gift emphasis is not
+  implemented.
 - Use eligible contribution units per smoothed concurrent viewer count, with a
   floor for tiny audiences and per-user limits shared across channels/inputs.
   Do not replace viewers with only active chatters or use raw spending totals.
 - Candidate starting tune: 10-second support windows, one free counted support
   per user per 5 seconds, viewer floor 20; map normalized activity through the
   same bounded curve on both sides. These are experiments, not current constants.
-- Candidate quiet-stream floor: four neutral game-generated messages per arena
-  per 10 seconds; community activity adds up to eight more per 10 seconds.
-  Neutral waves have matched difficulty and never claim a real sender, gift or
-  support score. Both zero-support bars stay at zero. Baseline collisions would
-  still reward dodging; decide this explicitly before implementation.
+- Neutral generated hazards were considered and not selected for this iteration.
+  Quiet chats produce quieter rounds; no generated message is presented as a
+  viewer's chat or gift.
 - Sample/queue real supported messages within a bounded display budget; do not
   turn an idle period into invented donations or misleading attributed text.
   Keep moderation retraction, tracking-loss pauses and identity enforcement.
 
-Next work requires an implementation instruction after design discussion:
-replace marker-directed spawning with a lane scheduler, pool support into wave
-density, update support-oriented controller wording, and test zero activity,
-tiny/proportional audiences, spam/paid caps, mirrored arena difficulty, safe
-routes, defection and moderation. No runtime/API changes in this discussion.
+Implemented follow-up: fixed horizontal lanes, equal geometry in both target
+arenas, existing support normalization and caps, marker collision, and retained
+defection/moderation behavior. Synthetic rule/UI tests cover the local behavior;
+real Twitch, physical OBS alignment, and competitive balance still require
+separate acceptance. No route or snapshot field was added.
 
 ## Earlier discussion and implementation history
 

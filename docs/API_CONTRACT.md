@@ -1,8 +1,9 @@
 # Existing module and wire contracts
 
-This documents the implemented interface at `dd440d6`; it proposes no schema
-rename. Contract changes must include all producers, consumers, tests, and this
-document in one coordinated review.
+This documents the current implemented interface; the horizontal dodge update
+changes trajectory behavior but adds no route or snapshot field. Contract changes
+must include all producers, consumers, tests, and this document in one coordinated
+review.
 
 ## Separate local dodge mode (2026-10-31)
 
@@ -39,7 +40,10 @@ tracking,invulnerable,pressure,switchOpen,pending,shots,bullets,events,result,
 inputSource,twitch,support`. Phases are lobby/running/paused/finished. Result is
 `{winner:'a'|'b'|'tie',health:{a,b}}`. A marker is `{x,y,at}` (wall-clock `at`).
 Bullets have `id,from,target,text,kind,x,y,vx,vy,armsAt,expiresAt`; times are elapsed
-game milliseconds. State events have `id,type,at,...`, elapsed `at`, last 30 only.
+game milliseconds. Dodge bullets move left-to-right at fixed horizontal speed
+through cycling lanes in the target arena; marker coordinates affect collision
+only, never trajectory. Both source chats use the same direction and geometry.
+State events have `id,type,at,...`, elapsed `at`, last 30 only.
 IDs are local to the match. Browsers render current bullets; they do not replay
 the event feed to reconstruct authoritative physics. `pressure` includes enabled,
 current/previous normalized units, barrage, audience sample timestamps, frozen

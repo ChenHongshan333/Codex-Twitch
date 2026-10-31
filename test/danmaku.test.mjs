@@ -105,7 +105,7 @@ test('deletion clears queued/in-flight/replayed text without undoing past hits',
   assert.deepEqual(state.pending, { a: 0, b: 0 }); assert.equal(state.pressure.barrage, null);
 });
 
-test('warnings hold shots still and moving away dodges without a homing correction', () => {
+test('warnings hold horizontal shots still and moving away dodges the fixed lane', () => {
   const { game, advance, move } = rig();
   game.activity(chat('aim')); advance(20);
   const announced = game.snapshot().bullets[0];
@@ -116,11 +116,33 @@ test('warnings hold shots still and moving away dodges without a homing correcti
   move('b', { x: 480, y: 80 }); advance(1000);
   const flying = game.snapshot().bullets[0];
   assert.ok(flying.x > announced.x);
-  assert.equal(flying.vx, announced.vx); assert.equal(flying.vy, announced.vy);
+  assert.equal(flying.vx, announced.vx); assert.equal(flying.vy, 0);
   assert.equal(flying.y, announced.y);
   advance(4000);
   assert.equal(game.snapshot().health.b, 5);
   assert.equal(game.snapshot().bullets.length, 0);
+});
+
+test('both source chats send straight left-to-right messages into the opposing arena without aiming', () => {
+  const { game, advance, move } = rig();
+  move('a', { x: 480, y: 50 }); move('b', { x: 480, y: 490 });
+  game.activity(chat('from-a', 'a', { id: 'from-a' }));
+  game.activity(chat('from-a-2', 'a', { id: 'from-a-2' }));
+  game.activity(chat('from-b', 'b', { id: 'from-b' }));
+  advance(20);
+  const first = game.snapshot().bullets;
+  const shotFromA = first.find(bullet => bullet.from === 'a');
+  const shotFromB = first.find(bullet => bullet.from === 'b');
+  assert.equal(shotFromA.target, 'b'); assert.equal(shotFromB.target, 'a');
+  for (const bullet of first) {
+    assert.equal(bullet.x, -game.config.bulletWidth / 2);
+    assert.equal(bullet.vx, game.config.speed); assert.equal(bullet.vy, 0);
+  }
+  assert.notEqual(shotFromA.y, game.snapshot().markers.b.y);
+  assert.notEqual(shotFromB.y, game.snapshot().markers.a.y);
+  assert.equal(shotFromA.y, shotFromB.y);
+  advance(350);
+  assert.notEqual(game.snapshot().bullets.filter(bullet => bullet.target === 'b')[1].y, shotFromA.y);
 });
 
 test('a marker crossing a projectile between samples is hit even when both endpoints miss', () => {

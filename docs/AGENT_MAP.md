@@ -9,6 +9,10 @@ Dodge engine test coverage was expanded from base `13b0aa4`: controlled marker
 movement, pause/cooldown boundaries, audience windows/recovery, interrupted lead,
 knockout/reset and snapshot isolation. The existing engine test pointer applies;
 no runtime edge or contract changed.
+The 2026-10-31 horizontal-lane implementation changes dodge trajectory behavior
+since the reviewed baseline: `DanmakuEngine.spawn` selects fixed cycling lanes,
+while `tick` still performs swept marker collision. See the current runbook and
+handoff for behavior and verification state.
 
 ## Read according to the task
 

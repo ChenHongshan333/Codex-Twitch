@@ -1,10 +1,10 @@
 # OBS dodge mode
 
-Design correction pending implementation: the user wants collective audience
-support and horizontal Bilibili-style scrolling instead of marker-directed aim.
-Low-support balance is under discussion in the [design notes](design/physical-danmaku-discussion.md).
-The commands and rules below describe the existing prototype; they do not yet
-implement the proposed lane/baseline model.
+This mode is the PK game itself: both streamers dodge in equal arenas, and
+opponent-community messages scroll through the arena as bullets. It is not a
+transparent interference layer over an arbitrary game, drawing session, or quiz.
+Messages move horizontally through fixed lanes; they do not aim at or home on a
+marker. Tracked markers still determine collisions and hits.
 
 This separate local prototype implements the user's physical-danmaku direction.
 It does not change native PK rooms, the four-role sandbox, or legacy OBS state.
@@ -32,12 +32,14 @@ Start/Resume wait for both markers; synthetic event submission is disabled while
 paused/disconnected and hidden in live mode. The practice figure only illustrates
 the local hit marker; it is not an external VTuber avatar or a live video feed.
 
-A projectile enters the opposite arena and travels toward a position snapshot.
-Move after its warning to dodge. Hits automatically reduce health. At the middle
-of the round, select a viewer who already attacked and press **Defect this
-viewer**. Future attacks from that identity go against their former side, even
-if you keep their source chat unchanged. The two-second cooldown is retained.
-Already launched projectiles keep their target. One switch per round.
+Messages from one community enter the opposing arena from its left edge and
+travel left-to-right through successive fixed lanes. The warning marks the
+message's lane before it moves. Move the tracked marker to avoid a capsule; hits
+automatically reduce health. At the middle of the round, select a viewer who
+already attacked and press **Defect this viewer**. Future attacks from that
+identity go against their former side, even if you keep their source chat
+unchanged. The two-second cooldown is retained. Already launched messages keep
+their target and lane. One switch per round.
 
 Five health; 1.5 seconds of invulnerability after a hit. Zero health ends the
 round. At the time limit, higher remaining health wins; equal health draws.
@@ -97,11 +99,16 @@ active shots; queues never grow without limit. These are initial tuning values,
 not validated competitive balance. Resetting buckets can interrupt a lead.
 
 Every capsule has the same **128 × 28 rectangular hitbox**, clipped text and
-speed of 300 arena units/second. A warning precedes movement by 800 ms. It aims
-at a marker snapshot; it never homes continuously. The engine uses continuous
-relative collision checks against the visible 14-unit circle. Rendering refresh
-rate does not award damage. Both marker inputs are trusted local operator inputs;
-remote anti-cheat/latency compensation is not implemented.
+horizontal speed of 300 arena units/second. A warning precedes movement by
+800 ms. Lanes cycle independently for each arena, so repeated messages spread
+vertically without following the marker. Free chat is a core input; Cheers and
+gift-sub events are optional and capped at three units per event. Activity still
+passes through audience normalization, cooldowns, pressure thresholds and queue
+caps, so a paid event does not guarantee a bullet or extra damage. No neutral
+hazards are generated: quiet chats produce quieter rounds. The engine uses
+continuous relative collision checks against the visible 14-unit marker circle.
+Rendering refresh rate does not award damage. Both marker inputs are trusted
+local operator inputs; remote anti-cheat/latency compensation is not implemented.
 
 ## Real Twitch input (private configuration)
 

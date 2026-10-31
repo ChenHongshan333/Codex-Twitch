@@ -164,7 +164,6 @@ export class TwitchBridge extends EventEmitter {
     });
     clearTimeout(this.retryTimer);
     this.retryTimer = setTimeout(() => { void this.boot(retryEpoch); }, delay);
-    this.retryTimer.unref?.();
   }
   async reply(channelId, message) {
     if (this.status.state !== 'connected' || !this.identity.scopes.includes('user:write:chat')) return false;

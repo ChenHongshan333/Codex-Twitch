@@ -7,12 +7,16 @@ not imply that live Twitch acceptance has passed.
 
 ## Intended experience
 
-Latest user correction (after unit-test publication): OBS dodge should turn
-community support into Bilibili-style horizontal scrolling messages, without
-marker-directed aiming. Quiet/low-gift balance is being discussed; free support,
-a neutral baseline and capped support-driven density are recommendations, not
-implemented or accepted settings. See [latest design notes](design/physical-danmaku-discussion.md).
-Current prototype still uses marker-snapshot trajectories.
+The selected physical-danmaku mode is PK game A: each streamer plays the same
+dodge game in an equal arena, opponent-community messages cross that arena as
+horizontal bullets, and remaining health determines the result. It is not a
+transparent message layer placed over a streamer-selected external activity.
+The native Extension's broader activity-agnostic PK remains a separate mode.
+
+The confirmed direction is Bilibili-style horizontal messages without
+marker-directed aiming. Free chat is the core input; optional paid support uses
+the existing capped event weights. Quiet chats do not receive invented neutral
+hazards. Competitive balance still needs live playtesting. See [design notes](design/physical-danmaku-discussion.md).
 
 Submission-route clarification confirmed with the user on 2026-10-31:
 **publishing a native Twitch Extension is optional**. Next acceptance work is
