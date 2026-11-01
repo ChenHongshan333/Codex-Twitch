@@ -5,6 +5,10 @@ changes trajectory behavior but adds no route or snapshot field. Contract change
 must include all producers, consumers, tests, and this document in one coordinated
 review.
 
+2026-11-02 live-setup addition: dodge snapshots now add `serverTime`, `setup`
+and `inputActivity`; no route was added. The earlier no-field-change statement
+refers to the horizontal-lane revision only.
+
 ## Separate local dodge mode (2026-10-31)
 
 `npm run dodge` starts `startDodgeServer` on 127.0.0.1:3020, independently of
@@ -27,6 +31,28 @@ Successful mutations return the snapshot, except activity returns
 `{ok,team,normalized?,switched?,state}`. Rule-rejected activity returns 409 with
 `{ok:false,reason,state}`; invalid requests 400/413/415; boundary violations 403;
 unknown routes and synthetic routes in live mode 404. Reset creates a new match ID.
+In live mode, `start` and `resume` additionally require both verified chat
+subscriptions, fresh positive audience samples and both fresh markers. A failed
+readiness check returns 409 `{error,state}` without changing phase/duration.
+Rehearsal start rules remain unchanged. During an already running match, missing
+audience data continues to suspend new admission rather than changing in-flight
+collision rules. The existing tracking-loss pause still applies.
+
+`serverTime` is the server wall clock in milliseconds (the engine's injected
+clock in tests). `setup` is `{ready,chats,audience,markers,blockers:string[]}`;
+it reports input readiness, not proof of physical OBS alignment, avatar support
+or successful broadcast. `inputActivity` contains sides `a,b`, each with
+`{received,accepted,rejected,lastAt,lastReason}`. Counts refer to deduplicated
+chat events handed from TwitchBridge to dodge, excluding Cheers handled by an
+optional support subscription. `lastAt` is a server wall-clock timestamp or null.
+Only a fixed rule rejection reason is retained: no viewer ID, message body or
+token is added. Acceptance does not guarantee a bullet (normalization/caps still
+apply). Reset zeroes these match-local counters. These are diagnostics, not scores.
+
+The live controller defaults to camera input, disables keyboard selection and
+does not submit rehearsal marker coordinates even if selection is manipulated.
+Local marker endpoints remain trusted operator controls; no remote identity or
+physical camera attestation is introduced. Native PK contracts are unchanged.
 
 Controller follow-up: **Start rehearsal** is synthetic-only and sends existing
 marker calls for both sides followed by a 60-second start action; it starts local

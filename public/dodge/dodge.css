@@ -61,6 +61,13 @@ p { font-size: 13px; line-height: 1.6; color: var(--muted); }
 .pressure > span + span { background: var(--b); }
 .rehearsal-intro { margin-top: 14px; padding: 16px 18px; display: flex; align-items: center; gap: 18px; justify-content: space-between; border: 1px solid #4b405a; border-left: 3px solid var(--action); border-radius: 5px; background: #211d29; }
 .rehearsal-intro strong { font-size: 14px; }
+.live-setup { margin-bottom: 20px; padding: 18px; border: 1px solid #625578; border-radius: 6px; background: #211d29; }
+.live-setup h2 { font-size: 17px; margin: 0; }
+.live-setup p, .live-setup ol { font-size: 13px; }
+.live-setup li[data-ready="true"] { color: #b6e3be; }
+.live-setup li[data-ready="false"] { color: #efcf9b; }
+.live-links { display: flex; flex-wrap: wrap; gap: 16px; color: #d1baff; font-size: 13px; }
+.live-setup .setup-note { font-size: 11px; color: var(--muted); }
 .rehearsal-intro p { margin: 4px 0 0; font-size: 12px; }
 .rehearsal-intro button { flex: none; }
 .stage-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 54px; }

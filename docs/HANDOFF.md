@@ -1,5 +1,128 @@
 # Current handoff
 
+### Implemented live-dodge setup and diagnostics — 2026-11-02
+
+User authorized implementation, progress update and GitHub push. Current branch
+`codex/integrator-live-dodge-setup`, base `e91c6fbd49f1db3fdfc73521b88319b97b6a0ab4`;
+prior conversation documentation was preserved. Native PK is unchanged.
+Added offline `doctor:dodge`, read-only `verify:dodge`, live chat/count/marker
+readiness with backend Start/Resume gating, match-local input diagnostics, and a
+camera-first live setup UI. New snapshot fields/409 behavior are in the contract.
+No remote/public transport, avatar adapter or actual broadcast was introduced.
+
+Checks: syntax final isolated sandbox run PASS (also escalated rerun PASS after initial native OOM); default
+parallel full tests failed with native process memory errors even outside sandbox;
+serial full suite `npm.cmd test -- --test-concurrency=1` PASS 119/119. Local Node
+is v25.9.0; reference Node 24 is unchanged. Offline doctor EXPECTED exit 1: live
+flag/channels incomplete, token format only. No .env value printed/modified.
+Read-only verifier likewise exits 1 at local config, without network access.
+Ephemeral synthetic HTTP smoke: all 7 controller/script/tracker/overlay/state
+URLs return 200, server closed afterward.
+No browser surface available, so no fresh real-browser/hardware/OBS/Twitch result.
+Documentation/diff checks pass. Implementation commit `1d5e50a` was successfully
+pushed with upstream tracking to `origin/codex/integrator-live-dodge-setup`;
+this publication receipt is a follow-up documentation commit. No merge/deployment.
+Google mirror pending: connected document inventory is empty. Update the existing
+[session record](../records/2026-11-01_unassigned_status-run-guide_pending.md).
+
+Next owner action: privately configure two channels/user consent and run
+`doctor:dodge`, `verify:dodge`, then `dodge`; calibrate cameras and OBS per the
+runbook, exercise actual chat/hits/pause/result and record Twitch footage. Confirm
+whether separate computers are mandatory before claiming delivery complete;
+authenticated remote state/marker transport and specific avatar adapters remain
+unimplemented. Older planning sections below are history.
+
+### Consolidated web/chat/OBS route — 2026-11-02
+
+User prefers returning to the web controller after reviewing Extension judge
+access, and asks which decisions are settled and what this route requires.
+Gameplay is retained: real Twitch chat attacks the opposing arena, physical/avatar
+positions drive collision, backend owns health/timing/result, OBS broadcasts it.
+Web controls are streamer setup/start/pause, not a requirement for manual scoring
+or mouse-character play. Current dodge already provides chat wiring, local colour
+tracking and OBS views; no fresh live/hardware acceptance was performed.
+
+Recommended next sequence: privately authorize two channels and verify live chat
+admission with valid audience data; align physical tracking/OBS; capture real
+Twitch interaction; simplify operator UI only as needed from that acceptance.
+Decide whether this delivery must support separate computers before claiming
+completion: authenticated shared remote state/marker/OBS transport is missing.
+Specific VTuber adapter and final judge access are also unresolved. Physical-first
+acceptance is recommended, not an approved removal of avatar support. Preserve
+native Extension code; previous Extension integration preference below is history.
+Same branch/base; planning/docs only, no runtime/configuration changes, live
+connection, deployment or submission. Checks: local links/content and diff pass;
+Google mirror pending lack of connected document sessions. See the session record
+linked below. A plan alone does not authorize implementation.
+
+### Twitch Extension controls requested — 2026-11-02
+
+User now prefers streamer buttons inside a native Twitch Extension, with backend
+start/scoring/settlement and no standalone controller in normal play. Physical/
+virtual-avatar dodging stays. Existing native invite/accept/ready/countdown/auth
+UI and tests were reviewed; this UI currently controls community-volley PK, not
+DanmakuEngine. No runtime integration was made. Next: scope an explicit dodge
+mode behind Extension identity, shared authoritative state and authenticated
+remote tracker/OBS sessions, retaining existing native PK. Local camera capture
+and specific avatar adapters still need setup/integration. Rechecked official
+Extension broadcaster live-view support and hackathon unreviewed-Extension access
+restriction. Same branch/base; documentation-only, no fresh tests/live acceptance,
+credentials, deployment or publication. Session record updated; Google mirror
+pending the previously observed lack of connected document sessions.
+
+### Current scope question — 2026-11-02
+
+Resolved by the next user message: retain physical/virtual-avatar dodging and
+explain how to connect real Twitch and whether a controller is needed. The prior
+question about scope does not authorize removal of existing modes. Source confirms the standalone
+bot is separate from dodge's embedded TwitchBridge. Keyboard/mouse input is a
+tracker substitute, while collision/health/results are real gameplay additions.
+The current browser controller supplies start/pause/calibration; Twitch does not
+require that page, but an alternative operator interface has not been wired.
+Same branch/base, documentation-only; no fresh runtime/live verification.
+Next: establish whether the two performers share one machine or need remote play;
+privately configure and verify real chat, then physical tracking and OBS alignment.
+Avatar software adapters and authenticated remote transport remain unimplemented.
+Retain existing operator controls for initial acceptance; reducing the page or
+moving controls to chat is proposed follow-up, not a current capability. No live
+connection, broadcast, deployment or runtime change was performed in this review.
+See the [session record](../records/2026-11-01_unassigned_status-run-guide_pending.md).
+
+### OBS presentation clarification — 2026-11-02
+
+Continued on `codex/docs-status-run-guide`, base `e91c6fb`, preserving the existing
+documentation edits. Explained terminal/backend vs browser controller vs tracker
+vs OBS output, with a proposed one-machine two-arena demonstration. Source/docs
+review only; no new runtime/browser/live/physical OBS checks or contract changes.
+November 1 test results below are inherited. Next: operator prepares OBS camera
+and Browser Source composition, validates tracking alignment, then demonstrates
+real two-channel chat if privately authorized/configured. Google mirror remains
+pending: no connected document sessions. Same [session record](../records/2026-11-01_unassigned_status-run-guide_pending.md)
+updated; documentation whitespace checks pass.
+Further clarification provides OBS Window Capture steps for recording keyboard
+rehearsal, checked against the official OBS Quick Start Guide. No OBS application
+operation, fresh runtime test or recording was performed by the agent.
+
+## Status and startup review — 2026-11-01
+
+Fresh checkout review started clean on `master` at `e91c6fb` (exact base in the
+[session record](../records/2026-11-01_unassigned_status-run-guide_pending.md)).
+The horizontal dodge revision is already merged through PR #2; older statements
+below about uncommitted changes/previous feature branches are historical.
+This explanation-only session uses `codex/docs-status-run-guide`; runtime and
+configuration are unchanged. Local Node is `v25.9.0`, npm `11.12.1`.
+
+Fresh `npm.cmd run check` passes. First full test run reported two file-level
+failures (105 passed); focused rerun passes 19/19 and full rerun passes 112/112.
+Cause of the first failures remains unconfirmed. Temporary synthetic dodge HTTP
+smoke passes all six controller/state/tracker/overlay URLs and was shut down;
+this does not establish browser, physical OBS or live Twitch acceptance.
+Documentation links/content and `git diff --check` pass. No live acceptance,
+credentials, push, deployment or submission changed. Google mirror is pending:
+document-control inventory found no connected sessions; identity remains pending.
+Next: user runs `npm run dodge`, opens port 3020 and clicks **Start rehearsal**;
+account owner/integrator complete physical OBS and two-channel Twitch acceptance.
+
 Updated 2026-10-31 (Asia/Singapore; audit started October 30). Read this first, then [status](STATUS.md),
 [product](PRODUCT.md), [architecture](ARCHITECTURE.md), and [contract](API_CONTRACT.md).
 

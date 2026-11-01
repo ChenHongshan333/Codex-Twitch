@@ -47,7 +47,7 @@ test('HTTP rehearsal runs both directions, preserves identity on switch and paus
 test('live mode rejects synthetic activity/counts and uses verified bridge identities only', async t => {
   const bridges = [];
   class FakeBridge extends EventEmitter {
-    constructor() { super(); this.status = { state: 'connected' }; this.channels = [{ team: 'a', id: '10' }, { team: 'b', id: '20' }]; }
+    constructor() { super(); this.status = { state: 'connected' }; this.channels = [{ team: 'a', id: '10', subscribed: true }, { team: 'b', id: '20', subscribed: true }]; }
     async start() { this.emit('status', this.status); }
     async request() { return { data: [{ user_id: '10', viewer_count: 1000 }, { user_id: '20', viewer_count: 100 }] }; }
     stop() {}

@@ -7,6 +7,28 @@ not imply that live Twitch acceptance has passed.
 
 ## Intended experience
 
+Current working delivery route (2026-11-02): after considering native Extension
+controls and judge-installation constraints, the user prefers returning to the
+web controller and asks to consolidate scope. Retain physical/virtual-avatar
+dodging, real Twitch chat and OBS presentation. The web page is the streamer
+setup/control surface; viewers participate in Twitch chat. Backend collisions,
+health, timing and settlement remain automatic. Controller use does not imply
+manual scoring or mouse-controlled characters as the normal experience.
+
+The immediate proposed sequence is real two-channel chat admission, physical
+marker/OBS alignment, then capture of the actual Twitch interaction. The existing
+local prototype can establish these on one computer; it cannot establish remote
+two-computer play. Whether remote play is required for this delivery and which
+avatar software to integrate remain unresolved. Starting with physical tracking
+before a software-specific avatar adapter is a recommendation, not a confirmed
+cut. Web invitation/ready automation is not inherited from native PK automatically.
+Native Extension code remains preserved; its integration is deferred as a current
+route preference, with final judge access still to be resolved. No deployment,
+broadcast or credential change is authorized by that discussion. The subsequent
+user instruction authorizes implementation and push: local live-readiness checks,
+diagnostic tools and camera-first setup UI are now implemented. Actual Twitch/
+hardware acceptance and authenticated remote/avatar integration remain open.
+
 The selected physical-danmaku mode is PK game A: each streamer plays the same
 dodge game in an equal arena, opponent-community messages cross that arena as
 horizontal bullets, and remaining health determines the result. It is not a

@@ -14,13 +14,21 @@
     <span id="source" class="source-badge">Connecting…</span>
   </header>
   <main class="room">
-    <div class="room-heading"><div><p class="eyebrow">COMMUNITY VS COMMUNITY</p><h1>Crossfire arena</h1></div><span class="room-note">Move. Dodge. Turn the tide.</span></div>
+    <div class="room-heading"><div><p class="eyebrow">COMMUNITY VS COMMUNITY</p><h1>Crossfire stream setup</h1></div><span class="room-note">Chat attacks. You dodge. The server scores.</span></div>
+    <section id="live-setup" class="live-setup" aria-labelledby="live-setup-title" hidden>
+      <h2 id="live-setup-title">Before you start / 真实直播准备</h2>
+      <p>Viewers play in Twitch chat. You move in front of the camera; this page sets up and controls the match. OBS broadcasts the camera with the transparent bullet layer.</p>
+      <ol id="readiness-checks" aria-label="Live readiness"></ol>
+      <p id="start-requirements" role="status"></p>
+      <div class="live-links"><a id="chat-link-a" target="_blank" rel="noopener" hidden>Open Coral Twitch chat ↗</a><a id="chat-link-b" target="_blank" rel="noopener" hidden>Open Violet Twitch chat ↗</a></div>
+      <p class="setup-note">Private configuration: edit .env, then restart npm run dodge. Use npm run doctor:dodge and npm run verify:dodge. Never enter tokens on this page. This version runs both arenas on one computer.</p>
+    </section>
     <div class="room-layout">
       <section id="battle" class="battle" aria-label="Battle room" tabindex="-1">
         <div class="match-strip">
           <div class="match-team a"><span class="team-avatar">C</span><div><strong>Coral Crew</strong><span>Attacks travel right <b aria-hidden="true">→</b></span></div></div>
           <div class="match-clock"><span id="phase">LOBBY</span><strong id="timer">03:00</strong><span id="round-caption">Make your next move</span></div>
-          <div class="match-team b"><div><strong>Violet Crew</strong><span><b aria-hidden="true">←</b> Attacks travel left</span></div><span class="team-avatar">V</span></div>
+          <div class="match-team b"><div><strong>Violet Crew</strong><span>Attacks the other arena <b aria-hidden="true">→</b></span></div><span class="team-avatar">V</span></div>
         </div>
         <div class="pressure-strip"><span>Community pressure</span><div id="pressure" class="pressure" aria-label="Share of normalized activity"><span></span><span></span></div><span id="barrage-label">Even ground</span></div>
         <div id="rehearsal-intro" class="rehearsal-intro"><div><strong>Your chat is the ammunition.</strong><p>Try a 60-second round with test messages. No Twitch account or camera needed.</p></div><button id="quick-start" class="primary">Start rehearsal <span aria-hidden="true">↗</span></button></div>
@@ -29,13 +37,13 @@
           <article class="team a">
             <div class="team-heading"><h2><span class="dot"></span>Coral Crew</h2><div class="health"><span id="health-pips-a" class="health-pips" aria-hidden="true"></span><strong id="health-a">5 / 5 HP</strong></div></div>
             <canvas id="arena-a" width="960" height="540" tabindex="0" aria-label="Coral arena. Use WASD or drag to move the rehearsal marker."></canvas>
-            <div class="arena-caption"><span id="tracking-a">○ MARKER OFFLINE</span><span><kbd>WASD</kbd> or drag</span></div>
+            <div class="arena-caption"><span id="tracking-a">○ MARKER OFFLINE</span><span id="movement-a"><kbd>WASD</kbd> or drag · rehearsal only</span></div>
             <div class="tools"><label for="input-a">Marker</label><select id="input-a"><option value="off">Off</option><option value="keyboard">Rehearsal · WASD</option><option value="camera">Camera tracker</option></select><a href="/track/a" target="_blank" rel="noopener">Camera setup ↗</a><a href="/overlay/a" target="_blank" rel="noopener">OBS ↗</a></div>
           </article>
           <article class="team b">
             <div class="team-heading"><h2><span class="dot"></span>Violet Crew</h2><div class="health"><span id="health-pips-b" class="health-pips" aria-hidden="true"></span><strong id="health-b">5 / 5 HP</strong></div></div>
             <canvas id="arena-b" width="960" height="540" tabindex="0" aria-label="Violet arena. Use arrow keys or drag to move the rehearsal marker."></canvas>
-            <div class="arena-caption"><span id="tracking-b">○ MARKER OFFLINE</span><span><kbd>↑ ↓ ← →</kbd> or drag</span></div>
+            <div class="arena-caption"><span id="tracking-b">○ MARKER OFFLINE</span><span id="movement-b"><kbd>↑ ↓ ← →</kbd> or drag · rehearsal only</span></div>
             <div class="tools"><label for="input-b">Marker</label><select id="input-b"><option value="off">Off</option><option value="keyboard">Rehearsal · arrows</option><option value="camera">Camera tracker</option></select><a href="/track/b" target="_blank" rel="noopener">Camera setup ↗</a><a href="/overlay/b" target="_blank" rel="noopener">OBS ↗</a></div>
           </article>
         </section>
@@ -63,7 +71,7 @@
       <summary><span>Stream setup & fair play</span><span class="summary-hint">Audience · camera · OBS</span></summary>
       <div class="setup-grid">
         <section><div class="section-heading"><h2>Audience normalization</h2><span id="count-source" class="eyebrow">SYNTHETIC COUNTS</span></div><p>Accepted activity is divided by source-stream viewers. The comparison uses eight-second buckets, so bigger audiences need proportionally more activity.</p><p id="pressure-detail">Waiting for audience data.</p><form id="audience-form" class="inline"><label for="audience-a">Coral viewers<input id="audience-a" type="number" min="0" max="10000000" value="100" required></label><label for="audience-b">Violet viewers<input id="audience-b" type="number" min="0" max="10000000" value="100" required></label><button>Apply test counts</button></form><p id="twitch-status"></p></section>
-        <section><h2>Bring the battle into OBS</h2><ol><li>For physical play, select Camera tracker, open Camera setup and calibrate a bright coloured body marker. Keep both tracker windows visible.</li><li>Add each OBS URL as a <strong>960 × 540</strong> Browser Source over its matching camera crop and mirror setting. If OBS holds the webcam, use OBS Virtual Camera without the overlay in its feed.</li><li>Messages have equal 128 × 28 hitboxes. Five health; 1.5-second grace after a hit. Tracking loss pauses the round.</li></ol><p>This prototype runs on one machine. Remote streamer transport and external VTuber avatar adapters remain pending. The rehearsal figure is a test target, not a live video or an external avatar.</p></section>
+        <section><h2>Bring the battle into OBS</h2><ol><li>For physical play, select Camera tracker, open Camera setup and calibrate a bright coloured body marker. Keep both tracker windows visible.</li><li>Add <a href="/overlay/a" target="_blank" rel="noopener">Coral OBS URL ↗</a> and <a href="/overlay/b" target="_blank" rel="noopener">Violet OBS URL ↗</a> as <strong>960 × 540</strong> Browser Sources over their matching camera crops and mirror settings. If OBS holds the webcam, use OBS Virtual Camera without the overlay in its feed.</li><li>In OBS, Start Streaming sends the composed picture to Twitch; Start Recording saves a video. Chat still comes from the real Twitch chat rooms.</li><li>Messages have equal 128 × 28 hitboxes. Five health; 1.5-second grace after a hit. Tracking loss pauses the round.</li></ol><p>This prototype runs on one machine. Remote streamer transport and external VTuber avatar adapters remain pending. The rehearsal figure is a test target, not a live video or an external avatar.</p></section>
       </div>
     </details>
     <footer><span>Local prototype · free chat counts · camera frames stay in your browser</span><span id="connection" role="status">Connecting</span></footer>

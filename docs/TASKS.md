@@ -10,6 +10,8 @@ Use the [agent map](AGENT_MAP.md) for task-to-code/test routing and
 
 | Task | Priority | Proposed owner | Depends on | State |
 | --- | --- | --- | --- | --- |
+| Web-operated real Twitch physical/avatar dodge acceptance | Current working route, 2026-11-02 | This session: local setup/diagnostics; account/hardware owners unassigned | Private two-channel consent; physical camera/OBS setup; decide required delivery topology | Live readiness/gating, receipt diagnostics and doctor/verifier implemented; serial suite 119/119. Live/hardware acceptance blocked by configuration and unavailable browser/camera setup. Remote/avatar/judge access remain open |
+| Extension-operated physical/avatar dodge | Preserved alternative; immediate preference superseded | Integrator + auth/rules/frontend, people unassigned | Explicit mode/contract design, shared backend and authenticated remote tracking | Existing native controls operate community PK, not dodge; integration deferred in the proposed immediate route, no implementation or publication |
 | Horizontal community-support dodge revision | P0 revised direction | Integrator/rules/frontend | [Latest design correction](design/physical-danmaku-discussion.md) | Implemented in separate dodge mode: fixed horizontal lanes, free chat core, optional capped support, no invented quiet-stream hazards; checks recorded in current handoff |
 | 0. Resolve judge access/delivery setup | P0 | Representative + integrator | Real Twitch accounts and a reproducible judging setup | Chat/OBS accepted for next evidence run; final judge access still open; Extension publication optional |
 | 1. CI + packaging regression coverage | P0 | Integrator | Current passing baseline | Ready |
