@@ -5,6 +5,45 @@ Updated 2026-10-31 (Asia/Singapore; audit started October 30). Read this first, 
 
 ## What this session did
 
+### Horizontal dodge PK implemented
+
+After the user confirmed the dodge arena itself is the PK game (A), replaced
+marker-aimed shots with fixed, cycling horizontal lanes in `DanmakuEngine`.
+Messages from either source chat now travel left-to-right in the opposing
+arena; markers remain collision targets, and defection only redirects future
+messages. Free chat is the core input, optional Cheer/gift events remain capped,
+and no synthetic neutral hazards are generated. Updated product, contract,
+runbook, design, task, decision and record notes. No wire fields or routes changed.
+Working tree: `master`, base `a138f8d`; edits remain uncommitted.
+
+Initial full `npm test` under Node `v23.11.0` exposed six Twitch lifecycle tests
+cancelled because reconnect retry timers were unref'ed. Removed the unref so the
+bridge remains alive during recovery. Final `npm test` passes **112/112**;
+`npm run check` and `git diff --check` pass. No physical OBS or live Twitch
+acceptance was performed. The local session record is updated; Google
+Records mirror stays pending because no connected document session is available.
+Chrome 156 headless smoke on isolated port 3031 passed controller start, both
+960×540 arenas, opposite-chat routing, horizontal trajectories, W marker
+movement, Coral focus and the transparent overlay. Generated-camera feeds through
+both tracker pages produced the expected mirror transforms (X≈230↔728, Y≈269),
+with no page errors. Physical webcams and OBS were not available/validated.
+Remaining blockers: physical camera/OBS alignment and authorized account access
+for live Twitch. Next: open both tracker pages and OBS Browser Sources on hardware,
+align camera crops, then proceed to two-channel acceptance.
+
+### Current codebase explanation
+
+The first audit on `master` at `a138f8d` read the required source/docs and explained
+the four isolated runtime modes: native Extension PK, loopback sandbox, legacy
+debug, and local OBS dodge. It also confirmed `bot.mjs` is only a retained
+single-channel EventSub connectivity bot, rather than the main application.
+No runtime/configuration changes or fresh automated/browser/live checks were
+performed. At that audit's start, shots still aimed at marker snapshots. The
+implementation and current behavior are recorded above. The local
+[session record](../records/2026-10-31_unassigned_codebase-review_pending.md)
+is updated; its Google Records mirror is pending because no connected document
+session was available. No implementation or tests were run for this review.
+
 ### Pull request and default-branch integration
 
 User explicitly requested opening a PR and merging to the primary branch.
@@ -20,8 +59,9 @@ zero failures/skips; `git diff --check origin/master...HEAD` PASS; knowledge-doc
 check **181 links / 19 documents** PASS. GitHub reports clean/mergeable, no review
 decision and no check runs; these local checks are not GitHub CI. No new browser,
 Twitch or physical OBS acceptance. Merge is user-authorized; no deployment.
-Next: agree on quiet/free/paid balance, implement the horizontal lane model when
-requested, and obtain real Twitch/OBS evidence. Google mirror remains pending.
+At that merge-preparation point the follow-up was to settle balance and implement
+horizontal lanes; the implementation is recorded above. Real Twitch/OBS evidence
+remains outstanding. Google mirror remains pending.
 
 ### Horizontal support model — design correction
 
@@ -30,12 +70,13 @@ horizontal Bilibili-style danmaku, without marker-directed aim, and asked about
 few gifts/supporters. Recorded confirmed correction separately from proposed
 free-support, neutral-floor and capped-density tuning in the design discussion,
 product, decisions and runbook. Arena HUD remains the selected visual direction.
-Current code still aims at markers; no runtime/API or test changes this turn.
+At that review point, code still aimed at markers; the later implementation above
+replaced that behavior with horizontal lanes.
 The 111-test result below belongs to the preceding unit-test turn, not a fresh
 run here. Local documentation checks only. User subsequently requested publishing
 these notes to `codex/integrator-danmaku-dodge`; published as `be0f193`. No merge or
-deployment. Next: agree on free/paid influence and quiet baseline,
-then implement/test the lane scheduler when requested. Google mirror pending:
+deployment. The later implementation above chose free chat as the core input and
+no fabricated quiet-stream hazards. Google mirror pending:
 no Google writer or connected document session available.
 
 ### Additional dodge unit tests

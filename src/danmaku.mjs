@@ -45,6 +45,9 @@ export class DanmakuEngine {
     this.bucket = 0; this.barrage = null; this.barrageUntil = 0; this.lead = null; this.lastPayload = { a: null, b: null };
     this.health = { a: this.config.health, b: this.config.health }; this.invulnerable = { a: 0, b: 0 };
     this.queues = { a: [], b: [] }; this.credit = { a: 0, b: 0 }; this.nextShot = { a: 0, b: 0 };
+    const laneCount = Math.max(1, Math.floor(this.config.height / this.config.bulletHeight));
+    const initialLane = Math.floor(this.random() * laneCount);
+    this.laneCursor = { a: initialLane, b: initialLane };
     this.shots = { a: 0, b: 0 }; this.players = new Map(); this.seen = new Set();
     this.bullets = []; this.sequence = 0; this.events = []; this.result = null; this.reason = '';
   }
@@ -131,13 +134,17 @@ export class DanmakuEngine {
     return { ok: true, team, normalized };
   }
   spawn(from, payload) {
-    const target = other(from), marker = this.markers[target];
-    const x = from === 'a' ? -this.config.bulletWidth / 2 : this.config.width + this.config.bulletWidth / 2;
-    const y = 30 + this.random() * (this.config.height - 60);
-    const dx = marker.x - x, dy = marker.y - y, length = Math.hypot(dx, dy);
+    const target = other(from), laneCount = Math.max(1, Math.floor(this.config.height / this.config.bulletHeight));
+    const lane = this.laneCursor[target] % laneCount;
+    this.laneCursor[target] = (lane + 1) % laneCount;
+    // Both arenas use the same readable left-to-right lanes. Stream activity
+    // decides which arena receives a message; marker position never steers it.
+    const x = -this.config.bulletWidth / 2;
+    const y = (lane + .5) * this.config.height / laneCount;
     this.bullets.push({ id: ++this.sequence, from, target, ...payload, x, y,
-      vx: dx / length * this.config.speed, vy: dy / length * this.config.speed,
-      armsAt: this.elapsed + this.config.warningMs, expiresAt: this.elapsed + 7000 });
+      vx: this.config.speed, vy: 0,
+      armsAt: this.elapsed + this.config.warningMs,
+      expiresAt: this.elapsed + this.config.warningMs + (this.config.width + this.config.bulletWidth) / this.config.speed * 1000 + 1000 });
     this.lastPayload[from] = payload; this.shots[from]++; this.event('shot', { from, target });
   }
   tick() {

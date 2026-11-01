@@ -15,23 +15,27 @@ what actually works. Use [agent map](AGENT_MAP.md) to find the relevant code.
 
 Latest user correction: audience support should create collective pressure;
 OBS danmaku should scroll horizontally like Bilibili without targeting the marker.
-This supersedes earlier aimed-trajectory design defaults, while current code
-still implements them. Low-support balance proposals (free contributions, neutral
-baseline, capped density and gift emphasis) await agreement; see the latest
-[design discussion](design/physical-danmaku-discussion.md). No implementation was
-requested by the balance question, and no runtime/contract changed in this turn.
+The user clarified that this is the dodge game itself (two equal arenas with
+health/survival deciding PK), not an overlay layer for arbitrary activity. This
+supersedes earlier aimed-trajectory defaults. Free chat is the core participation
+path, optional Cheer/gift input is capped by existing rules, and quiet chats stay
+quiet rather than receiving fabricated neutral hazards. These choices are now
+implemented in the separate dodge mode; competitive tuning and live acceptance
+remain open. See the [design discussion](design/physical-danmaku-discussion.md)
+and [runbook](dodge-runbook.md).
 
 | Idea / decision | Status and consequence | Detail / provenance |
 | --- | --- | --- |
 | Cross-channel audience interference | Core idea; implemented in native PK and local dodge using different rules | [Product](PRODUCT.md), [original ideation summary](../records/sources-2026-10-31.md) |
-| Streamers choose their activity | Retained; app does not control arbitrary external games or judge artwork | [AGENTS.md](../AGENTS.md), product |
+| Streamers choose their activity | Retained for native PK; physical-danmaku mode is the selected dodge game arena, not an arbitrary-activity overlay | [AGENTS.md](../AGENTS.md), product |
+| Dodge PK format | Confirmed as A: both streamers dodge in equal arenas; opposing-community messages are horizontal bullets; remaining health settles the winner | [Product](PRODUCT.md), [dodge runbook](dodge-runbook.md) |
 | Free participation | Retained; ordinary chat is eligible. Paid support is optional, never required | [Dodge runbook](dodge-runbook.md) |
 | No third host in native PK | Implemented: A invites B, B accepts, both ready, automatic start/result | Product and [contract](API_CONTRACT.md) |
 | One viewer identity/allegiance across channels | Backend-owned; one cooldown and one defection allowance per match. Cooldown values differ between modes | Contract and runbook |
 | Show existing attack/defection mechanics first | Earlier confirmed presentation scope; later expanded to playable physical dodging | [Presentation spec](superpowers/specs/2026-10-31-pk-danmaku-design.md), [discussion](design/physical-danmaku-discussion.md) |
 | Equal arenas and body-point dodging via OBS | Confirmed; local 960×540 arenas implemented. Physical alignment and remote two-machine play pending | Runbook and [dodge plan](superpowers/plans/2026-10-31-dodge-mode.md) |
 | VTuber avatars move to dodge with equivalent geometry | Confirmed direction; specific avatar software/control adapter unknown and not implemented | Physical discussion, runbook |
-| Automatic tracked-marker hits | Explicit user selection; local colour-marker tracking/collisions implemented. Full body-pose recognition is not implemented | Discussion, runbook |
+| Automatic tracked-marker hits | Explicit user selection; local colour-marker tracking/collisions implemented. Markers determine hits, not message aim. Full body-pose recognition is not implemented | Discussion, runbook |
 | Danmaku made from chat, gifts and paid messages | Chat + optional Twitch Cheer/gift ingestion implemented; real grants/events pending acceptance. “Super Chat” describes the idea, not a Twitch event name | Contract, runbook, source notes |
 | Equal bounded projectile appearance and length | Confirmed; fixed hit geometry, clipped text and capped load implemented | Runbook; geometry source via agent map |
 | Sustained 5–10-second lead can overwhelm opponent | Confirmed direction; first-pass five-second lead/eight-second bucket/six-second barrage implemented. Competitive balance unverified | Runbook |

@@ -1,5 +1,29 @@
 # Verified status — audit spanning 2026-10-30–31 (Asia/Singapore)
 
+## Latest implementation update — horizontal dodge lanes (2026-10-31)
+
+User confirmed the dodge arena itself is the PK game (A), not a danmaku layer on
+arbitrary activity. `src/danmaku.mjs` now sends both communities' messages
+left-to-right through fixed cycling lanes in the opposite arena. Marker positions
+affect collision only. Existing defection/allegiance, viewer normalization,
+moderation, and bounded activity remain. Free chat is the core input; optional
+Cheers/gifts keep capped event weights; no neutral hazards are fabricated.
+
+The first full test run under Node `v23.11.0` exposed six Twitch lifecycle tests
+cancelled while only unref retry timers were pending. Removed the retry timer's
+unref call so a standalone bridge remains alive while reconnecting. Final
+`node --test test/twitch.test.mjs` passes 9/9; full `npm test` passes **112/112**;
+`npm run check` and `git diff --check` pass. No live Twitch, real browser or
+physical OBS acceptance was run.
+Working tree is `master` at base `a138f8d`; implementation and docs are
+uncommitted. Remaining blockers: physical camera/OBS validation and an authorized
+account owner/private setup for two-channel Twitch acceptance. Next:
+rehearse both arenas with aligned camera sources, then run live acceptance when
+setup is available.
+Chrome 156 headless passes local controller/overlay checks and generated-camera
+mirror mapping; these do not establish physical OBS or Twitch acceptance. See the
+[handoff](HANDOFF.md) and [session record](../records/2026-10-31_unassigned_codebase-review_pending.md).
+
 ## Latest implementation update — 2026-10-31
 
 Integration request: user authorized PR creation and merge. GitHub's default
