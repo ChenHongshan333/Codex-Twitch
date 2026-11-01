@@ -11,6 +11,8 @@ using `npm.cmd test -- --test-concurrency=1` on Node v25.9.0. Offline doctor exi
 1 as expected: live flag and two channels incomplete, token format only.
 No fresh browser, physical camera/OBS or actual Twitch acceptance; no .env changes,
 deployment or stream started. Remote two-computer play/avatar adapters still open.
+Implementation `1d5e50a` was successfully pushed to the matching origin branch;
+publication receipt follows as documentation. No merge or deployment.
 See [progress](../progress.md) and [handoff](HANDOFF.md) for next steps.
 
 Latest working route, 2026-11-02: user prefers returning to the web controller

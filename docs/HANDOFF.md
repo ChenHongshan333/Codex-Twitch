@@ -19,7 +19,9 @@ Read-only verifier likewise exits 1 at local config, without network access.
 Ephemeral synthetic HTTP smoke: all 7 controller/script/tracker/overlay/state
 URLs return 200, server closed afterward.
 No browser surface available, so no fresh real-browser/hardware/OBS/Twitch result.
-Documentation/diff checks pass; publication outcome is recorded after push.
+Documentation/diff checks pass. Implementation commit `1d5e50a` was successfully
+pushed with upstream tracking to `origin/codex/integrator-live-dodge-setup`;
+this publication receipt is a follow-up documentation commit. No merge/deployment.
 Google mirror pending: connected document inventory is empty. Update the existing
 [session record](../records/2026-11-01_unassigned_status-run-guide_pending.md).
 

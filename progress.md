@@ -7,6 +7,10 @@
 OBS 输出，保留虚拟形象的后续接入目标与原生 Extension 代码。控制台不负责人工
 算分：碰撞、血量、计时和胜负仍由后台自动处理；键盘人物仅是模拟测试工具。
 
+代码提交 `1d5e50a` 已成功推送至
+[GitHub 功能分支](https://github.com/ChenHongshan333/Codex-Twitch/tree/codex/integrator-live-dodge-setup)。
+本次记录的推送回执随文档后续提交同步；未合并默认分支、未部署或开播。
+
 ### 已完成的代码
 
 - `npm run doctor:dodge`：离线检查真实模式、用户 token 格式、两个不同频道名和

@@ -47,7 +47,10 @@ parallel Node failures occurred before assertions in multiple old and new test
 files; cause not proven. Serial execution passed every test without reducing
 coverage; reference Node 24 and default test command were not changed.
 
-Publication result is added after the observed push. Real Twitch, physical
+Publication: implementation commit `1d5e50a` created and `git push --set-upstream
+origin codex/integrator-live-dodge-setup` succeeded on 2026-11-02. Upstream tracking
+is established; this receipt is added in a documentation follow-up. No merge or
+deployment. Real Twitch, physical
 camera/OBS, public/remote transport and software-specific avatar checks remain
 pending, with configuration and next steps in progress.md and the runbook.
 
