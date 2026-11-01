@@ -13,6 +13,11 @@ The 2026-10-31 horizontal-lane implementation changes dodge trajectory behavior
 since the reviewed baseline: `DanmakuEngine.spawn` selects fixed cycling lanes,
 while `tick` still performs swept marker collision. See the current runbook and
 handoff for behavior and verification state.
+The 2026-11-02 live-setup revision (base `e91c6fb`) adds readiness and chat receipt
+diagnostics to `dodge-http.mjs`, camera-first live UI, and `dodge-setup.mjs` for
+offline config/read-only Twitch checks. Start/Resume live gating and additive
+snapshot fields are documented in the contract. Follow `test/dodge-live.test.mjs`,
+`test/dodge-setup.test.mjs` and the existing HTTP/UI suites for this boundary.
 
 ## Read according to the task
 
@@ -97,6 +102,7 @@ are not cached here.
 | Twitch reconnect, dedupe, support/moderation | [twitch.mjs](../src/twitch.mjs): `TwitchBridge.validate`, `handle`, `fail`, `stop` | [twitch.test.mjs](../test/twitch.test.mjs), consuming room/dodge HTTP cases |
 | Dodge collision, allegiance, admission, barrage | [danmaku.mjs](../src/danmaku.mjs): `sweptHit`, `DanmakuEngine.activity`, `tick`, `audience`, `moderate` | [danmaku.test.mjs](../test/danmaku.test.mjs) |
 | Dodge routes, live/synthetic boundary, counts | [dodge-http.mjs](../src/dodge-http.mjs): `createDodgeServer`, `sampleAudience`; [dodge-server.mjs](../scripts/dodge-server.mjs) | [dodge-http.test.mjs](../test/dodge-http.test.mjs) |
+| Live dodge readiness/diagnostics and read-only connection check | [dodge-http.mjs](../src/dodge-http.mjs): `readiness`, chat counters; [dodge-setup.mjs](../src/dodge-setup.mjs): `inspectDodgeConfig`, `verifyDodgeConnection`; [doctor-dodge.mjs](../scripts/doctor-dodge.mjs) | [dodge-live.test.mjs](../test/dodge-live.test.mjs), [dodge-setup.test.mjs](../test/dodge-setup.test.mjs), existing dodge UI/HTTP suites; real Twitch/OBS acceptance separately |
 | Camera detection, crop/mirror, loss | [tracker.js](../public/dodge/tracker.js): `findMarker` and camera lifecycle; [track.html](../public/dodge/track.html) | Colour tests in dodge HTTP suite; browser video pipeline; physical camera check separately |
 | Dodge rendering/controller/OBS | [dodge.js](../public/dodge/dodge.js): `drawArena`, `renderControls`, `renderFeed`, synthetic quick-start; [index.html](../public/dodge/index.html), [dodge.css](../public/dodge/dodge.css), [overlay.html](../public/dodge/overlay.html) | [dodge-ui.test.mjs](../test/dodge-ui.test.mjs) for DOM/local HTTP, then real-browser controls/mobile/reconnect/transparent output; [UI review](design/2026-10-31-dodge-ui-review.md); OBS hardware separately |
 | Extension packaging/judge access | [package-extension.mjs](../scripts/package-extension.mjs): `parseOptions`, `stripLocalSimulator`, `collectAssets`; [setup](twitch-extension-setup.md) | Local `--check`/actual ZIP review; packaging regression task remains open |

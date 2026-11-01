@@ -13,6 +13,47 @@ what actually works. Use [agent map](AGENT_MAP.md) to find the relevant code.
 
 ## Product and gameplay
 
+Implementation authorization (2026-11-02): user explicitly asked to build the
+web/chat/OBS route, update progress.md and push to GitHub. Implemented local live
+readiness, diagnostic tooling and camera-first operator UI; no credentials,
+broadcast, deployment, native-mode replacement or remote exposure was performed.
+Topology/VTuber questions were sent to the user; no answer assumed. Local live
+acceptance still needs private channel setup and physical OBS verification.
+
+Current working route (2026-11-02): user responds to the unreviewed-Extension
+judge restriction by preferring the web controller and requests a consolidated
+direction/task sequence. Gameplay stays real chat -> opposing horizontal shots ->
+physical/avatar dodging -> automatic collision/health/result -> OBS/Twitch output.
+No manual scoring or mouse-character play is implied by the web entry point.
+Native Extension is preserved as an alternative; its integration is no longer
+the immediate proposal. Final delivery topology (same-machine acceptance versus
+required remote play), avatar software and judge setup remain open. Suggested
+physical-first acceptance is not a user-approved cancellation of avatar support.
+No runtime redesign/deployment/broadcast is authorized by the planning question.
+
+Earlier preference, superseded for the immediate route (2026-11-02): use a native Twitch Extension for streamer
+buttons and automatic start/scoring/settlement, retaining physical/virtual-avatar
+dodging and avoiding a separate controller in normal use. This supersedes the
+earlier suggestion to retain a standalone operator page as the target UX. Existing
+native invitation/ready/auth components can be reused, but their community-volley
+engine is separate from dodge health/collision. Integration must explicitly
+preserve native PK and add dodge support rather than treating both states as one.
+Local tracking/avatar adapters and authenticated remote transport remain needed.
+This is a product direction, not a claim of implemented integration or permission
+to publish/deploy. Hosted Test and public review/judge access are separate gates.
+
+Scope reconfirmed (2026-11-02): after questioning the chatbot-to-dodge transition,
+the user explicitly retains physical/virtual-avatar dodging and asks for the
+real-Twitch integration approach and controller necessity. Prioritize explaining
+and validating chat input, tracked coordinates, collision and OBS output. Existing
+chat wiring and physical colour-marker prototype are implemented; actual live/
+hardware acceptance, specific avatar-position adapters and remote transport remain
+open. Browser start/pause controls are a current implementation choice, not a
+Twitch requirement. A smaller streamer setup/control page is a recommendation,
+not implemented or approved as a redesign; no chat start/pause command is wired.
+Mouse/keyboard input remains a local tracking substitute. The user's request
+for an approach does not authorize broadcasting, deployment or credential changes.
+
 Latest user correction: audience support should create collective pressure;
 OBS danmaku should scroll horizontally like Bilibili without targeting the marker.
 The user clarified that this is the dodge game itself (two equal arenas with

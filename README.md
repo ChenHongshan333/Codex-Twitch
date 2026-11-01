@@ -1,5 +1,14 @@
 # ChatCrossfire / 弹幕交火
 
+当前交付路线：**网页设置页 + 真实 Twitch 聊天 + 真人追踪 + OBS**。
+主播在网页设置摄像头、开始/暂停；观众在 Twitch 聊天室参与；碰撞、血量与
+胜负由后台自动处理。键盘人物仅用于模拟测试，原生 Extension 保留为可选模式。
+真实输入配置后依次运行 `npm run doctor:dodge`、`npm run verify:dodge`、
+`npm run dodge`。前两步分别检查配置和只读聊天/观众数连接，均不会代替你开播。
+实时就绪清单和聊天接收/拒绝原因帮助定位缺口。
+详见 [真实联调步骤](docs/dodge-runbook.md#real-twitch-input-private-configuration)。
+当前仍是同机原型；远程双电脑和特定 VTuber 软件接口未实现。
+
 New local OBS dodge prototype: `npm run dodge`, then open
 [Dodge Lab](http://127.0.0.1:3020/). Equal arenas, camera colour-marker hits,
 viewer-normalized chat attacks and defection. Start with keyboard rehearsal;

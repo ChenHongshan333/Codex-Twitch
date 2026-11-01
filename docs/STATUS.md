@@ -1,5 +1,43 @@
 # Verified status — audit spanning 2026-10-30–31 (Asia/Singapore)
 
+## Live-dodge implementation — 2026-11-02
+
+Branch `codex/integrator-live-dodge-setup`, base `e91c6fb`. Added safe offline/live
+connection diagnostics, readiness/Start-Resume gating, chat receipt/rejection
+counters and a camera-first real-input page. Native PK/gameplay rules are retained.
+Syntax isolated rerun passes; default parallel full tests suffer native Node
+process OOM failures in and out of sandbox; serial full suite passes **119/119**
+using `npm.cmd test -- --test-concurrency=1` on Node v25.9.0. Offline doctor exits
+1 as expected: live flag and two channels incomplete, token format only.
+No fresh browser, physical camera/OBS or actual Twitch acceptance; no .env changes,
+deployment or stream started. Remote two-computer play/avatar adapters still open.
+See [progress](../progress.md) and [handoff](HANDOFF.md) for next steps.
+
+Latest working route, 2026-11-02: user prefers returning to the web controller
+after discussing unreviewed-Extension judge access, and asks to consolidate scope.
+Retain physical/avatar dodging, real Twitch chat and OBS; native Extension stays
+preserved. Final same-machine/remote delivery topology and specific avatar
+adapter remain open. No new runtime/live acceptance. See [handoff](HANDOFF.md).
+
+Product scope reconfirmed on 2026-11-02: retain physical/virtual-avatar dodging;
+user requests the real-Twitch integration approach and controller necessity.
+Existing runtime is unchanged; no fresh live acceptance or product redesign is
+claimed. Physical tracking is a colour-marker prototype; specific avatar adapters
+and authenticated remote play remain open. See [handoff](HANDOFF.md).
+
+## Fresh startup review — 2026-11-01
+
+Reviewed clean `master` at `e91c6fb`; horizontal dodge work is merged (PR #2).
+Documentation-only follow-up branch: `codex/docs-status-run-guide`. Fresh syntax
+check passes. Initial full test run: 105 passed plus two file-level failures;
+focused rerun: 19/19 pass; full rerun: 112/112 pass. Initial failure cause remains
+unconfirmed on local Node v25.9.0. Synthetic local HTTP smoke returns 200 for
+controller, state, both trackers and both overlays; temporary server closed.
+No fresh real-browser, physical camera/OBS or live Twitch evidence. Those
+acceptance gaps remain open. See the [session record](../records/2026-11-01_unassigned_status-run-guide_pending.md)
+for exact checks and pending Google mirror. Older checkout/test counts below are
+historical. Immediate local entry: `npm run dodge` → port 3020 → **Start rehearsal**.
+
 ## Latest implementation update — horizontal dodge lanes (2026-10-31)
 
 User confirmed the dodge arena itself is the PK game (A), not a danmaku layer on

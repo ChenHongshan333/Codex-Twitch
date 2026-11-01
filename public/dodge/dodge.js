@@ -2,7 +2,7 @@ const $ = id => document.getElementById(id);
 const sides = ['a', 'b'];
 const colours = { a: '#ff826e', b: '#bda4ff' };
 const overlay = $('overlay'), overlaySide = location.pathname.split('/').pop();
-let state, receivedAt = 0, demoTimer, demoStep = 0, connected = false, starting = false, feedCursor = '';
+let state, receivedAt = 0, demoTimer, demoStep = 0, connected = false, starting = false, feedCursor = '', configuredInput;
 const positions = { a: { x: 480, y: 270 }, b: { x: 480, y: 270 } }, keys = new Set();
 
 async function post(path, body) {
@@ -12,7 +12,20 @@ async function post(path, body) {
   return result;
 }
 function notice(message) { if ($('notice') && $('notice').textContent !== message) $('notice').textContent = message; }
-function receive(next) { state = next; connected = true; receivedAt = performance.now(); if (!overlay) renderControls(); }
+function receive(next) {
+  state = next; connected = true; receivedAt = performance.now();
+  if (!overlay) {
+    if (configuredInput !== state.inputSource) {
+      configuredInput = state.inputSource;
+      for (const side of sides) {
+        const keyboard = $(`input-${side}`).querySelector('option[value="keyboard"]');
+        keyboard.disabled = state.inputSource !== 'synthetic';
+        if (state.inputSource !== 'synthetic') $(`input-${side}`).value = 'camera';
+      }
+    }
+    renderControls();
+  }
+}
 async function poll() {
   try {
     const response = await fetch('/api/dodge/state', { signal: AbortSignal.timeout(2500) });
@@ -27,6 +40,11 @@ function renderControls() {
   $('phase').textContent = state.phase.toUpperCase();
   $('round-caption').textContent = state.result ? 'Round complete' : state.switchOpen ? 'Defection is open' : state.phase === 'paused' ? 'Waiting to resume' : state.phase === 'running' ? 'Dodge incoming messages' : 'Make your next move';
   const synthetic = state.inputSource === 'synthetic';
+  $('live-setup').hidden = synthetic;
+  $('audience-form').hidden = !synthetic;
+  document.querySelector('.preview-label').textContent = synthetic ? 'LOCAL PREVIEW · NO STREAM VIDEO' : 'MARKER PREVIEW · CAMERA VIDEO IS IN OBS';
+  for (const side of sides) if (!synthetic) $(`movement-${side}`).textContent = 'Move your body · camera tracking';
+  if (!synthetic) renderReadiness();
   $('rehearsal-intro').hidden = !synthetic || state.phase !== 'lobby';
   $('quick-start').disabled = !connected || starting;
   $('simulator-controls').hidden = !synthetic;
@@ -57,7 +75,8 @@ function renderControls() {
     `${state.pressure.barrage ? `${state.pressure.barrage === 'a' ? 'CORAL' : 'VIOLET'} BARRAGE · ` : ''}A ${totals.a.toFixed(3)} / B ${totals.b.toFixed(3)} units per viewer · denominators ${Math.round(denominator.a)} / ${Math.round(denominator.b)} · ${(state.pressure.windowRemainingMs / 1000).toFixed(1)}s in bucket`;
   $('switch-status').textContent = state.switchOpen ? 'DEFECTION OPEN · switch once; cooldown stays, future messages attack your former side.' : 'Defection opens around halftime. One switch per viewer.';
   document.querySelectorAll('[data-action]').forEach(button => {
-    button.disabled = !connected || ({ start: state.phase !== 'lobby' || !state.tracking.a || !state.tracking.b, pause: state.phase !== 'running', resume: state.phase !== 'paused' || !state.tracking.a || !state.tracking.b, reset: false })[button.dataset.action];
+    const ready = synthetic ? state.tracking.a && state.tracking.b : state.setup.ready;
+    button.disabled = !connected || ({ start: state.phase !== 'lobby' || !ready, pause: state.phase !== 'running', resume: state.phase !== 'paused' || !ready, reset: false })[button.dataset.action];
   });
   for (const form of [$('audience-form'), $('attack-form')]) for (const item of form.elements) item.disabled = !connected || !synthetic;
   $('switch').disabled = !connected || !state.switchOpen || !synthetic;
@@ -65,6 +84,21 @@ function renderControls() {
   $('demo').disabled = !connected || !synthetic || state.phase !== 'running';
   $('stop-demo').disabled = !demoTimer;
   renderFeed();
+}
+function renderReadiness() {
+  const checks = [{ ready: connected && state.setup.chats, text: `Twitch chats: ${state.twitch.message || state.twitch.state}` }];
+  for (const side of sides) {
+    const name = side === 'a' ? 'Coral' : 'Violet', count = state.pressure.audience[side];
+    const fresh = count && state.serverTime - count.at < state.config.freshnessMs;
+    const activity = state.inputActivity[side];
+    checks.push({ ready: Boolean(fresh && count.value > 0), text: `${name} viewers: ${count ? Math.round(count.value) : 'offline / unavailable'}${count && !fresh ? ' (stale)' : ''}. Chat received ${activity.received}, accepted ${activity.accepted}, rejected ${activity.rejected}.${activity.lastReason ? ` Last reason: ${activity.lastReason}` : ''}` });
+    checks.push({ ready: state.tracking[side], text: `${name} camera marker: ${state.tracking[side] ? 'tracking' : 'open Camera setup and calibrate'}.` });
+    const link = $(`chat-link-${side}`), channel = state.twitch.channels?.find(item => item.team === side);
+    link.hidden = !channel || !/^[a-zA-Z0-9_]{1,25}$/.test(channel.login);
+    if (!link.hidden) link.href = `https://www.twitch.tv/${channel.login}/chat`;
+  }
+  $('readiness-checks').replaceChildren(...checks.map(check => { const row = document.createElement('li'); row.dataset.ready = String(check.ready); row.textContent = `${check.ready ? '✓' : '○'} ${check.text}`; return row; }));
+  $('start-requirements').textContent = !connected ? 'Local server disconnected. Reconnect before starting.' : state.setup.ready ? 'Ready. Start round once; hits, health and the final result are automatic.' : state.setup.blockers.join(' ');
 }
 function renderFeed() {
   const cursor = `${state.id}:${state.events.at(-1)?.id ?? 0}`;
@@ -100,14 +134,14 @@ function drawArena(canvas, side) {
     ctx.strokeRect(30, 30, 900, 480);
     ctx.beginPath(); ctx.moveTo(30, 450); ctx.lineTo(930, 450); ctx.stroke();
     const p = state.markers[side] ?? { x: 480, y: 270 };
-    if ($(`input-${side}`).value !== 'camera') {
+    if (state.inputSource === 'synthetic' && $(`input-${side}`).value === 'keyboard') {
       ctx.save(); ctx.translate(p.x, p.y); ctx.globalAlpha = state.tracking[side] ? 1 : .45;
       ctx.fillStyle = '#2b303d'; ctx.strokeStyle = '#6a7084'; ctx.lineWidth = 3;
       ctx.beginPath(); ctx.arc(0, -79, 25, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
       ctx.beginPath(); ctx.moveTo(-22, -42); ctx.quadraticCurveTo(-58, -35, -61, 24); ctx.lineTo(-45, 78); ctx.lineTo(-25, 75); ctx.lineTo(-20, 112); ctx.lineTo(20, 112); ctx.lineTo(25, 75); ctx.lineTo(45, 78); ctx.lineTo(61, 24); ctx.quadraticCurveTo(58, -35, 22, -42); ctx.closePath(); ctx.fill(); ctx.stroke();
       ctx.beginPath(); ctx.moveTo(-14, 112); ctx.lineTo(-24, 174); ctx.moveTo(14, 112); ctx.lineTo(24, 174); ctx.stroke(); ctx.restore();
     }
-    ctx.fillStyle = '#a5a8b7'; ctx.font = '13px system-ui'; ctx.textAlign = 'left'; ctx.fillText('960 × 540 · REHEARSAL TARGET', 47, 58);
+    ctx.fillStyle = '#a5a8b7'; ctx.font = '13px system-ui'; ctx.textAlign = 'left'; ctx.fillText(state.inputSource === 'synthetic' ? '960 × 540 · REHEARSAL TARGET' : '960 × 540 · CAMERA MARKER PREVIEW', 47, 58);
   }
   ctx.strokeStyle = colours[side]; ctx.lineWidth = 2; ctx.strokeRect(1, 1, 958, 538);
   for (const b of state.bullets) if (b.target === side) {
@@ -183,7 +217,7 @@ if (!overlay) {
   window.addEventListener('keyup', event => keys.delete(event.key.length === 1 ? event.key.toLowerCase() : event.key)); window.addEventListener('blur', () => keys.clear());
   for (const side of sides) {
     const canvas = $(`arena-${side}`);
-    const drag = event => { if ($(`input-${side}`).value !== 'keyboard') return; const rect = canvas.getBoundingClientRect(); positions[side] = { x: Math.max(14, Math.min(946, (event.clientX - rect.left) / rect.width * 960)), y: Math.max(14, Math.min(526, (event.clientY - rect.top) / rect.height * 540)) }; };
+    const drag = event => { if (state?.inputSource !== 'synthetic' || $(`input-${side}`).value !== 'keyboard') return; const rect = canvas.getBoundingClientRect(); positions[side] = { x: Math.max(14, Math.min(946, (event.clientX - rect.left) / rect.width * 960)), y: Math.max(14, Math.min(526, (event.clientY - rect.top) / rect.height * 540)) }; };
     canvas.addEventListener('pointerdown', event => { canvas.setPointerCapture(event.pointerId); canvas.focus(); drag(event); });
     canvas.addEventListener('pointermove', event => { if (event.buttons) drag(event); });
   }
@@ -191,7 +225,7 @@ if (!overlay) {
   setInterval(async () => {
     if (document.hidden || markersSending) return; markersSending = true;
     try { await Promise.all(sides.map(async side => {
-      if ($(`input-${side}`).value !== 'keyboard') return;
+      if (state?.inputSource !== 'synthetic' || $(`input-${side}`).value !== 'keyboard') return;
       for (const key of keys) if (movements[side][key]) { positions[side].x += movements[side][key][0]; positions[side].y += movements[side][key][1]; }
       positions[side].x = Math.max(14, Math.min(946, positions[side].x)); positions[side].y = Math.max(14, Math.min(526, positions[side].y));
       await post('marker', { side, ...positions[side] });

@@ -9,6 +9,7 @@ Google tab mirrors the session identity, contribution, checks, blockers, and nex
 
 | Record | Session identity | Kind |
 | --- | --- | --- |
+| [Project status, scope and live-dodge implementation](2026-11-01_unassigned_status-run-guide_pending.md) | Pending; no observed thread ID | Source review, scope decisions, live setup/diagnostics, tests and publication |
 | [Current codebase review and dodge implementation](2026-10-31_unassigned_codebase-review_pending.md) | Pending; no observed thread ID | Source audit, horizontal-lane dodge implementation, tests and handoff |
 | [Current review, records and dodge implementation](2026-10-31_unassigned_review-records_01a18d87.md) | `01a18d87-3294-76d2-88a8-b5aa16e5daaf` (observed Codex app thread) | Audit, knowledge map, skills, OBS prototype, UI smoke, unit coverage and horizontal-support design |
 | [Prior application implementation](2026-10-30_chenhongshan333_native-pk.md) | Original development session ID still needed from its owner | Historical Git/progress reconstruction |

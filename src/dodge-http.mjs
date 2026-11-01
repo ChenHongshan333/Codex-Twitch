@@ -23,8 +23,20 @@ export function createDodgeServer({ engine = new DanmakuEngine(), live = false, 
   const support = {};
   let sampling = false, stopped = false, syntheticAudience = { a: 100, b: 100 };
   const source = live ? 'twitch' : 'synthetic';
+  const newActivity = () => ({ received: 0, accepted: 0, rejected: 0, lastAt: null, lastReason: '' });
+  let inputActivity = { a: newActivity(), b: newActivity() };
+  function readiness() {
+    const chats = !live || bridge.status.state === 'connected' && ['a', 'b'].every(side => bridge.channels?.some(channel => channel.team === side && channel.subscribed));
+    const audience = engine.freshAudience(), markers = engine.freshMarkers();
+    const blockers = [];
+    if (!chats) blockers.push('Connect both Twitch chats. Check the user token, channel names and network.');
+    if (!audience) blockers.push('Waiting for fresh positive viewer counts on both live streams. Open both broadcasts and wait for the next sample.');
+    if (!markers) blockers.push('Open both camera setup windows and calibrate the markers. Keep both windows visible.');
+    return { ready: chats && audience && markers, chats, audience, markers, blockers };
+  }
   function snapshot() {
-    return { ...engine.snapshot(), inputSource: source, twitch: live ? bridge.status : { state: 'disabled', message: 'Synthetic rehearsal — no Twitch events or real audience counts.' },
+    return { ...engine.snapshot(), serverTime: engine.now(), inputSource: source, twitch: live ? bridge.status : { state: 'disabled', message: 'Synthetic rehearsal — no Twitch events or real audience counts.' },
+      setup: readiness(), inputActivity: structuredClone(inputActivity),
       support: Object.fromEntries(Object.entries(support).map(([side, item]) => [side, item.status])) };
   }
   async function sample() {
@@ -37,7 +49,11 @@ export function createDodgeServer({ engine = new DanmakuEngine(), live = false, 
   }
   bridge.on('chat', chat => {
     if (!live || chat.isCheer && support[chat.channelTeam]?.identity?.scopes?.includes('bits:read')) return;
-    engine.activity({ ...chat, kind: 'chat' });
+    const activity = inputActivity[chat.channelTeam];
+    if (!activity) return;
+    const result = engine.activity({ ...chat, kind: 'chat' });
+    activity.received++; activity[result.ok ? 'accepted' : 'rejected']++;
+    activity.lastAt = engine.now(); activity.lastReason = result.ok ? '' : result.reason;
   });
   bridge.on('moderation', () => engine.moderate());
   bridge.on('status', status => {
@@ -76,12 +92,16 @@ export function createDodgeServer({ engine = new DanmakuEngine(), live = false, 
       if (path === '/api/dodge/marker') engine.marker(input.side, input);
       else if (path === '/api/dodge/action') {
         if (!['start', 'pause', 'resume', 'reset'].includes(input.action)) return respond(400, { error: 'Unknown action.' });
+        if (live && ['start', 'resume'].includes(input.action) && !readiness().ready) return respond(409, { error: readiness().blockers.join(' '), state: snapshot() });
         if (input.action === 'start' && input.durationSeconds !== undefined) {
           if (engine.phase !== 'lobby' || ![60, 180, 300].includes(input.durationSeconds)) return respond(400, { error: 'Choose a 60, 180 or 300 second round before starting.' });
           engine.config.durationMs = input.durationSeconds * 1000;
         }
         engine[input.action]();
-        if (input.action === 'reset') { if (live) void sample(); else engine.audience(syntheticAudience, 'synthetic'); }
+        if (input.action === 'reset') {
+          inputActivity = { a: newActivity(), b: newActivity() };
+          if (live) void sample(); else engine.audience(syntheticAudience, 'synthetic');
+        }
       } else if (path === '/api/dodge/audience' && !live) {
         if (!['a', 'b'].every(side => Number.isInteger(input[side]) && input[side] >= 0 && input[side] <= 10000000)) return respond(400, { error: 'Use nonnegative integer synthetic audience counts.' });
         syntheticAudience = { a: input.a, b: input.b }; engine.audience(input, 'synthetic', { reset: true });

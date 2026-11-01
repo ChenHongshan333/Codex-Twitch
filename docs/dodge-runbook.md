@@ -112,6 +112,11 @@ local operator inputs; remote anti-cheat/latency compensation is not implemented
 
 ## Real Twitch input (private configuration)
 
+This route uses the web setup page, real Twitch chat and OBS. No native Twitch
+Extension installation is required. The page starts/pauses the match; backend
+collision, health, timing and settlement are automatic. Live play uses body-marker
+tracking, not the rehearsal figure. Both arenas still run on one computer.
+
 Create `.env` from `.env.example` only if absent. Never overwrite an existing
 file or put tokens in chat, screenshots, records or Git. Configure:
 
@@ -141,6 +146,54 @@ connect. Synthetic attack/audience endpoints then return 404. Ordinary chat,
 duplicate message IDs are ignored. Moderation delete/clear/ban events
 conservatively remove all pending/in-flight text and reset pressure; damage
 already awarded is not reversed. Delayed moderation cannot undo a shown frame.
+
+### Check configuration, then check the actual connection
+
+```powershell
+npm run doctor:dodge
+npm run verify:dodge
+npm run dodge
+```
+
+`doctor:dodge` prints only configuration names, format/presence status and fixed
+guidance. It exits 1 for incomplete live setup, without editing `.env` or making
+network requests. A token-format OK is not token validity or a scope check.
+`verify:dodge` first requires that configuration, then validates the user token,
+subscribes to both chats and queries both actual viewer counts. It sends no chat,
+does not start a round, camera or OBS broadcast, and closes its EventSub session
+before exit. Offline/zero-viewer streams, failed subscription, API failure and
+timeout exit 1. Exit 0 establishes only subscription/count access at that moment.
+
+The live page has a readiness checklist for chats, viewer samples and markers.
+It blocks Start/Resume until all are ready, including backend enforcement. Open
+both camera setup windows, enable/calibrate the markers and keep them visible.
+The page defaults to cameras; synthetic messages, test viewer counts and keyboard
+marker controls are hidden or disabled in live mode. No full-body or avatar-software
+tracking is implied by a fresh colour marker.
+
+The per-side received/accepted/rejected chat counters help diagnose silence:
+zero received means check connection/source chat; a rejected count shows the last
+rule reason (e.g. not running, cooldown or missing counts). Accepted chat still
+passes normalized admission and caps. Counters reset with the match.
+
+### Small real acceptance run
+
+1. Arrange two authorized live channels with test viewers actually watching.
+   Both counts must be positive; allow time for the next 15-second sample.
+2. Run the read-only verifier, then start dodge and verify the live checklist.
+3. Calibrate both physical markers. Add `/overlay/a` and `/overlay/b` as 960×540
+   OBS Browser Sources above their matching camera crops/mirror settings.
+4. Start the match once. One test viewer in each chat sends an ordinary message
+   every few seconds. Check A-chat -> B arena and B-chat -> A arena, a dodge and
+   a hit, tracking loss/pause/recovery, and automatic settlement. Show the actual
+   Twitch chat and delivered stream, allowing for broadcast delay.
+5. In OBS, Start Streaming publishes to Twitch; Start Recording saves a file.
+   No program command here starts broadcasting on the operator's behalf.
+
+This is a same-computer acceptance procedure. Separate streamer computers need
+authenticated shared transport; do not publish/tunnel this loopback controller.
+Specific VTuber-position adapters remain unimplemented. A future remote/VTuber
+delivery must add and verify those pieces before advertising them as working.
 
 Rehearse with real channels before filming/submission. Browser and mocked tests
 do not establish live Twitch or physical OBS acceptance.
