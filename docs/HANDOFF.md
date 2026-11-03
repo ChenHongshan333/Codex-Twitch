@@ -1,5 +1,16 @@
 # Current handoff
 
+README translation, 2026-11-03: translated all remaining Chinese README text,
+including headings, tables, command comments and configuration placeholders,
+into English. Existing modes, commands, links and verification caveats retained;
+no runtime or API contract changes. Branch `codex/docs-readme-english`, clean
+starting base `fca6841c8f4597fece09a50f658b92265e3bc89d`; changes uncommitted.
+Documentation content/link checks and `git diff --check` PASS; runtime tests not
+run for this prose-only change. Google Records mirror pending: connected document
+inventory returned no sessions. Next: owner reviews the English README and supplies
+session identity/Google access when available. See the
+[translation record](../records/2026-11-03_unassigned_readme-english_pending.md).
+
 Latest style revision, 2026-11-03: user supplied a 97.516s reference MP4 and asked
 to improve natural spoken delivery while updating the same face-only file.
 `artifacts/submission-video/ChatCrossfire-demo-face-only.mp4` is now 135 seconds

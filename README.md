@@ -1,16 +1,22 @@
-# ChatCrossfire / 弹幕交火
+# ChatCrossfire
 
-当前交付路线：**网页设置页 + 真实 Twitch 聊天 + 真人追踪 + OBS**。
-主播在网页设置摄像头、开始/暂停；观众在 Twitch 聊天室参与；碰撞、血量与
-胜负由后台自动处理。键盘人物仅用于模拟测试，原生 Extension 保留为可选模式。
-真实输入配置后依次运行 `npm run doctor:dodge`、`npm run verify:dodge`、
-`npm run dodge`。前两步分别检查配置和只读聊天/观众数连接，均不会代替你开播。
-实时就绪清单和聊天接收/拒绝原因帮助定位缺口。
-单人视频演示可设 `DODGE_MODE=ai-demo`、`DODGE_LIVE=1`，只配置真实频道 A，
-由明确标注的本地游戏 AI 操作另一侧；仍需 A 开播、有实际观众并校准摄像头 A。
-默认 `DODGE_MODE=duel` 保留双频道模式。见 [拍摄脚本](docs/demo-runbook.md)。
-详见 [真实联调步骤](docs/dodge-runbook.md#real-twitch-input-private-configuration)。
-当前仍是同机原型；远程双电脑和特定 VTuber 软件接口未实现。
+Current delivery route: **web setup page + real Twitch chat + physical tracking + OBS**.
+Streamers configure cameras and start/pause from the web page; viewers participate
+in Twitch chat. The backend automatically handles collisions, health and results.
+Keyboard-controlled characters are for simulation only; the native Extension
+remains an optional mode.
+After configuring real input, run `npm run doctor:dodge`, `npm run verify:dodge`,
+then `npm run dodge`. The first two commands check configuration and read-only
+chat/viewer-count connectivity respectively; neither starts your broadcast.
+The live readiness checklist and chat acceptance/rejection reasons help identify gaps.
+For a solo video demonstration, set `DODGE_MODE=ai-demo` and `DODGE_LIVE=1`,
+configure only real channel A, and let a clearly labelled local game AI control
+the other side. A still needs to be live, with a real viewer-count sample and
+camera A calibrated. The default `DODGE_MODE=duel` retains two-channel mode.
+See the [shoot plan](docs/demo-runbook.md) and
+[real-input setup steps](docs/dodge-runbook.md#real-twitch-input-private-configuration).
+This remains a single-machine prototype; remote two-computer play and adapters
+for specific VTuber applications are not implemented.
 
 New local OBS dodge prototype: `npm run dodge`, then open
 [Dodge Lab](http://127.0.0.1:3020/). Equal arenas, camera colour-marker hits,
@@ -30,7 +36,7 @@ for development and is not that evidence. Native Extension PK remains an optiona
 existing route. See the [peer readiness checklist](docs/hackathon-readiness.md)
 and [official FAQ](https://twitchcon-codex.devpost.com/resources).
 
-## 协作与最新审计 / Collaboration
+## Collaboration and latest audit
 
 Fresh-clone audit and next steps (2026-10-31): [Current handoff](docs/HANDOFF.md),
 [verified status](docs/STATUS.md), [task queue and ownership](docs/TASKS.md),
@@ -46,157 +52,215 @@ Historical token/tunnel/process/artifact notes below and in `progress.md` do not
 establish availability in a new clone. Legacy `/overlay/*` pages show the separate
 debug match; they do not show native Extension PK rooms.
 
-**Your chat. Their problem.** Twitch 原生 Extension：两位主播在 Twitch 内邀请、接受和准备，后台自动开赛、管理攻击与叛变、结束并结算社区阵营战。无需第三位主持人。
+**Your chat. Their problem.** A native Twitch Extension: two streamers invite,
+accept and ready up within Twitch. The backend automatically starts the match,
+manages attacks and defection, and ends and settles the community team battle.
+No third host is required.
 
-## 原生 Extension 入口（可选路线）
+## Native Extension entry point (optional route)
 
 ```powershell
-# 正常服务，默认 3000；首页说明 Twitch 接入与本地测试
+# Standard server, port 3000 by default; landing page covers Twitch and local setup
 npm start
-# 独立四角色本地联调，默认 3010
+# Separate four-role local integration sandbox, port 3010 by default
 npm run sandbox
 ```
 
-打开 `http://127.0.0.1:3010/sandbox`，四个窗口分别代表两位模拟主播和两个模拟观众。A 邀请 `demo_violet`，B 接受，双方准备；后台自动倒计时并开赛。观众点击 Join / Attack，半场窗口内 Defect，时间到自动结束。可选 30 秒短局测试。此页面明确标记 **LOCAL SIMULATION**，不会创建真实 Twitch 账号或冒充原生安装已验证。
+Open `http://127.0.0.1:3010/sandbox`. Four windows represent two simulated
+streamers and two simulated viewers. A invites `demo_violet`, B accepts, and both
+ready up; the backend automatically counts down and starts the match. Viewers
+click Join / Attack and Defect during the halftime window; the match ends when
+time runs out. An optional 30-second round is available for testing. The page is
+clearly marked **LOCAL SIMULATION**; it creates no real Twitch accounts and does
+not claim that native installation has been verified.
 
-真实 Twitch 原生接入需要额外的 Extension 配置，与现有聊天机器人的 OAuth 应用不同：
+Real native Twitch integration requires additional Extension configuration,
+separate from the existing chatbot's OAuth application:
 
 ```text
-TWITCH_EXTENSION_ID=扩展ClientID
-TWITCH_EXTENSION_SECRET=扩展的Base64共享密钥
-PUBLIC_ORIGIN=https://真实后端域名
+TWITCH_EXTENSION_ID=your-extension-client-id
+TWITCH_EXTENSION_SECRET=your-extension-base64-shared-secret
+PUBLIC_ORIGIN=https://your-backend.example.com
 ENABLE_SANDBOX=0
 ```
 
-使用 `npm run doctor:extension` 检查缺失配置，不会打印凭证。后端验证 Twitch Helper 提供的 JWT，只有相应频道的主播能发起/接受 PK；观众分享身份后才能参与，跨两个频道共用同一个身份、冷却和叛变次数。
+Run `npm run doctor:extension` to check for missing configuration without printing
+credentials. The backend verifies JWTs supplied by Twitch Helper. Only the
+corresponding channel's broadcaster can initiate or accept a PK match. Viewers
+must share their identity to participate; identity, cooldown and defection
+allowance are shared across both channels.
 
-- [Twitch 创建、打包、安装和测试指南](docs/twitch-extension-setup.md)
-- [公网 HTTPS 后端部署指南](docs/cloud-deploy.md)
-- [项目进度与真实验证状态](progress.md)
+- [Twitch Extension creation, packaging, installation and testing guide](docs/twitch-extension-setup.md)
+- [Public HTTPS backend deployment guide](docs/cloud-deploy.md)
+- [Project progress and real-world verification status](progress.md)
 
-正式 ZIP：`npm run package:extension -- --backend https://实际后端域名`。没有真实 HTTPS 后端时，只能生成明确标记的本地包：`npm run package:extension -- --backend http://127.0.0.1:3010 --local`。
+Production ZIP: `npm run package:extension -- --backend https://your-backend.example.com`.
+Without a real HTTPS backend, generate only a clearly labelled local package:
+`npm run package:extension -- --backend http://127.0.0.1:3010 --local`.
 
-本次已准备临时 HTTPS 测试后端和对应正式格式的前端 ZIP，实际地址、验证证据和缺失平台配置见 [progress.md](progress.md)。它仍需要 Twitch 开发者配置和两位主播安装激活，不能仅凭公网健康检查就认定真实 Twitch 已打通。
+A temporary HTTPS test backend and a matching frontend ZIP in production format
+were prepared in an earlier session. See [progress.md](progress.md) for historical
+addresses, verification evidence and missing platform setup. Twitch developer
+configuration and installation/activation by both streamers are still required;
+a public health check alone does not establish real Twitch integration.
 
-自动分数为成功释放的攻击次数（community battle points），不直接判定画作好坏或外部游戏输赢。当前仍需完成 Twitch 开发者配置、第二真实频道、公网部署与真实 Twitch 内全链路验证，详见 progress.md。
+Automatic scoring counts successfully released attacks (community battle points).
+It does not judge artwork quality or determine the outcome of an external game.
+Twitch developer setup, a second real channel, public deployment and end-to-end
+verification within Twitch remain outstanding; see progress.md.
 
-## 第一版调试模式（以下保留用于排错）
+## Original debug mode (retained below for troubleshooting)
 
-适合画画、答题、创作和主播约定的其他比赛。主持人负责记分，主播按约定执行挑战。OBS 动画不会自动改变或控制外部游戏。
+Suitable for drawing, quizzes, creative activities and other contests agreed on
+by the streamers. The host keeps score and streamers perform the agreed
+challenges. OBS animations do not automatically change or control external games.
 
-## 30 秒启动
+## Start in 30 seconds
 
-需要 **Node.js 22.13+（建议 24 LTS 或更新版本）**。运行项目没有第三方依赖；原仓库的 `.env` 可继续使用，不要覆盖它。
+Requires **Node.js 22.13+ (24 LTS or newer recommended)**. The runtime has no
+third-party dependencies. Keep any existing `.env` in the repository; do not
+overwrite it.
 
 ```powershell
 npm start
 ```
 
-打开终端打印的 **Debug** 链接（`http://127.0.0.1:3000/debug#key=…`），自动解锁本机浏览器的调试控制。`/debug` 普通地址是只读视图。调试 key 不等于 Twitch token，不要把私密链接分享给观众。
+Open the **Debug** link printed in the terminal
+(`http://127.0.0.1:3000/debug#key=…`) to unlock debug controls in your local
+browser. The plain `/debug` URL is read-only. The debug key is separate from the
+Twitch token; do not share the private link with viewers.
 
-默认是明确标识的 **Demo** 模式，不连接 Twitch，也不发送 Twitch 聊天消息。没有 `.env` 也能运行演示。
+The default is a clearly labelled **Demo** mode. It does not connect to Twitch
+or send Twitch chat messages. The demo runs without a `.env` file.
 
-## 先体验完整闭环
+## Try a complete round
 
-1. 打开 Host 链接，点击 **Start the round**。
-2. 在 **Make some noise** 中连续点击 A 队 **Attack** 三次；模拟观众自动加入，B 队收到挑战。
-3. 点击 **Open defection**，再点 **A → B**，观察叛变播报和阵营人数变化。
-4. 使用两队比分旁的 `+` / `−` 手动记分。
-5. 点击 **End round**，调整最终比分，再点 **Confirm result**。
-6. 点击 **Set up another round**，回到准备状态。
+1. Open the Host link and click **Start the round**.
+2. Under **Make some noise**, click team A's **Attack** three times. Simulated
+   viewers join automatically, and team B receives a challenge.
+3. Click **Open defection**, then **A → B**, and watch the defection announcement
+   and team membership counts change.
+4. Use `+` / `−` beside each team's score to keep score manually.
+5. Click **End round**, adjust the final scores, then click **Confirm result**.
+6. Click **Set up another round** to return to the lobby.
 
-Demo 按钮同样遵守正式规则，默认每队五个模拟账号；快速重复点击可能提示冷却或队伍已经充能。
+Demo buttons follow the same gameplay rules, with five simulated accounts per
+team by default. Rapid clicks may report a cooldown or a fully charged team.
 
-## 接入真实 Twitch 聊天
+## Connect real Twitch chat
 
-现有 `.env` 只需要：
+The existing `.env` only needs:
 
 ```text
-TWITCH_OAUTH_TOKEN=你的用户访问令牌
+TWITCH_OAUTH_TOKEN=your-user-access-token
 ```
 
-没有 `.env` 时再复制 `.env.example`。只填 token 本体，不填 OAuth 返回网址。程序通过官方校验接口获取 Client ID、User ID 和登录名，无需 Client Secret。
+Copy `.env.example` only if `.env` does not exist. Enter the token itself, not
+the OAuth return URL. The app obtains the Client ID, User ID and login name
+through the official validation endpoint; no Client Secret is needed.
 
-1. 在 **Match setup** 填两个频道的登录名，不用填 URL。A 默认是 `hongshan333`；B 可暂时留空，进行单频道测试。
-2. 填比赛主题、双方显示名和挑战池。双方需提前认可挑战内容。
-3. 保存设置，切换为 **Twitch**，等待显示 **CONNECTED**。
-4. 点击 **Start the round**，请观众在真实聊天室发指令。
+1. In **Match setup**, enter both channel login names, without URLs. A defaults
+   to `hongshan333`; B can temporarily remain blank for single-channel testing.
+2. Enter the match theme, both display names and the challenge pool. Both
+   streamers should approve the challenges beforehand.
+3. Save settings, switch to **Twitch**, and wait for **CONNECTED**.
+4. Click **Start the round** and ask viewers to send commands in real chat.
 
-| 指令 | 作用 |
+| Command | Effect |
 | --- | --- |
-| `!join` | 首次加入当前频道对应的阵营，准备阶段也可加入。 |
-| `!attack` | 为自己的阵营充能，攻击当前阵营的对手。 |
-| `!switch` | 在窗口内叛变，每人每局仅一次。 |
-| `!help` | 请求简短玩法说明，聊天回复有节流。 |
-| `HeyGuys` | 保留连通测试，回复 `VoHiYo` 和玩法提示。 |
+| `!join` | Initially joins the current channel's team; also available in the lobby. |
+| `!attack` | Charges your team to attack its current opponent. |
+| `!switch` | Defects during the window, once per viewer per round. |
+| `!help` | Requests brief instructions; chat replies are throttled. |
+| `HeyGuys` | Retained connectivity check; replies with `VoHiYo` and gameplay tips. |
 
-最低读取权限是 `user:read:chat`；聊天回复还需 `user:write:chat`。使用 **User Access Token + EventSub WebSocket**，不混用 Cloud Bot 的 App Access Token 授权方式。每个频道独立订阅，统一进入同一场比赛。
+The minimum read scope is `user:read:chat`; chat replies also require
+`user:write:chat`. This uses **User Access Token + EventSub WebSocket**, separately
+from the Cloud Bot App Access Token authorization flow. Each channel has its own
+subscription, feeding the same match.
 
-同一 Twitch 用户跨两个频道共用身份、阵营、冷却和叛变次数；去对方聊天室发 `!join` 不会换阵营。重复事件和 Shared Chat 转发副本会被过滤。
+One Twitch user shares an identity, allegiance, cooldown and defection allowance
+across both channels. Sending `!join` in the opposing chat does not switch teams.
+Duplicate events and forwarded Shared Chat copies are filtered out.
 
-真实连接检查（不发送聊天消息）：
+Check real connectivity without sending chat messages:
 
 ```powershell
 npm run verify:twitch -- hongshan333
-npm run verify:twitch -- hongshan333 第二个频道名
+npm run verify:twitch -- hongshan333 second_channel_login
 ```
 
-原始单频道机器人保留：
+The original single-channel bot is retained:
 
 ```powershell
 npm run bot
 ```
 
-不要同时启动原始机器人和 PK 应用的 Twitch 模式，否则 `HeyGuys` 可能收到重复回复。
+Do not run the original bot alongside the PK app's Twitch mode, or `HeyGuys`
+may receive duplicate replies.
 
-## OBS 和主播提示页
+## OBS and streamer cue pages
 
-点击 **Broadcast kit** 获取链接，均不含主持人密钥。
+Click **Broadcast kit** for links; none includes the host key.
 
-| 页面 | 用途 |
+| Page | Purpose |
 | --- | --- |
-| `/overlay/a` | A 主播的透明 OBS 画面 |
-| `/overlay/b` | B 主播的透明 OBS 画面 |
-| `/cue/a` | A 主播在自己屏幕上查看挑战 |
-| `/cue/b` | B 主播在自己屏幕上查看挑战 |
+| `/overlay/a` | Transparent OBS view for streamer A |
+| `/overlay/b` | Transparent OBS view for streamer B |
+| `/cue/a` | Challenges for streamer A to view on their own screen |
+| `/cue/b` | Challenges for streamer B to view on their own screen |
 
-OBS 添加 Browser Source，设为 **1920 × 1080**，每位主播使用自己的 overlay。页面显示比分、时间、阵营人数、攻击动画、叛变通知和当前挑战；刷新后获取当前状态，不回放旧攻击。
+Add a Browser Source in OBS at **1920 × 1080**. Each streamer uses their own
+overlay. It shows scores, time, team membership, attack animations, defection
+notices and the current challenge. Refreshing loads the current state without
+replaying old attacks.
 
-主播另外打开自己的 **cue** 页面。OBS 画面效果不会自动影响主播正在玩的游戏。控制台 **Sound off / on** 只控制该控制台的合成音效，OBS 页面默认无音。
+Each streamer also opens their own **cue** page. OBS effects do not automatically
+affect the game being played. The console's **Sound off / on** controls only its
+own synthesized effects; OBS pages are silent by default.
 
-## 默认规则
+## Default rules
 
-- 每位观众每 10 秒贡献一次充能，叛变后保留冷却。
-- 每 3 次充能触发一个挑战；双方队伍最短释放间隔均为 20 秒。
-- 挑战持续 15 秒；每队最多一个执行中挑战和一个待执行挑战。
-- 队伍满充能时不再吸收充能，等待合法攻击时机。
-- 默认半场自动开放 30 秒叛变窗口；主持人可提前开启或关闭，每局只开一次。
-- 暂停冻结比赛、挑战、叛变窗口和冷却的游戏时间。
-- 攻击和叛变不直接加比赛分，主持人按约定规则记分。
-- 结算后可修正分数，修正会要求重新确认结果。
-- 主持人点击当前挑战旁的 `×`，可取消该队的当前和待执行挑战。
+- Each viewer contributes one charge every 10 seconds; defection retains the cooldown.
+- Every 3 charges trigger a challenge; each team has a minimum 20-second release interval.
+- Challenges last 15 seconds; each team can have at most one active and one queued challenge.
+- A fully charged team stops accepting charges until it can legally attack.
+- A 30-second defection window opens automatically at halftime by default. The
+  host can open it early or close it; it opens only once per round.
+- Pausing freezes gameplay time for the round, challenges, defection window and cooldowns.
+- Attacks and defection do not directly add match points; the host scores under the agreed rules.
+- Scores can be corrected after settlement; corrections require the result to be confirmed again.
+- Clicking `×` beside a team's current challenge cancels its active and queued challenges.
 
-队伍攻击上限限制刷屏和挑战堆叠，**不代表不同观众规模之间已完全公平**。
+Team attack caps limit spam and challenge stacking; **they do not establish full
+fairness between audiences of different sizes**.
 
-## 两位远程主播共用
+## Sharing with two remote streamers
 
-两个 overlay 必须访问 **同一个后端**。localhost 只代表当前电脑，不能直接把 localhost 链接发给另一台电脑使用。
+Both overlays must connect to **the same backend**. localhost refers only to the
+current computer; sending a localhost link to another computer will not work.
 
-实际双主播演示建议部署到支持长期 HTTP/SSE 连接的 Node.js 主机，通过 HTTPS 反向代理访问：
+For a real two-streamer demo, deploy to a Node.js host supporting long-lived
+HTTP/SSE connections, accessed through an HTTPS reverse proxy:
 
 ```text
 HOST=0.0.0.0
 PORT=3000
-PUBLIC_ORIGIN=https://你的实际域名
-ADMIN_KEY=至少24个字符的随机私密密钥
-TWITCH_OAUTH_TOKEN=现有用户令牌
+PUBLIC_ORIGIN=https://your-domain.example.com
+ADMIN_KEY=your-random-private-key-at-least-24-characters
+TWITCH_OAUTH_TOKEN=your-existing-user-token
 ```
 
-反向代理需关闭 `/api/events` 的响应缓冲。后端主动建立 Twitch EventSub WebSocket，不需要 webhook 回调。只把只读 overlay/cue 链接发给主播；主持人链接仅给裁判或主持人。音视频连麦和双方视频布局由主播现有工具完成。
+Disable reverse-proxy response buffering for `/api/events`. The backend initiates
+the Twitch EventSub WebSocket connection; no webhook callback is required.
+Share only read-only overlay/cue links with streamers. Host links are for the
+referee or host only. Streamers use their existing tools for audio/video calls
+and arranging both video feeds.
 
-本次尚未部署远程服务，也未自动修改账号授权或对外发布项目。
+No remote service was deployed, account authorization changed automatically or
+project published as part of the original debug setup.
 
-## 开发与测试
+## Development and testing
 
 ```powershell
 npm ci
@@ -204,40 +268,58 @@ npm run check
 npm test
 ```
 
-`jsdom` 仅为测试依赖，用于页面渲染和交互；它不等于真实浏览器视觉验证。规则测试使用可控时钟；Twitch 生命周期测试模拟 HTTP/WebSocket，独立于真实账号和网络。
+`jsdom` is a development-only test dependency for page rendering and interaction;
+it does not establish real-browser visual correctness. Rule tests use controlled
+clocks. Twitch lifecycle tests mock HTTP/WebSocket, independently of real
+accounts and network access.
 
 ```text
-server.mjs              HTTP、主持人会话、SSE、指令路由
-src/engine.mjs          权威规则引擎，与网络和页面分离
-src/twitch.mjs          校验、双频道订阅、迁移、重连、去重
-src/store.mjs           原子保存配置与轮转事件日志
-public/                 控制台、OBS overlay、主播提示页
-test/                   规则、接口、Twitch 和页面交互测试
-scripts/verify-twitch.mjs 只订阅、不发言的真实连接检查
-bot.mjs                 保留原始首次连通测试入口
-progress.md             给组员看的进度、验证结果与待办
+server.mjs               HTTP, host sessions, SSE and command routing
+src/engine.mjs           Authoritative rules engine, separate from networking and UI
+src/twitch.mjs           Validation, two-channel subscriptions, migration, reconnection, deduplication
+src/store.mjs            Atomic configuration saves and rotating event logs
+public/                  Console, OBS overlays and streamer cue pages
+test/                    Rules, API, Twitch and page interaction tests
+scripts/verify-twitch.mjs Read-only real connection check: subscribes without sending messages
+bot.mjs                  Original initial connectivity test entry point
+progress.md             Team progress, verification results and outstanding work
 ```
 
-网页实时更新使用 **SSE + HTTP POST**：后端推送状态，主持人用受保护的 HTTP 请求操作。Twitch 仍使用 EventSub WebSocket。
+The web UI uses **SSE + HTTP POST** for live updates: the backend pushes state,
+and the host acts through protected HTTP requests. Twitch still uses EventSub
+WebSocket.
 
-`data/config.json` 保存设置；`data/events.jsonl` 保存事件，并在约 5 MB 轮转，保留一份前序日志。这些文件不提交 Git。比赛状态在内存中，**重启后回到 Demo 准备阶段，不恢复进行中的比赛**。页面刷新和网络恢复会从仍在运行的后端获取状态。
+`data/config.json` stores settings. `data/events.jsonl` stores events and rotates
+at approximately 5 MB, retaining one previous log. These files are not committed
+to Git. Match state is in memory: **restarting returns to the Demo lobby and does
+not recover an ongoing match**. Page refreshes and network recovery retrieve
+state from the still-running backend.
 
-## 排错
+## Troubleshooting
 
-- `EADDRINUSE`：已有程序占用 3000，停掉旧实例或在 `.env` 设置 `PORT=3001`。
-- 控制按钮不可点击：使用本次启动打印的 Host 链接；重启会更新随机 key 和会话。
-- 设置保存不可用：重置到没有参与者的准备阶段。
-- `fetch failed` / reconnecting：当前进程需能访问 `id.twitch.tv`、`api.twitch.tv`、`eventsub.wss.twitch.tv`。
-- HTTP 401：token 过期或撤销，更新 `.env` 后重启；尚无 refresh token 自动续期。
-- HTTP 403：检查 token 权限和相应频道的聊天访问条件。
-- 只显示 `1/2`：单频道已连通，仍需配置第二个真实频道。
-- Twitch 意外断线：显示重连并自动重新订阅，期间消息无法补回；主持人可暂停。
-- 远程访问 Host 不允许：配置精确的 `PUBLIC_ORIGIN`，并使用该域名访问。
+- `EADDRINUSE`: another process is using port 3000. Stop the old instance or set `PORT=3001` in `.env`.
+- Controls disabled: use the Host link printed by the current startup. Restarting changes the random key and session.
+- Cannot save settings: reset to a lobby with no participants.
+- `fetch failed` / reconnecting: the process needs access to `id.twitch.tv`, `api.twitch.tv` and `eventsub.wss.twitch.tv`.
+- HTTP 401: the token has expired or been revoked. Update `.env` and restart; automatic refresh-token renewal is not implemented.
+- HTTP 403: check token scopes and the relevant channel's chat access requirements.
+- Only `1/2` connected: one channel is connected; configure the second real channel.
+- Unexpected Twitch disconnection: the app shows reconnecting and automatically resubscribes. Messages missed during the outage cannot be recovered; the host can pause.
+- Remote Host rejected: configure the exact `PUBLIC_ORIGIN` and access the app through that domain.
 
-不要将 `.env`、token、Client Secret 或主持人链接写入提交材料。若 token 泄露，应撤销相关 Twitch 授权并重新获取。
+Keep `.env`, tokens, Client Secrets and host links out of submission materials.
+If a token is exposed, revoke the relevant Twitch authorization and obtain a new one.
 
-## Hackathon 交付
+## Hackathon delivery
 
-仍需所选模式的真实 Twitch / OBS 演示录像、三分钟以内的视频、完整仓库、项目描述和主要开发 thread 的 Codex Session ID。当前拍摄路线是一位真人与明确标注的本地 AI 对手；双真人模式的完整实测另待完成。代码完成不等于比赛已提交。
+Delivery still requires real Twitch/OBS demonstration footage for the selected
+mode, a video under three minutes, the complete repository, a project description
+and the main development thread's Codex Session ID. The current recording route
+uses one human and a clearly labelled local AI opponent; complete two-human
+acceptance remains separate outstanding work. Finished code does not mean the
+hackathon entry has been submitted.
 
-官方参考：[Chatbot Guide](https://dev.twitch.tv/docs/chat/chatbot-guide/)、[聊天授权](https://dev.twitch.tv/docs/chat/authenticating/)、[EventSub WebSocket](https://dev.twitch.tv/docs/eventsub/handling-websocket-events/)、[比赛页面](https://twitchcon-codex.devpost.com/)。
+Official references: [Chatbot Guide](https://dev.twitch.tv/docs/chat/chatbot-guide/),
+[chat authorization](https://dev.twitch.tv/docs/chat/authenticating/),
+[EventSub WebSocket](https://dev.twitch.tv/docs/eventsub/handling-websocket-events/),
+[hackathon page](https://twitchcon-codex.devpost.com/).
