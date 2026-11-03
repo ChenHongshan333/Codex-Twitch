@@ -25,6 +25,7 @@ export function findMarker(pixels, width, height, colour = [50, 220, 80]) {
 }
 
 if (typeof document !== 'undefined' && document.getElementById('camera')) {
+  if (new URLSearchParams(location.search).get('embedded') === '1') document.body.classList.add('embedded-tracker');
   const $ = id => document.getElementById(id), video = $('video'), preview = $('camera-preview'), ctx = preview.getContext('2d', { willReadFrequently: true });
   const sample = document.createElement('canvas'); sample.width = 320; sample.height = 180;
   const sc = sample.getContext('2d', { willReadFrequently: true }), side = location.pathname.split('/').pop();

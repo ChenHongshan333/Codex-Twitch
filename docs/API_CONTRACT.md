@@ -11,6 +11,55 @@ refers to the horizontal-lane revision only.
 
 ## Separate local dodge mode (2026-10-31)
 
+### One live channel versus local AI (2026-11-03)
+
+`DODGE_MODE=ai-demo`, `DODGE_LIVE=1` selects the user-authorized recording mode;
+default `DODGE_MODE=duel` preserves the two-channel rules below. The mode is an
+immutable server/engine constructor option, not a client-selected role. AI demo
+requires real Twitch input; selecting it with `live:false` is rejected.
+The process subscribes only to `DODGE_CHANNEL_A`; channel B and support token B
+are ignored. Get Streams queries only A's verified ID. B's audience stays null;
+no second stream, viewer count or Twitch user is invented.
+
+Snapshots add `mode:'duel'|'ai-demo'`. In AI demo, `inputSource:'twitch'` describes
+the primary viewer input; B is explicitly a local game-AI actor. Start/Resume
+require A's real subscribed chat, a fresh A viewer sample from a confirmed live stream and fresh
+physical marker A. `marker` writes for B return 400 because the server controls
+that actor. `tracking.b:true` means AI availability, not physical tracking.
+Synthetic audience/activity HTTP endpoints remain 404; Host/Origin/loopback
+protections and native PK are unchanged. Snapshot `inputActivity.b` stays zero:
+AI is not passed off as Twitch traffic. Real chat still comes only from the bridge.
+In this single-presenter AI mode an actual live-stream sample of zero viewers is
+valid; a missing/offline sample is still null and blocks Start. The normalizer's
+existing floor of 20 still applies. AI audience A additionally includes `raw` for
+the actual sample; `value` retains smoothing for normalization, while the UI
+displays `raw`, including zero. B is always null even if an internal caller supplies
+a value. Default duel still rejects zero viewer samples on either side.
+
+The AI uses bounded vertical avoidance (350ms decisions, 120 arena units/second)
+and adds one labelled `kind:'ai'` queued attack every 2.5 seconds, starting at
+2 seconds of gameplay. Both new AI attacks and real admission wait for fresh A
+audience data. No AI activity is registered as a viewer identity. Existing
+collision, health, tracking-loss pause, timers and result shape apply to both
+actors. Barrage comparison is disabled in this mode. A real Twitch viewer may
+still defect once in the existing middle window, retaining identity/cooldown
+and the real A source denominator; subsequent messages can back the AI side.
+
+The controller labels the mode/opponent, omits a second channel/count requirement
+and embeds `/track/a?embedded=1` for local calibration. Both overlays label actors:
+A is transparent over a real camera, B draws an opaque local-AI arena and robot.
+The embedded tracker is the same local detector, with compact presentation;
+camera permission/calibration is still explicit, and hidden-page pause remains.
+In AI demo the controller also paints the enabled iframe's actual camera video
+behind arena A, using the same centred 16:9 crop and mirror as detection. Frames
+stay in the browser; no new frame-upload route is introduced. Overlay A remains
+transparent. Window Capture of the controller includes the real camera picture.
+Producers: `danmaku.mjs`, `dodge-http.mjs`, `dodge-setup.mjs` and launchers;
+consumers: controller/tracker/overlays, doctor/verifier; coverage: `dodge-ai.test.mjs`
+and the AI case in `dodge-ui.test.mjs` plus existing duel regressions.
+
+### Default duel and rehearsal contracts
+
 `npm run dodge` starts `startDodgeServer` on 127.0.0.1:3020, independently of
 `createApp` and all PK registries. Its `DanmakuEngine` owns marker, collision,
 health, timer, allegiance and pressure state. Clock/random/config injections

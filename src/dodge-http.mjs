@@ -11,14 +11,18 @@ const files = new Map([
 ]);
 const assetRoot = new URL('../public/dodge/', import.meta.url);
 
-export async function sampleAudience(bridge) {
-  if (bridge.status.state !== 'connected' || bridge.channels?.length !== 2) throw new Error('Both Twitch chats must be connected.');
+export async function sampleAudience(bridge, requiredSides = ['a', 'b']) {
+  if (bridge.status.state !== 'connected' || bridge.channels?.length !== requiredSides.length || !requiredSides.every(side => bridge.channels.some(channel => channel.team === side))) throw new Error('Required Twitch chats must be connected.');
   const query = new URLSearchParams(bridge.channels.map(channel => ['user_id', channel.id]));
   const result = await bridge.request(`https://api.twitch.tv/helix/streams?${query}`);
   return Object.fromEntries(bridge.channels.map(channel => [channel.team, result.data?.find(stream => stream.user_id === channel.id)?.viewer_count ?? null]));
 }
 
-export function createDodgeServer({ engine = new DanmakuEngine(), live = false, token = '', channels = {}, supportTokens = {}, bridgeFactory = options => new TwitchBridge(options) } = {}) {
+export function createDodgeServer({ mode = 'duel', engine = new DanmakuEngine({ mode }), live = false, token = '', channels = {}, supportTokens = {}, bridgeFactory = options => new TwitchBridge(options) } = {}) {
+  if (engine.mode !== mode) throw new Error('Dodge server and engine modes must agree.');
+  if (mode === 'ai-demo' && !live) throw new Error('AI demo requires real Twitch input. Use duel mode for synthetic rehearsal.');
+  const aiDemo = mode === 'ai-demo', sourceSides = aiDemo ? ['a'] : ['a', 'b'];
+  const activeChannels = aiDemo ? { a: channels.a } : channels;
   const bridge = bridgeFactory({ token, moderationEvents: true });
   const support = {};
   let sampling = false, stopped = false, syntheticAudience = { a: 100, b: 100 };
@@ -26,16 +30,16 @@ export function createDodgeServer({ engine = new DanmakuEngine(), live = false, 
   const newActivity = () => ({ received: 0, accepted: 0, rejected: 0, lastAt: null, lastReason: '' });
   let inputActivity = { a: newActivity(), b: newActivity() };
   function readiness() {
-    const chats = !live || bridge.status.state === 'connected' && ['a', 'b'].every(side => bridge.channels?.some(channel => channel.team === side && channel.subscribed));
+    const chats = !live || bridge.status.state === 'connected' && sourceSides.every(side => bridge.channels?.some(channel => channel.team === side && channel.subscribed));
     const audience = engine.freshAudience(), markers = engine.freshMarkers();
     const blockers = [];
-    if (!chats) blockers.push('Connect both Twitch chats. Check the user token, channel names and network.');
-    if (!audience) blockers.push('Waiting for fresh positive viewer counts on both live streams. Open both broadcasts and wait for the next sample.');
-    if (!markers) blockers.push('Open both camera setup windows and calibrate the markers. Keep both windows visible.');
+    if (!chats) blockers.push(aiDemo ? 'Connect your Twitch chat. Check the user token, channel login and network.' : 'Connect both Twitch chats. Check the user token, channel names and network.');
+    if (!audience) blockers.push(aiDemo ? 'Waiting for Twitch to confirm your channel is live with a fresh viewer sample. Zero actual viewers is allowed in AI demo; offline is not.' : 'Waiting for fresh positive viewer counts on both live streams. Open both broadcasts and wait for the next sample.');
+    if (!markers) blockers.push(aiDemo ? 'Calibrate camera A. Keep its tracker visible; the other marker is controlled by local AI.' : 'Open both camera setup windows and calibrate the markers. Keep both windows visible.');
     return { ready: chats && audience && markers, chats, audience, markers, blockers };
   }
   function snapshot() {
-    return { ...engine.snapshot(), serverTime: engine.now(), inputSource: source, twitch: live ? bridge.status : { state: 'disabled', message: 'Synthetic rehearsal — no Twitch events or real audience counts.' },
+    return { ...engine.snapshot(), serverTime: engine.now(), inputSource: source, twitch: live ? { ...bridge.status, ...(aiDemo && bridge.status.state === 'connected' ? { message: 'Your Twitch chat is connected. The opponent is local game AI.' } : {}) } : { state: 'disabled', message: 'Synthetic rehearsal — no Twitch events or real audience counts.' },
       setup: readiness(), inputActivity: structuredClone(inputActivity),
       support: Object.fromEntries(Object.entries(support).map(([side, item]) => [side, item.status])) };
   }
@@ -43,12 +47,12 @@ export function createDodgeServer({ engine = new DanmakuEngine(), live = false, 
     if (stopped || sampling) return;
     if (!live) { engine.audience(syntheticAudience, 'synthetic'); return; }
     sampling = true;
-    try { const counts = await sampleAudience(bridge); if (!stopped) engine.audience(counts, 'twitch'); }
+    try { const counts = await sampleAudience(bridge, sourceSides); if (!stopped) engine.audience(counts, 'twitch'); }
     catch { if (!stopped && bridge.status.state !== 'connected') engine.audience({ a: null, b: null }, 'twitch'); }
     finally { sampling = false; }
   }
   bridge.on('chat', chat => {
-    if (!live || chat.isCheer && support[chat.channelTeam]?.identity?.scopes?.includes('bits:read')) return;
+    if (!live || !sourceSides.includes(chat.channelTeam) || chat.isCheer && support[chat.channelTeam]?.identity?.scopes?.includes('bits:read')) return;
     const activity = inputActivity[chat.channelTeam];
     if (!activity) return;
     const result = engine.activity({ ...chat, kind: 'chat' });
@@ -61,7 +65,7 @@ export function createDodgeServer({ engine = new DanmakuEngine(), live = false, 
     if (status.state === 'connected') void sample();
     else engine.audience({ a: null, b: null }, 'twitch');
   });
-  for (const side of ['a', 'b']) if (live && supportTokens[side]) {
+  for (const side of sourceSides) if (live && supportTokens[side]) {
     const item = bridgeFactory({ token: supportTokens[side], supportOnly: true }); support[side] = item;
     item.on('activity', event => engine.activity(event));
   }
@@ -119,8 +123,8 @@ export function createDodgeServer({ engine = new DanmakuEngine(), live = false, 
   if (!live) engine.audience({ a: 100, b: 100 }, 'synthetic');
   async function connect() {
     if (!live) return;
-    if (!/^[a-zA-Z0-9_]{1,25}$/.test(channels.a ?? '') || !/^[a-zA-Z0-9_]{1,25}$/.test(channels.b ?? '') || channels.a.toLowerCase() === channels.b.toLowerCase()) throw new Error('Configure two different Twitch channel logins for live mode.');
-    await bridge.start(channels);
+    if (!/^[a-zA-Z0-9_]{1,25}$/.test(channels.a ?? '') || !aiDemo && (!/^[a-zA-Z0-9_]{1,25}$/.test(channels.b ?? '') || channels.a.toLowerCase() === channels.b.toLowerCase())) throw new Error(aiDemo ? 'Configure your Twitch channel login in DODGE_CHANNEL_A.' : 'Configure two different Twitch channel logins for live mode.');
+    await bridge.start(activeChannels);
     for (const [side, item] of Object.entries(support)) await item.start({ [side]: channels[side] });
   }
   async function close() {

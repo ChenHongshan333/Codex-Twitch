@@ -32,14 +32,17 @@ export function sweptHit(x0, y0, x1, y1, hw, hh, radius) {
 }
 
 export class DanmakuEngine {
-  constructor({ now = Date.now, random = Math.random, config = {} } = {}) {
-    this.now = now; this.random = random;
+  constructor({ now = Date.now, random = Math.random, config = {}, mode = 'duel' } = {}) {
+    if (!['duel', 'ai-demo'].includes(mode)) throw new Error('Unknown dodge mode.');
+    this.now = now; this.random = random; this.mode = mode;
     for (const [key, value] of Object.entries(config)) if (!(key in defaults) || !Number.isFinite(value) || value <= 0) throw new Error(`Invalid dodge rule: ${key}`);
     this.config = { ...defaults, ...config }; this.reset();
   }
   reset() {
     this.id = randomUUID(); this.phase = 'lobby'; this.elapsed = 0; this.lastTick = this.now();
     this.markers = { a: null, b: null }; this.previous = { a: null, b: null };
+    this.aiTargetY = this.config.height / 2; this.aiDecisionAt = 0; this.aiShotAt = 2000;
+    if (this.mode === 'ai-demo') this.markers.b = { x: this.config.width * .72, y: this.aiTargetY, at: this.now() };
     this.counts = { a: null, b: null }; this.audienceSource = 'unavailable';
     this.frozen = { a: null, b: null }; this.normalized = { a: 0, b: 0 }; this.lastPressure = { a: 0, b: 0 };
     this.bucket = 0; this.barrage = null; this.barrageUntil = 0; this.lead = null; this.lastPayload = { a: null, b: null };
@@ -56,24 +59,26 @@ export class DanmakuEngine {
     if (this.events.length > 30) this.events.shift();
   }
   marker(side, point) {
+    if (this.mode === 'ai-demo' && side === 'b') throw new Error('The local AI marker is server controlled. Calibrate camera A.');
     if (!sides.includes(side) || !Number.isFinite(point?.x) || !Number.isFinite(point?.y)) throw new Error('Marker must have a side and finite coordinates.');
     const { width, height, radius } = this.config;
     this.markers[side] = { x: Math.max(radius, Math.min(width - radius, point.x)), y: Math.max(radius, Math.min(height - radius, point.y)), at: this.now() };
   }
-  freshMarkers() { return sides.every(side => this.markers[side] && this.now() - this.markers[side].at < this.config.trackingMs); }
+  freshMarkers() { return (this.mode === 'ai-demo' ? ['a'] : sides).every(side => this.markers[side] && this.now() - this.markers[side].at < this.config.trackingMs); }
   audience(values, source, { reset = false } = {}) {
     for (const side of sides) {
       const value = values[side], old = this.counts[side];
-      if (!Number.isFinite(value) || value <= 0) { this.counts[side] = null; this.frozen[side] = null; }
+      const liveZero = this.mode === 'ai-demo' && side === 'a' && value === 0;
+      if (this.mode === 'ai-demo' && side === 'b' || !Number.isFinite(value) || value <= 0 && !liveZero) { this.counts[side] = null; this.frozen[side] = null; }
       else {
-        this.counts[side] = { value: old && !reset ? .3 * value + .7 * old.value : value, at: this.now() };
+        this.counts[side] = { value: old && !reset ? .3 * value + .7 * old.value : value, at: this.now(), ...(this.mode === 'ai-demo' ? { raw: value } : {}) };
         if (reset || !this.frozen[side]) this.frozen[side] = Math.max(this.config.audienceFloor, this.counts[side].value);
       }
     }
     this.audienceSource = source;
     if (!this.freshAudience()) this.clearPressure();
   }
-  freshAudience() { return sides.every(side => this.counts[side] && this.now() - this.counts[side].at < this.config.freshnessMs); }
+  freshAudience() { return (this.mode === 'ai-demo' ? ['a'] : sides).every(side => this.counts[side] && this.now() - this.counts[side].at < this.config.freshnessMs); }
   clearPressure() {
     this.normalized = { a: 0, b: 0 }; this.credit = { a: 0, b: 0 };
     this.queues = { a: [], b: [] }; this.barrage = null; this.barrageUntil = 0; this.lead = null;
@@ -86,19 +91,20 @@ export class DanmakuEngine {
   }
   start() {
     if (this.phase !== 'lobby') throw new Error('Reset before starting a new round.');
-    if (!this.freshMarkers()) throw new Error('Both markers must be tracking before starting.');
+    if (!this.freshMarkers()) throw new Error(this.mode === 'ai-demo' ? 'Camera A must be tracking before starting.' : 'Both markers must be tracking before starting.');
     this.phase = 'running'; this.lastTick = this.now(); this.previous = structuredClone(this.markers);
     this.event('started');
   }
   pause(reason = 'Operator paused') { if (this.phase === 'running') { this.phase = 'paused'; this.reason = reason; this.event('paused', { reason }); } }
   resume() {
     if (this.phase !== 'paused') throw new Error('Round is not paused.');
-    if (!this.freshMarkers()) throw new Error('Recover both markers before resuming.');
+    if (!this.freshMarkers()) throw new Error(this.mode === 'ai-demo' ? 'Recover camera A before resuming.' : 'Recover both markers before resuming.');
     this.phase = 'running'; this.reason = ''; this.lastTick = this.now(); this.previous = structuredClone(this.markers); this.event('resumed');
   }
   switchOpen() { return Math.abs(this.elapsed - this.config.durationMs / 2) <= Math.min(15000, this.config.durationMs / 4); }
   activity({ id, userId, channelTeam, text = '', kind = 'chat', units = 1 }) {
     if (this.phase !== 'running' || !sides.includes(channelTeam) || !['chat', 'cheer', 'gift'].includes(kind)) return { ok: false, reason: 'Round is not running or input is invalid.' };
+    if (this.mode === 'ai-demo' && channelTeam !== 'a') return { ok: false, reason: 'Only the verified Twitch channel supplies viewer activity in AI demo.' };
     if (typeof id !== 'string' || !id || id.length > 200 || this.seen.has(id)) return { ok: false, reason: 'Duplicate or missing event ID.' };
     this.seen.add(id); if (this.seen.size > 5000) this.seen.delete(this.seen.values().next().value);
     if (userId != null && (typeof userId !== 'string' || !userId || userId.length > 200)) return { ok: false, reason: 'Invalid user.' };
@@ -116,14 +122,14 @@ export class DanmakuEngine {
     if (kind === 'chat' && !text.trim()) return { ok: false, reason: 'Empty chat.' };
     if (!userId && kind !== 'gift') return { ok: false, reason: 'Only gifts can be anonymous.' };
     if (player && this.elapsed < player.nextAt) return { ok: false, reason: 'Activity cooldown is shared across both channels.' };
-    if (!this.freshAudience()) { this.clearPressure(); return { ok: false, reason: 'Waiting for fresh live audience counts for both streams.' }; }
+    if (!this.freshAudience()) { this.clearPressure(); return { ok: false, reason: this.mode === 'ai-demo' ? 'Waiting for Twitch to confirm your channel is live with a fresh viewer sample.' : 'Waiting for fresh live audience counts for both streams.' }; }
     if (player) player.nextAt = this.elapsed + this.config.cooldownMs;
     const team = player?.team ?? channelTeam;
     const weight = kind === 'chat' ? 1 : Math.max(1, Math.min(3, Number.isFinite(units) ? units : 1));
     const normalized = weight / this.frozen[channelTeam];
     this.normalized[team] += normalized;
     const a = this.normalized.a, b = this.normalized.b;
-    const leader = Math.abs(a - b) >= .02 && Math.max(a, b) >= Math.max(.001, Math.min(a, b)) * 1.5 ? (a > b ? 'a' : 'b') : null;
+    const leader = this.mode === 'duel' && Math.abs(a - b) >= .02 && Math.max(a, b) >= Math.max(.001, Math.min(a, b)) * 1.5 ? (a > b ? 'a' : 'b') : null;
     if (!leader) this.lead = null;
     else if (this.lead?.side !== leader) this.lead = { side: leader, since: this.elapsed };
     this.credit[team] = Math.min(4, this.credit[team] + normalized * this.config.referenceAudience);
@@ -147,14 +153,37 @@ export class DanmakuEngine {
       expiresAt: this.elapsed + this.config.warningMs + (this.config.width + this.config.bulletWidth) / this.config.speed * 1000 + 1000 });
     this.lastPayload[from] = payload; this.shots[from]++; this.event('shot', { from, target });
   }
+  moveAi(dt) {
+    const marker = this.markers.b;
+    if (this.elapsed >= this.aiDecisionAt) {
+      this.aiDecisionAt = this.elapsed + 350;
+      const threats = this.bullets.filter(bullet => bullet.target === 'b' && bullet.x < marker.x + 90 &&
+        Math.max(0, bullet.armsAt - this.elapsed) + (marker.x - bullet.x) / bullet.vx * 1000 < 1000);
+      const laneCount = Math.floor(this.config.height / this.config.bulletHeight);
+      let best = Infinity;
+      for (let lane = 1; lane < laneCount - 1; lane++) {
+        const y = (lane + .5) * this.config.height / laneCount;
+        const danger = threats.filter(bullet => Math.abs(y - bullet.y) < this.config.radius + this.config.bulletHeight / 2 + 10).length;
+        const cost = danger * 1000 + Math.abs(y - marker.y) + Math.abs(y - this.config.height / 2) * .03;
+        if (cost < best) { best = cost; this.aiTargetY = y; }
+      }
+    }
+    const move = Math.max(-120 * dt / 1000, Math.min(120 * dt / 1000, this.aiTargetY - marker.y));
+    this.markers.b = { x: marker.x, y: marker.y + move, at: this.now() };
+  }
   tick() {
     const wall = this.now(), dt = Math.max(0, wall - this.lastTick); this.lastTick = wall;
     if (this.phase !== 'running') return;
     if (!this.freshMarkers() || dt > 500) { this.pause('Tracking lost or simulation stalled — recover markers, then Resume'); return; }
+    if (this.mode === 'ai-demo') this.moveAi(dt);
     if (!this.freshAudience()) this.clearPressure();
     const end = Math.min(this.config.durationMs, this.elapsed + dt);
     while (this.elapsed < end && this.phase === 'running') {
       const before = this.elapsed, step = Math.min(20, end - before); this.elapsed += step;
+      if (this.mode === 'ai-demo' && this.freshAudience() && this.elapsed >= this.aiShotAt) {
+        this.aiShotAt = this.elapsed + 2500;
+        if (this.queues.b.length < this.config.maxPending) this.queues.b.push({ text: 'AI · dodge this!', kind: 'ai' });
+      }
       const bucket = Math.floor(this.elapsed / this.config.windowMs);
       if (bucket !== this.bucket) {
         this.lastPressure = { ...this.normalized };
@@ -198,9 +227,9 @@ export class DanmakuEngine {
     this.event('finished', this.result);
   }
   snapshot() {
-    return structuredClone({ id: this.id, phase: this.phase, reason: this.reason, config: this.config,
+    return structuredClone({ id: this.id, mode: this.mode, phase: this.phase, reason: this.reason, config: this.config,
       elapsedMs: this.elapsed, remainingMs: Math.max(0, this.config.durationMs - this.elapsed),
-      health: this.health, markers: this.markers, tracking: Object.fromEntries(sides.map(side => [side, Boolean(this.markers[side] && this.now() - this.markers[side].at < this.config.trackingMs)])),
+      health: this.health, markers: this.markers, tracking: Object.fromEntries(sides.map(side => [side, this.mode === 'ai-demo' && side === 'b' || Boolean(this.markers[side] && this.now() - this.markers[side].at < this.config.trackingMs)])),
       invulnerable: Object.fromEntries(sides.map(side => [side, this.elapsed < this.invulnerable[side]])),
       pressure: { enabled: this.freshAudience(), current: this.normalized, previous: this.lastPressure, barrage: this.barrage, barrageRemainingMs: Math.max(0, this.barrageUntil - this.elapsed), source: this.audienceSource,
         audience: this.counts, denominator: this.frozen, windowRemainingMs: this.config.windowMs - this.elapsed % this.config.windowMs },

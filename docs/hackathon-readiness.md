@@ -1,5 +1,25 @@
 # Hackathon readiness: required Twitch proof
 
+2026-11-03 final media update: a 142-second English-narrated/subtitled local MP4
+now exists. It contains actual Twitch camera-setup capture and actual source/test
+evidence, plus a clearly labelled offline mechanics rehearsal. It does not contain
+a real chat-triggered game round; that acceptance gap remains explicit. Streaming
+has ended, public VODs were not changed, and no upload/submission was performed.
+See the [produced-cut timeline](demo-runbook.md). Earlier video-pending notes below
+describe the prior shoot state, not the current existence of the local draft.
+
+2026-11-03 recording route: user selected their own `hongshan333` channel plus
+an explicitly labelled local game AI opponent, using the new `ai-demo` mode.
+One real chat is subscribed; the actual broadcast/viewer sample, stable physical
+tracking and chat-to-game/OBS footage are still pending. The full automated suite
+passes 126/126 serially. This does not close the live video requirement or prove
+two real streamers. Follow the current [shoot plan](demo-runbook.md); older
+two-channel acceptance details below still apply to the default duel mode.
+The operator has now started hongshan333's broadcast; Get Streams confirms it is
+live, with raw counts of zero and then one observed. AI demo supports that real
+zero sample; offline is distinct and rejected. Live game interaction and the
+finished video remain unverified; a stream existing alone is not that proof.
+
 Rechecked 2026-10-31 against the [overview](https://twitchcon-codex.devpost.com/),
 [official rules](https://twitchcon-codex.devpost.com/rules) and
 [FAQ](https://twitchcon-codex.devpost.com/resources). This is an engineering

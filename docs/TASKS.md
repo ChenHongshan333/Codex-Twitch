@@ -8,8 +8,17 @@ lane revision and recorded its verification.
 Use the [agent map](AGENT_MAP.md) for task-to-code/test routing and
 [decisions](DECISIONS.md) for confirmed scope versus optional ideas.
 
+Video style/privacy revision complete, 2026-11-03: preferred review artifact is
+`artifacts/submission-video/ChatCrossfire-demo-face-only.mp4` (135s). Natural
+first-person English voiceover, action-aligned pauses and short purple-accented
+captions follow the supplied reference's approach. Small moving face mask/body
+visibility retained; prior 142s cut backed up. Full decode, actual audio length/
+energy and sampled visual checks PASS. Archives unchanged, no submission.
+
 | Task | Priority | Proposed owner | Depends on | State |
 | --- | --- | --- | --- | --- |
+| One live channel versus labelled local AI + submission video | P0 current route, 2026-11-03 | Current session produced local cut; owner reviews/submits | Full real-chat gameplay evidence and main Codex ID | AI mode and verified-live zero support implemented; syntax/serial suite 126/126. [Narrated cut](demo-runbook.md) produced: 142s, actual Twitch camera setup plus labelled actual-engine synthetic rehearsal and Codex source/test explanation. Streaming/capture ended, archives unchanged; full real-chat round, owner review/upload/submission pending |
+| Current operator-assisted live acceptance | P0, 2026-11-02 | Current conversation + account/hardware owner, human identity unassigned | Both selected channels broadcasting with viewers; camera availability and OBS calibration | yati769/zsyuyiie configured; doctor PASS; both real chat subscriptions connected and local server in Twitch-input lobby. Official OBS 33.0.1 installed/verified on F drive; downloaded installer deleted. Both live counts offline/unavailable; actual messages, camera tracking and OBS recording pending; browser-control host unavailable. See [acceptance record](../records/2026-11-02_unassigned_live-acceptance_pending.md) |
 | Web-operated real Twitch physical/avatar dodge acceptance | Current working route, 2026-11-02 | This session: local setup/diagnostics; account/hardware owners unassigned | Private two-channel consent; physical camera/OBS setup; decide required delivery topology | Live readiness/gating, receipt diagnostics and doctor/verifier implemented; serial suite 119/119. Live/hardware acceptance blocked by configuration and unavailable browser/camera setup. Remote/avatar/judge access remain open |
 | Extension-operated physical/avatar dodge | Preserved alternative; immediate preference superseded | Integrator + auth/rules/frontend, people unassigned | Explicit mode/contract design, shared backend and authenticated remote tracking | Existing native controls operate community PK, not dodge; integration deferred in the proposed immediate route, no implementation or publication |
 | Horizontal community-support dodge revision | P0 revised direction | Integrator/rules/frontend | [Latest design correction](design/physical-danmaku-discussion.md) | Implemented in separate dodge mode: fixed horizontal lanes, free chat core, optional capped support, no invented quiet-stream hazards; checks recorded in current handoff |

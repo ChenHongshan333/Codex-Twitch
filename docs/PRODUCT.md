@@ -7,6 +7,16 @@ not imply that live Twitch acceptance has passed.
 
 ## Intended experience
 
+Recording scope, 2026-11-03: the user will present alone, use their own
+`hongshan333` channel and wants the second side demonstrated by local game AI.
+Implemented an explicitly labelled `ai-demo` mode: one verified Twitch chat and
+real viewer sample, one camera marker, one server-controlled AI opponent. AI
+attacks are synthetic and labelled; its audience count remains absent. This is
+the submission demonstration route, not proof of two remote streamers or a
+second real channel. Default two-channel dodge and native PK remain available.
+Actual live gameplay/OBS footage and the final under-three-minute edit remain
+pending. See [shoot plan](demo-runbook.md) and [mode contract](API_CONTRACT.md).
+
 Current working delivery route (2026-11-02): after considering native Extension
 controls and judge-installation constraints, the user prefers returning to the
 web controller and asks to consolidate scope. Retain physical/virtual-avatar

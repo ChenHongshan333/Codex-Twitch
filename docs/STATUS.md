@@ -1,5 +1,69 @@
 # Verified status — audit spanning 2026-10-30–31 (Asia/Singapore)
 
+Latest reference-style update, 2026-11-03: same face-only MP4 now runs 135s with
+new first-person conversational English narration, action-aligned pauses and short
+bold subtitles/violet keywords. Moving face-only masks and body visibility are
+retained. Original 142s cut backed up locally. Final audio/video both 135s, full
+decode PASS, speech energy/peak checked. No runtime/contract changes or upload.
+Source/archives unchanged; Google mirror and main Codex ID remain pending.
+
+Earlier privacy correction, 2026-11-03: the prior review export was
+`artifacts/submission-video/ChatCrossfire-demo-face-only.mp4`. A small opaque oval
+follows detected face position/scale; body and shoulders remain visible as the
+user clarified. This supersedes the large fixed-panel export. 142s, original
+narration/captions retained; sampled visual review and full decode PASS. Original
+footage and Twitch archives are unchanged; no runtime/contract change.
+
+Latest media result, 2026-11-03: local narrated MP4 produced at
+`artifacts/submission-video/ChatCrossfire-demo-narrated.mp4` (142 seconds,
+1280×720, English narration/subtitles). Genuine Twitch camera-calibration footage
+is separated from a persistently labelled synthetic mechanics rehearsal using
+the actual engine/renderer. Source and actual 126/126 automated results explain
+Codex's contribution. Full live chat-to-game footage is still absent. Streaming
+and capture ended; Twitch confirmed offline, but two public archives remained
+and were not changed. No upload/submission. Earlier pending-media statements below
+are historical. Main session ID and Google Records mirror remain pending.
+
+Latest, 2026-11-03: user-authorized hongshan333-versus-local-AI recording mode is
+implemented and running on 3020. Real chat subscribed; no fake second channel,
+viewers or identities. Doctor/syntax pass; final serial automated suite 126/126.
+Actual viewer count and stable physical marker A are still missing. OBS is running
+and user confirms Twitch connected; Window Capture setup is in progress. A 2:45
+shoot plan/English script is ready; live footage and final MP4 are not produced.
+Default duel/native remain intact. Google Records writer unavailable. See
+[handoff](HANDOFF.md), [shoot plan](demo-runbook.md) and [record](../records/2026-11-02_unassigned_live-acceptance_pending.md).
+Window Capture has since been set. In response to missing self-video, the AI
+controller now composites actual camera A video into its human arena, preserving
+tracker crop/mirror and local-only frames. Operator confirmation remains pending.
+Update: operator confirmed the picture and started their broadcast. Twitch now
+confirms the channel is live (actual samples 0, then 1). AI mode accepts a verified
+live zero sample without inventing viewers; default duel still requires positive
+samples. Camera A calibration, actual chat/gameplay and recordings remain pending.
+Source freezing improved with window visibility; fixed-size Chrome plus fit/lock
+and background OBS was advised. Current service is running with the zero fix.
+
+Actual connection attempt, 2026-11-02: user selected `yati769` / `zsyuyiie`;
+targeted private configuration update and doctor pass. Both real chat subscriptions
+connect; local dodge now runs in Twitch-input mode on loopback 3020, in lobby.
+verify:dodge exits 1 because both live viewer counts are offline/unavailable.
+Six HTTP routes pass, synthetic endpoints are unavailable and Start correctly
+waits for viewers/markers. No messages sent or stream started; actual chat delivery,
+camera/OBS and full two-channel gameplay remain unverified. OBS Studio 33.0.1
+was subsequently installed to F:\OBS Studio at the user's request, with official
+hash/signatures and local installation checks passing; downloaded installer deleted.
+Installation does not establish OBS operation or physical-camera acceptance. Browser control host
+unavailable. See the [acceptance record](../records/2026-11-02_unassigned_live-acceptance_pending.md).
+Camera follow-up: operator reports white circles and both coordinates reached
+the backend, briefly fresh together, then stale. Stable simultaneous tracking
+and live viewer counts remain missing; no match or mode change occurred.
+
+Session recovery, 2026-11-02: user-supplied ID
+`01a197c3-77bd-72b1-a450-ca1147bf6c53` confirmed from local session metadata;
+existing implementation record/index updated on `codex/integrator-live-dodge-setup`
+from `cfd7a8e`. Context reconstruction only, with no fresh runtime/live checks.
+Next acceptance steps below remain open. Google mirror pending no connected
+document sessions; see [handoff](HANDOFF.md).
+
 ## Live-dodge implementation — 2026-11-02
 
 Branch `codex/integrator-live-dodge-setup`, base `e91c6fb`. Added safe offline/live

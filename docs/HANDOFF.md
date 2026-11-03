@@ -1,5 +1,157 @@
 # Current handoff
 
+Latest style revision, 2026-11-03: user supplied a 97.516s reference MP4 and asked
+to improve natural spoken delivery while updating the same face-only file.
+`artifacts/submission-video/ChatCrossfire-demo-face-only.mp4` is now 135 seconds
+(2:15), with a conversational first-person English script, generic Andrew neural
+voice, action-aligned speech pauses and 76 short bold caption phrases with violet
+keywords. Intro/code pauses were tightened. Small moving face masks remain in
+all presenter footage (0–36s and 119–135s); body and arm visibility retained.
+No reference footage/audio reuse or voice cloning. Previous 142s version backed
+up locally as `ChatCrossfire-demo-face-only-before-style.mp4`.
+
+FFprobe/video+audio duration and full decode PASS; decoded speech RMS -17.6dBFS,
+peak -1.37dBFS, 135s audio verified. A timestamp/mixing export problem was caught
+and fixed by assembling speech on a sample clock before muxing; silent draft
+superseded. Original source/master/archives untouched. No runtime/contract edits,
+upload or submission. Google Records mirror remains pending. Same branch/base as
+below. Owner next action: play the updated file; real-chat gameplay evidence and
+main Codex ID remain separate open items.
+
+Earlier privacy correction, 2026-11-03: user clarified face only, not body.
+The prior local review file was
+`artifacts/submission-video/ChatCrossfire-demo-face-only.mp4`. Re-exported from
+the original unmasked cut: a small opaque oval robot face follows locally detected
+face position/scale in both presenter sections (0–40s and 125–142s). The previous
+large rectangular visor is superseded. Body/shoulders and arm movements remain
+visible. Sampled frames checked; only the face ellipse region is changed before
+encoding. Duration stays 142s; original AAC audio is copied and subtitles retained.
+FFprobe/full decode PASS. Local sources/Twitch archives unchanged, no upload;
+Google mirror still pending. No runtime/contract changes.
+
+### Narrated local video delivered — 2026-11-03
+
+Latest result supersedes the earlier shoot-in-progress notes below. Created local
+`artifacts/submission-video/ChatCrossfire-demo-narrated.mp4`: 142 seconds, 1280×720,
+H.264/AAC, natural English neural narration and burned-in English subtitles.
+The actual Twitch-delivered raw capture is 162.282 seconds; it shows camera
+calibration, not successful marker tracking or chat-driven gameplay. Browser tabs
+are excluded. The movie clearly separates this recorded broadcast from an offline
+66-second DanmakuEngine/production-canvas rehearsal, played at labelled 1.22× speed.
+Synthetic messages/automated marker and local game AI are persistently labelled.
+Real engine output includes damage, pause/resume, defection and AI victory 2:5.
+Actual source excerpts/test output explain Codex's contribution; existing syntax
+and full serial 126/126 PASS remain the code verification. No new runtime edit
+was needed for media production. No chat was sent and no submission uploaded.
+
+OBS streaming and agent capture have ended; Twitch API confirmed offline.
+Two public VODs remained at that check; the user was told, and none were deleted
+or changed. Do not infer that stopping a stream hides its archives. User can rest;
+next action is owner playback/review, deciding whether to add real chat-to-game
+footage, confirming the main Codex session ID, and uploading/submitting themselves.
+The draft's honest rehearsal does not close the full real-gameplay evidence gap.
+Google Records mirror remains pending (writer unavailable/admin-disabled).
+Branch/base remain codex/integrator-live-dodge-setup /
+cfd7a8e9dd5173e669d759ca175b536d89ccd786; all changes uncommitted. Local media and
+reproduction scripts stay ignored. See the [session record](../records/2026-11-02_unassigned_live-acceptance_pending.md).
+
+### Submission video and one live channel versus AI — 2026-11-03
+
+User presents alone and owns hongshan333; cannot log into previous test channels.
+They declined a second account, confirmed continuing the video, then explicitly
+requested AI for the other side. Implemented `DODGE_MODE=ai-demo` alongside
+default duel: only A has verified Twitch input/count and physical camera; B is
+labelled local game AI with bounded steering and labelled attacks, no fake users
+or viewers. Embedded camera A simplifies single-operator setup. Native PK, duel
+rules and Host/Origin/loopback protections preserved; live synthetic endpoints
+remain unavailable. Contract/product/map/decisions and runbooks updated.
+
+Branch codex/integrator-live-dodge-setup, base cfd7a8e9dd5173e669d759ca175b536d89ccd786;
+existing uncommitted recovery/acceptance notes preserved; new work uncommitted.
+Final syntax PASS; serial full `npm.cmd test -- --test-concurrency=1` PASS 126/126,
+including AI rules, one-channel HTTP/diagnostics and UI/canvas labels. Default
+parallel Node v25 OOM limitation is inherited; no fresh browser/hardware pass.
+Doctor passes; restarted 3020 in ai-demo with hongshan333 actually subscribed.
+Five HTTP routes 200, synthetic input/counts 404, AI marker writes 400, blocked
+Start 409. Credentials unchanged; only selected mode/channel settings modified.
+
+Fresh public ideation tab read succeeds; connected Google writer remains absent
+and Drive plugin admin-disabled, so Records mirror pending. [Current shoot plan](demo-runbook.md)
+targets 2:45 with real Twitch and Codex footage, English narration/captions,
+explicit human/local-AI labels. No raw footage/final MP4/upload yet. OBS is running;
+operator confirms Twitch connected but has not added Window Capture. Await their
+preview status, then calibrate A, start owner's broadcast/viewer, test real chat,
+record the delivered Twitch player/chat and Codex building evidence. Browser
+control host is unavailable. Do not fake the missing footage or present AI as a
+second streamer. See the [session record](../records/2026-11-02_unassigned_live-acceptance_pending.md).
+Operator has now added Window Capture but reported no self-video in Chrome.
+Arena A now paints the enabled embedded camera's actual video, matching tracker
+crop/mirror; frames remain local. Synthetic DOM/canvas regression verifies the
+frame source/crop/mirror. Await hard-refresh and operator camera/OBS confirmation.
+Operator subsequently confirmed the self-video and Window Capture, then started
+their own OBS broadcast. Privately verified the destination matches hongshan333
+without exposing its key. Twitch Get Streams confirms live, first with raw 0,
+later 1 viewer. To support a genuinely solo demonstration, AI mode now accepts a
+fresh verified live zero sample, displays raw actual viewers and retains the
+normalization floor; offline/null still blocks, default duel unchanged. Focused
+zero/AI/UI/verifier suites pass 14/14; final full suite 126/126. Restarted service
+with the fix; latest real state has fresh A count 1, B null, lobby and camera A
+awaiting calibration. No actual chat message/gameplay/recording is verified yet.
+
+The operator's old-frame symptom improved with Chrome/OBS both visible; splitting
+resized the captured source. Instructed maximize Chrome, fit/lock its OBS source,
+then minimize OBS and keep Chrome in front. Historical OBS bandwidth tests had
+drops, but those precede this actual stream and do not prove current network loss.
+Next: fresh camera A tracking, OBS recording, 60-second real-chat/AI footage,
+actual Twitch player/chat proof, and Codex building footage for the 2:45 edit.
+
+### Actual connection checks and local startup — 2026-11-02
+
+User asked to run the route end to end. On `codex/integrator-live-dodge-setup`,
+base `cfd7a8e9dd5173e669d759ca175b536d89ccd786`, preserved the existing recovery
+documentation edits. Initially started rehearsal and validated existing token
+and hongshan333 chat subscription. User then supplied `yati769` / `zsyuyiie`:
+updated only the two channel settings and live flag in ignored .env, preserving
+credentials. Doctor now passes; real `npm.cmd run verify:dodge` subscribes to
+both chats but exits 1 because both live viewer counts are offline/unavailable.
+Restarted this session's service on loopback 3020 in Twitch-input mode with
+approved network access. State confirms both selected chats connected; six
+HTTP routes return 200, synthetic activity/audience return 404 and Start returns
+409 while audience/markers are missing. Lobby retained. No chat sent, stream
+started, runtime code or API contract changed. Actual message delivery is unverified.
+
+Need account owners to arrange both broadcasts/viewers and confirm camera availability.
+Browser access host is unavailable, and camera inventory was inconclusive.
+After inventory found no OBS, user authorized installation to F drive and installer
+cleanup. Official OBS 33.0.1 x64 installed to `F:\OBS Studio`, exit 0; official
+SHA-256, installer/executable signatures, executable version, uninstall registration
+and browser-source plugin verified. Downloaded installer deleted and absence
+confirmed. No OBS UI, recording or streaming session started. Next: live viewer counts,
+physical tracker/OBS calibration and actual-message/gameplay acceptance with the
+operator. Channel configuration is complete. Local live-input service remains
+running in this environment. Documentation links/diff pass; no fresh unit tests.
+Operator subsequently reports white circles in both camera pages; backend confirms
+both coordinates and briefly simultaneous fresh tracking, followed by expired
+updates. Keep both tracker windows visible; hidden-page processing is suspended
+by design. Stable tracking and live viewer counts still block Start. Input mode
+remains Twitch; local-camera rehearsal versus real-stream testing is unanswered.
+Google mirror pending no connected document sessions. See the separate
+[acceptance record](../records/2026-11-02_unassigned_live-acceptance_pending.md).
+
+### Session context recovered — 2026-11-02
+
+User supplied `01a197c3-77bd-72b1-a450-ca1147bf6c53`; local rollout metadata
+and recent messages confirm it belongs to the
+[live-dodge implementation record](../records/2026-11-01_unassigned_status-run-guide_pending.md).
+Reconciled its missing identity without changing its stable record key.
+Recovery checkout: `codex/integrator-live-dodge-setup`, base/HEAD
+`cfd7a8e9dd5173e669d759ca175b536d89ccd786`, initially clean. Context was read;
+the current chat was not switched. Documentation only; no fresh runtime tests,
+live acceptance or publication. Local documentation links and diff checks pass.
+Google mirror remains pending: fresh document inventory has no connected sessions.
+Next: account/hardware owners complete private two-channel setup and camera/OBS
+acceptance described below; remote topology and avatar adapters remain open.
+
 ### Implemented live-dodge setup and diagnostics — 2026-11-02
 
 User authorized implementation, progress update and GitHub push. Current branch

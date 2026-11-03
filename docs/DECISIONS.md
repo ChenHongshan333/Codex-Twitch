@@ -13,6 +13,16 @@ what actually works. Use [agent map](AGENT_MAP.md) to find the relevant code.
 
 ## Product and gameplay
 
+Confirmed video scope, 2026-11-03: after initially choosing a second test account,
+the user declined creating one, confirmed continuing with `hongshan333`, then
+explicitly requested AI for the second side. Implemented `DODGE_MODE=ai-demo`
+alongside default `duel`: one real Twitch channel and a labelled local game AI,
+not a fake second stream or viewer count. Embedded camera A reduces window
+switching. Local steering/attack cadence is a game-AI implementation, not an LLM
+service or external avatar adapter. User may appear on camera; one operator
+must be identified truthfully. Producing a video is authorized; broadcasting,
+uploading or submitting still needs the relevant operator action/authorization.
+
 Implementation authorization (2026-11-02): user explicitly asked to build the
 web/chat/OBS route, update progress.md and push to GitHub. Implemented local live
 readiness, diagnostic tooling and camera-first operator UI; no credentials,
