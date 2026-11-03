@@ -15,6 +15,7 @@
   </header>
   <main class="room">
     <div class="room-heading"><div><p class="eyebrow">COMMUNITY VS COMMUNITY</p><h1>Crossfire stream setup</h1></div><span class="room-note">Chat attacks. You dodge. The server scores.</span></div>
+    <p id="ai-demo-note" class="ai-demo-note" hidden><strong>LIVE TWITCH × LOCAL AI DEMO</strong> · One real Twitch channel and one local game AI opponent. Chat attacks the AI arena; dodge the clearly labelled AI messages in your camera arena. This is a single-channel demonstration.</p>
     <section id="live-setup" class="live-setup" aria-labelledby="live-setup-title" hidden>
       <h2 id="live-setup-title">Before you start / 真实直播准备</h2>
       <p>Viewers play in Twitch chat. You move in front of the camera; this page sets up and controls the match. OBS broadcasts the camera with the transparent bullet layer.</p>
@@ -52,6 +53,7 @@
         <div class="round-insight"><span id="switch-status">Defection opens around halftime. One switch per viewer.</span><span class="fair-play">Equal arenas · equal hitboxes</span></div>
       </section>
       <aside class="activity-panel" aria-label="Activity and test chat">
+        <section id="ai-camera" class="ai-camera" hidden><h2>Your camera · calibrate a bright marker</h2><div id="camera-frame"></div><p>Click Enable camera, then your coloured marker. Keep this page visible while playing.</p><p>For OBS, use Window Capture of this browser window, including your camera preview and both arenas. The other side is local game AI; no second camera is needed.</p></section>
         <div class="activity-heading"><h2 id="activity-title">Rehearsal chat</h2><span class="test-label" id="test-label">TEST INPUT</span></div>
         <div id="activity-feed" class="activity-feed" role="log" aria-label="Match activity" aria-live="off"><div class="feed-empty"><span aria-hidden="true">↗ ↙</span><strong>The next move starts in chat.</strong><p>Accepted attacks, hits and defections appear here when a round begins.</p></div></div>
         <div id="simulator-controls" class="chat-controls">
@@ -65,6 +67,7 @@
           <p class="chat-footnote">Test events are simulated. No gifts or Bits are purchased.</p>
         </div>
         <p id="live-chat-help" class="live-chat-help" hidden>Play in Twitch chat with ordinary messages, <strong>!attack</strong> and <strong>!switch</strong>. Activity here comes from the connected channels.</p>
+        <p id="ai-chat-help" class="live-chat-help" hidden>Viewer messages come from your real Twitch chat: ordinary messages, <strong>!attack</strong> and halftime <strong>!switch</strong>. The local AI adds clearly labelled attacks; it is not another Twitch viewer or channel.</p>
       </aside>
     </div>
     <details id="setup" class="setup-panel">

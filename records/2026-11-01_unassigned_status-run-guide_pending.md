@@ -4,8 +4,8 @@
 - Date/timezone: 2026-11-01, Asia/Shanghai (same UTC+8 as repository records)
 - Continued: 2026-11-02, Asia/Shanghai; OBS presentation/control-panel explanation
 - Human owner: unassigned
-- Codex session/thread ID: pending; owner must supply the observed ID
-- Identity source: unavailable in this session
+- Codex session/thread ID: 01a197c3-77bd-72b1-a450-ca1147bf6c53
+- Identity source: user supplied in a resume request on 2026-11-02; confirmed against local rollout session_meta (matching ID, repository path and original start timestamp 2026-11-01T15:38:52.630Z). This identifies the original session, not the current recovery conversation, whose ID is unobserved.
 - Actual chat title: unknown
 - Session label: unassigned_status-run-guide (provisional)
 - Session purpose: source audit, startup/scope guidance, then authorized live-dodge setup implementation and push
@@ -14,6 +14,22 @@
 - Google mirror: pending; document 1x_30AXx2-QcIlqXfVeT-18YsWaFR7mQIaJNL9Q7lmvk; document-control inventory returned no connected sessions. Historical Records tab t.v5dw10hrs0ha was not re-observed or modified.
 
 ## Codex contribution and decisions
+
+### Context recovery and identity reconciliation, 2026-11-02
+
+Read the requested session's local metadata and recent assistant messages,
+which match this record's implementation/publication handoff. Preserve the
+existing filename and stable record key to avoid duplicate records. Current
+checkout is clean before this documentation update, on
+`codex/integrator-live-dodge-setup` at
+`cfd7a8e9dd5173e669d759ca175b536d89ccd786`. This is context reconstruction;
+the active chat was not switched and no new implementation was requested.
+The 119/119 serial test result below is inherited, not rerun. No runtime,
+configuration, credentials, live connection or remote publication changed.
+Fresh connected document inventory again returned no sessions; Google mirror
+remains pending. Next action is private two-channel setup followed by
+doctor/verifier and physical camera/OBS acceptance with account/hardware owners;
+remote topology and avatar adapters remain unresolved.
 
 ### Authorized implementation, 2026-11-02
 

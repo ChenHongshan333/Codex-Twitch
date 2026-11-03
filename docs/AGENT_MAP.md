@@ -21,6 +21,13 @@ snapshot fields are documented in the contract. Follow `test/dodge-live.test.mjs
 
 ## Read according to the task
 
+2026-11-03 recording addition from base `cfd7a8e`: `DanmakuEngine({mode:'ai-demo'})`
+and matching server/launcher/doctor options support one real chat against labelled
+local AI; default mode is `duel`. AI owns marker B; real counts/marker A still gate
+Start. Follow [contract](API_CONTRACT.md), [runbook](dodge-runbook.md),
+`test/dodge-ai.test.mjs` and AI UI coverage. The current under-three-minute recording
+plan is [demo-runbook.md](demo-runbook.md); it supersedes that file's legacy host plan.
+
 ```mermaid
 flowchart TD
   Entry[AGENTS.md: rules and workflow] --> Map[AGENT_MAP.md: select a lane]

@@ -4,6 +4,9 @@ const colours = { a: '#ff826e', b: '#bda4ff' };
 const overlay = $('overlay'), overlaySide = location.pathname.split('/').pop();
 let state, receivedAt = 0, demoTimer, demoStep = 0, connected = false, starting = false, feedCursor = '', configuredInput;
 const positions = { a: { x: 480, y: 270 }, b: { x: 480, y: 270 } }, keys = new Set();
+const isAiDemo = () => state?.mode === 'ai-demo';
+const teamName = side => isAiDemo() ? side === 'a' ? 'You' : 'Local AI' : side === 'a' ? 'Coral' : 'Violet';
+function resultText() { return state.result.winner === 'tie' ? 'Round complete · draw' : `Round complete · ${teamName(state.result.winner)} wins`; }
 
 async function post(path, body) {
   const response = await fetch(`/api/dodge/${path}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), signal: AbortSignal.timeout(2500) });
@@ -35,6 +38,23 @@ async function poll() {
   setTimeout(poll, 100);
 }
 function renderControls() {
+  const aiDemo = isAiDemo();
+  document.body.dataset.mode = aiDemo ? 'ai-demo' : 'duel';
+  $('ai-demo-note').hidden = !aiDemo; $('ai-camera').hidden = !aiDemo;
+  if (aiDemo && !$('camera-frame').firstChild) {
+    const frame = document.createElement('iframe'); frame.src = '/track/a?embedded=1'; frame.title = 'Your local camera and marker calibration'; frame.allow = 'camera'; $('camera-frame').append(frame);
+  } else if (!aiDemo && $('camera-frame').firstChild) $('camera-frame').replaceChildren();
+  document.querySelector('.room-heading .eyebrow').textContent = aiDemo ? 'ONE REAL TWITCH CHANNEL · LOCAL AI OPPONENT' : 'COMMUNITY VS COMMUNITY';
+  document.querySelector('.room-heading h1').textContent = aiDemo ? 'Your chat versus local AI' : 'Crossfire stream setup';
+  document.querySelector('.match-team.a strong').textContent = aiDemo ? 'You + Twitch chat' : 'Coral Crew';
+  document.querySelector('.match-team.b strong').textContent = aiDemo ? 'Local AI opponent' : 'Violet Crew';
+  document.querySelector('.match-team.b .team-avatar').textContent = aiDemo ? 'AI' : 'V';
+  document.querySelector('.team.a h2').lastChild.textContent = aiDemo ? 'Your camera arena' : 'Coral Crew';
+  document.querySelector('.team.b h2').lastChild.textContent = aiDemo ? 'Local AI · simulated opponent' : 'Violet Crew';
+  document.querySelector('.team.b .tools').hidden = aiDemo;
+  document.querySelector('.pressure-strip').hidden = aiDemo;
+  document.querySelector('.setup-grid section:last-child ol').hidden = aiDemo;
+  document.querySelector('.fair-play').textContent = aiDemo ? 'Human camera · local game AI' : 'Equal arenas · equal hitboxes';
   const seconds = Math.ceil((state.phase === 'lobby' ? Number($('duration').value) * 1000 : state.remainingMs) / 1000);
   $('timer').textContent = `${String(Math.floor(seconds / 60)).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`;
   $('phase').textContent = state.phase.toUpperCase();
@@ -42,22 +62,23 @@ function renderControls() {
   const synthetic = state.inputSource === 'synthetic';
   $('live-setup').hidden = synthetic;
   $('audience-form').hidden = !synthetic;
-  document.querySelector('.preview-label').textContent = synthetic ? 'LOCAL PREVIEW · NO STREAM VIDEO' : 'MARKER PREVIEW · CAMERA VIDEO IS IN OBS';
-  for (const side of sides) if (!synthetic) $(`movement-${side}`).textContent = 'Move your body · camera tracking';
+  document.querySelector('.preview-label').textContent = synthetic ? 'LOCAL PREVIEW · NO STREAM VIDEO' : aiDemo ? 'HUMAN MARKER × LOCAL AI · CAMERA AT RIGHT' : 'MARKER PREVIEW · CAMERA VIDEO IS IN OBS';
+  for (const side of sides) if (!synthetic) $(`movement-${side}`).textContent = aiDemo && side === 'b' ? 'Local game AI · automatic movement' : 'Move your body · camera tracking';
   if (!synthetic) renderReadiness();
   $('rehearsal-intro').hidden = !synthetic || state.phase !== 'lobby';
   $('quick-start').disabled = !connected || starting;
   $('simulator-controls').hidden = !synthetic;
   $('test-label').hidden = !synthetic;
-  $('live-chat-help').hidden = synthetic;
-  $('activity-title').textContent = synthetic ? 'Rehearsal chat' : 'Twitch activity';
+  $('live-chat-help').hidden = synthetic || aiDemo;
+  $('ai-chat-help').hidden = !aiDemo;
+  $('activity-title').textContent = synthetic ? 'Rehearsal chat' : aiDemo ? 'Live chat + local AI' : 'Twitch activity';
   $('duration').disabled = state.phase !== 'lobby';
-  $('source').textContent = synthetic ? 'LOCAL REHEARSAL' : 'TWITCH INPUT';
+  $('source').textContent = synthetic ? 'LOCAL REHEARSAL' : aiDemo ? 'TWITCH × LOCAL AI DEMO' : 'TWITCH INPUT';
   $('count-source').textContent = `${state.pressure.source.toUpperCase()} COUNTS`;
   $('twitch-status').textContent = [state.twitch.message, ...Object.entries(state.support).map(([side, status]) => `${side === 'a' ? 'Coral' : 'Violet'} support: ${status.message}`)].join(' ');
   for (const side of sides) {
     $(`health-${side}`).textContent = `${state.health[side]} / ${state.config.health} HP`;
-    $(`tracking-${side}`).textContent = state.tracking[side] ? '● MARKER TRACKING' : '○ MARKER OFFLINE';
+    $(`tracking-${side}`).textContent = aiDemo && side === 'b' ? '◆ LOCAL AI · SERVER CONTROLLED' : state.tracking[side] ? '● MARKER TRACKING' : '○ MARKER OFFLINE';
     const pips = $(`health-pips-${side}`);
     if (pips.dataset.health !== String(state.health[side])) {
       pips.replaceChildren(...Array.from({ length: state.config.health }, (_, index) => { const pip = document.createElement('i'); if (index < state.health[side]) pip.className = 'filled'; return pip; }));
@@ -65,7 +86,7 @@ function renderControls() {
     }
   }
   if (state.reason) notice(state.reason);
-  if (state.result) notice(state.result.winner === 'tie' ? 'Round complete · draw' : `Round complete · ${state.result.winner === 'a' ? 'Coral' : 'Violet'} wins`);
+  if (state.result) notice(resultText());
   const totals = state.pressure.current, sum = totals.a + totals.b;
   const bars = $('pressure').children;
   bars[0].style.width = `${sum ? totals.a / sum * 100 : 50}%`; bars[1].style.width = `${sum ? totals.b / sum * 100 : 50}%`;
@@ -73,6 +94,7 @@ function renderControls() {
   const denominator = state.pressure.denominator;
   $('pressure-detail').textContent = !state.pressure.enabled ? 'Admission suspended · waiting for fresh live viewer counts on both sides.' :
     `${state.pressure.barrage ? `${state.pressure.barrage === 'a' ? 'CORAL' : 'VIOLET'} BARRAGE · ` : ''}A ${totals.a.toFixed(3)} / B ${totals.b.toFixed(3)} units per viewer · denominators ${Math.round(denominator.a)} / ${Math.round(denominator.b)} · ${(state.pressure.windowRemainingMs / 1000).toFixed(1)}s in bucket`;
+  if (aiDemo) $('pressure-detail').textContent = state.pressure.enabled ? `Normalization denominator (minimum 20): ${Math.round(denominator.a)}. Actual viewer counts are shown above, including zero. Local AI has no viewer count; it adds a labelled test attack every 2.5 seconds. Comparative barrages are disabled.` : 'Waiting for Twitch to confirm your channel is live with a fresh viewer sample.';
   $('switch-status').textContent = state.switchOpen ? 'DEFECTION OPEN · switch once; cooldown stays, future messages attack your former side.' : 'Defection opens around halftime. One switch per viewer.';
   document.querySelectorAll('[data-action]').forEach(button => {
     const ready = synthetic ? state.tracking.a && state.tracking.b : state.setup.ready;
@@ -88,14 +110,21 @@ function renderControls() {
 function renderReadiness() {
   const checks = [{ ready: connected && state.setup.chats, text: `Twitch chats: ${state.twitch.message || state.twitch.state}` }];
   for (const side of sides) {
-    const name = side === 'a' ? 'Coral' : 'Violet', count = state.pressure.audience[side];
+    if (isAiDemo() && side === 'b') {
+      checks.push({ ready: true, text: 'Local AI opponent: automatic marker and labelled AI attacks; no second Twitch channel or viewer count.' });
+      $('chat-link-b').hidden = true;
+      continue;
+    }
+    const name = isAiDemo() ? 'Your Twitch channel' : side === 'a' ? 'Coral' : 'Violet', count = state.pressure.audience[side];
+    const viewerValue = count?.raw ?? count?.value;
     const fresh = count && state.serverTime - count.at < state.config.freshnessMs;
     const activity = state.inputActivity[side];
-    checks.push({ ready: Boolean(fresh && count.value > 0), text: `${name} viewers: ${count ? Math.round(count.value) : 'offline / unavailable'}${count && !fresh ? ' (stale)' : ''}. Chat received ${activity.received}, accepted ${activity.accepted}, rejected ${activity.rejected}.${activity.lastReason ? ` Last reason: ${activity.lastReason}` : ''}` });
+    checks.push({ ready: Boolean(fresh && (isAiDemo() ? viewerValue >= 0 : viewerValue > 0)), text: `${name} viewers: ${count ? Math.round(viewerValue) : 'offline / unavailable'}${count && !fresh ? ' (stale)' : ''}. Chat received ${activity.received}, accepted ${activity.accepted}, rejected ${activity.rejected}.${activity.lastReason ? ` Last reason: ${activity.lastReason}` : ''}` });
     checks.push({ ready: state.tracking[side], text: `${name} camera marker: ${state.tracking[side] ? 'tracking' : 'open Camera setup and calibrate'}.` });
     const link = $(`chat-link-${side}`), channel = state.twitch.channels?.find(item => item.team === side);
     link.hidden = !channel || !/^[a-zA-Z0-9_]{1,25}$/.test(channel.login);
     if (!link.hidden) link.href = `https://www.twitch.tv/${channel.login}/chat`;
+    if (isAiDemo() && !link.hidden) link.textContent = `Open @${channel.login} Twitch chat ↗`;
   }
   $('readiness-checks').replaceChildren(...checks.map(check => { const row = document.createElement('li'); row.dataset.ready = String(check.ready); row.textContent = `${check.ready ? '✓' : '○'} ${check.text}`; return row; }));
   $('start-requirements').textContent = !connected ? 'Local server disconnected. Reconnect before starting.' : state.setup.ready ? 'Ready. Start round once; hits, health and the final result are automatic.' : state.setup.blockers.join(' ');
@@ -105,7 +134,6 @@ function renderFeed() {
   if (cursor === feedCursor) return;
   feedCursor = cursor;
   const feed = $('activity-feed'), wasAtBottom = feed.scrollTop + feed.clientHeight >= feed.scrollHeight - 20;
-  const teamName = side => side === 'a' ? 'Coral' : 'Violet';
   const rows = [];
   for (const event of state.events.slice(-12)) {
     let team = event.from ?? event.target, text;
@@ -124,12 +152,24 @@ function renderFeed() {
   else { const empty = document.createElement('div'); empty.className = 'feed-empty'; const title = document.createElement('strong'); title.textContent = 'The next move starts in chat.'; const copy = document.createElement('p'); copy.textContent = 'Accepted attacks, hits and defections appear here when a round begins.'; empty.append(title, copy); feed.replaceChildren(empty); }
   if (wasAtBottom) feed.scrollTop = feed.scrollHeight;
 }
+function drawCamera(ctx) {
+  const cameraDocument = $('camera-frame')?.firstElementChild?.contentDocument;
+  const video = cameraDocument?.getElementById('video');
+  if (!video || video.readyState < 2 || !video.videoWidth || !video.videoHeight) return false;
+  const vw = video.videoWidth, vh = video.videoHeight;
+  const cropW = Math.min(vw, vh * 16 / 9), cropH = Math.min(vh, vw * 9 / 16);
+  ctx.save();
+  if (cameraDocument.getElementById('mirror')?.checked) { ctx.translate(960, 0); ctx.scale(-1, 1); }
+  ctx.drawImage(video, (vw - cropW) / 2, (vh - cropH) / 2, cropW, cropH, 0, 0, 960, 540);
+  ctx.restore(); return true;
+}
 function drawArena(canvas, side) {
   const ctx = canvas.getContext('2d'); ctx.clearRect(0, 0, 960, 540);
   if (!state) return;
   const stale = performance.now() - receivedAt > 1000;
   if (!overlay) {
     ctx.fillStyle = '#141820'; ctx.fillRect(0, 0, 960, 540);
+    const cameraVisible = isAiDemo() && side === 'a' && drawCamera(ctx);
     ctx.strokeStyle = '#303440'; ctx.lineWidth = 1;
     ctx.strokeRect(30, 30, 900, 480);
     ctx.beginPath(); ctx.moveTo(30, 450); ctx.lineTo(930, 450); ctx.stroke();
@@ -141,7 +181,16 @@ function drawArena(canvas, side) {
       ctx.beginPath(); ctx.moveTo(-22, -42); ctx.quadraticCurveTo(-58, -35, -61, 24); ctx.lineTo(-45, 78); ctx.lineTo(-25, 75); ctx.lineTo(-20, 112); ctx.lineTo(20, 112); ctx.lineTo(25, 75); ctx.lineTo(45, 78); ctx.lineTo(61, 24); ctx.quadraticCurveTo(58, -35, 22, -42); ctx.closePath(); ctx.fill(); ctx.stroke();
       ctx.beginPath(); ctx.moveTo(-14, 112); ctx.lineTo(-24, 174); ctx.moveTo(14, 112); ctx.lineTo(24, 174); ctx.stroke(); ctx.restore();
     }
-    ctx.fillStyle = '#a5a8b7'; ctx.font = '13px system-ui'; ctx.textAlign = 'left'; ctx.fillText(state.inputSource === 'synthetic' ? '960 × 540 · REHEARSAL TARGET' : '960 × 540 · CAMERA MARKER PREVIEW', 47, 58);
+    ctx.fillStyle = '#101116aa'; ctx.fillRect(38, 37, 400, 31);
+    ctx.fillStyle = '#e0dfeb'; ctx.font = '13px system-ui'; ctx.textAlign = 'left'; ctx.fillText(isAiDemo() ? side === 'b' ? '960 × 540 · LOCAL GAME AI' : cameraVisible ? 'LIVE CAMERA · TRACKED PHYSICAL MARKER' : 'ENABLE CAMERA IN THE RIGHT-HAND PANEL' : state.inputSource === 'synthetic' ? '960 × 540 · REHEARSAL TARGET' : '960 × 540 · CAMERA MARKER PREVIEW', 47, 58);
+  }
+  if (isAiDemo() && side === 'b') {
+    if (overlay) { ctx.fillStyle = '#141820'; ctx.fillRect(0, 0, 960, 540); }
+    const p = state.markers.b;
+    ctx.fillStyle = '#55446c'; ctx.fillRect(p.x - 32, p.y - 60, 64, 50);
+    ctx.fillStyle = '#e2ceff'; ctx.fillRect(p.x - 17, p.y - 43, 10, 10); ctx.fillRect(p.x + 7, p.y - 43, 10, 10);
+    ctx.strokeStyle = colours.b; ctx.lineWidth = 4; ctx.strokeRect(p.x - 28, p.y - 8, 56, 58);
+    ctx.fillStyle = '#e2ceff'; ctx.font = 'bold 14px system-ui'; ctx.textAlign = 'center'; ctx.fillText('LOCAL AI', p.x, p.y + 74);
   }
   ctx.strokeStyle = colours[side]; ctx.lineWidth = 2; ctx.strokeRect(1, 1, 958, 538);
   for (const b of state.bullets) if (b.target === side) {
@@ -168,12 +217,12 @@ function drawArena(canvas, side) {
     ctx.beginPath(); ctx.arc(marker.x, marker.y, 3, 0, Math.PI * 2); ctx.fillStyle = '#fff'; ctx.fill();
   }
   if (overlay) {
-    ctx.fillStyle = '#101116cc'; ctx.fillRect(16, 16, 250, 48);
+    ctx.fillStyle = '#101116cc'; ctx.fillRect(16, 16, isAiDemo() ? 440 : 250, 48);
     ctx.fillStyle = colours[side]; ctx.font = 'bold 16px system-ui'; ctx.textAlign = 'left';
-    ctx.fillText(`${side === 'a' ? 'CORAL' : 'VIOLET'}  ${state.health[side]}/${state.config.health} HP  ·  ${Math.ceil(state.remainingMs / 1000)}s`, 28, 46);
+    ctx.fillText(`${isAiDemo() ? side === 'a' ? 'LIVE TWITCH · YOU' : 'LOCAL AI · DEMO' : side === 'a' ? 'CORAL' : 'VIOLET'}  ${state.health[side]}/${state.config.health} HP  ·  ${Math.ceil(state.remainingMs / 1000)}s`, 28, 46);
   }
   if (state.phase !== 'running' || stale || !state.tracking[side]) {
-    const message = stale ? 'CONNECTION LOST' : state.phase === 'paused' ? (state.tracking.a && state.tracking.b ? 'PAUSED · RESUME WHEN READY' : 'PAUSED · RECOVER MARKERS') : state.phase === 'finished' ? `ROUND OVER · ${state.result.winner === 'tie' ? 'DRAW' : state.result.winner.toUpperCase() + ' WINS'}` : 'READY YOUR MARKER';
+    const message = stale ? 'CONNECTION LOST' : state.phase === 'paused' ? (state.tracking.a && state.tracking.b ? 'PAUSED · RESUME WHEN READY' : 'PAUSED · RECOVER MARKERS') : state.phase === 'finished' ? `ROUND OVER · ${state.result.winner === 'tie' ? 'DRAW' : teamName(state.result.winner).toUpperCase() + ' WINS'}` : isAiDemo() && side === 'b' ? 'LOCAL AI · WAITING FOR YOU' : 'READY YOUR MARKER';
     ctx.fillStyle = '#101116cc'; ctx.fillRect(210, 233, 540, 74); ctx.fillStyle = '#f3f0fa'; ctx.font = 'bold 20px system-ui'; ctx.textAlign = 'center'; ctx.fillText(message, 480, 278);
   }
 }

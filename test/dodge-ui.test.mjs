@@ -102,3 +102,46 @@ test('live streamer setup displays blockers, real-chat diagnostics and disables 
   assert.equal($('[data-action="start"]').disabled, true);
   assert.match($('#start-requirements').textContent, /disconnected/);
 });
+
+test('AI demo labels its local opponent and embedded camera, with no second-chat readiness requirement', async t => {
+  class Bridge extends EventEmitter {
+    status = { state: 'connected' }; channels = [{ team: 'a', id: '10', login: 'streamer', subscribed: true }];
+    async start() { this.status.channels = this.channels; this.emit('status', this.status); }
+    async request() { return { data: [{ user_id: '10', viewer_count: 0 }] }; }
+    stop() {}
+  }
+  const { app, $, window } = await rig(t, { appOptions: { mode: 'ai-demo', live: true, channels: { a: 'streamer' }, bridgeFactory: () => new Bridge() } });
+  assert.match($('#source').textContent, /LOCAL AI DEMO/);
+  assert.equal($('#ai-demo-note').hidden, false);
+  assert.equal($('#ai-camera').hidden, false);
+  assert.equal($('#ai-chat-help').hidden, false);
+  assert.match($('#activity-title').textContent, /local AI/);
+  assert.equal($('#camera-frame iframe').getAttribute('src'), '/track/a?embedded=1');
+  assert.equal($('.team.b .tools').hidden, true);
+  assert.equal($('#chat-link-b').hidden, true);
+  assert.match($('#readiness-checks').textContent, /no second Twitch channel or viewer count/);
+  assert.match($('#readiness-checks').textContent, /✓ Your Twitch channel viewers: 0/);
+  assert.equal($('[data-action="start"]').disabled, true);
+  app.engine.marker('a', { x: 480, y: 270 });
+  await until(() => !$('[data-action="start"]').disabled);
+  assert.equal(app.engine.markers.b.x, app.engine.config.width * .72);
+  app.engine.health.a = 0; app.engine.finish();
+  await until(() => $('#notice').textContent.includes('Local AI wins'));
+  assert.equal($('#simulator-controls').hidden, true);
+  const labels = [], frames = [], scales = [];
+  const context = new Proxy({ measureText: () => ({ width: 0 }), fillText: text => labels.push(text), drawImage: (...args) => frames.push(args), scale: (...args) => scales.push(args) }, { get: (target, key) => key in target ? target[key] : () => {} });
+  const cameraDocument = $('#camera-frame iframe').contentDocument;
+  cameraDocument.open(); cameraDocument.write('<video id="video"></video><input id="mirror" type="checkbox" checked>'); cameraDocument.close();
+  const video = cameraDocument.getElementById('video');
+  Object.defineProperties(video, { readyState: { value: 4 }, videoWidth: { value: 1280 }, videoHeight: { value: 960 } });
+  $('#arena-a').getContext = () => context;
+  window.drawArena($('#arena-a'), 'a');
+  assert.equal(frames[0][0], video);
+  assert.deepEqual(frames[0].slice(1), [0, 120, 1280, 720, 0, 0, 960, 540], 'Live face picture uses the same centred 16:9 crop as marker tracking');
+  assert.deepEqual(scales[0], [-1, 1], 'Camera mirror matches the tracker');
+  assert.ok(labels.includes('LIVE CAMERA · TRACKED PHYSICAL MARKER'));
+  $('#arena-b').getContext = () => context;
+  window.drawArena($('#arena-b'), 'b');
+  assert.ok(labels.includes('LOCAL AI'));
+  assert.ok(labels.includes('ROUND OVER · LOCAL AI WINS'));
+});

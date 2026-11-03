@@ -1,5 +1,45 @@
 # OBS dodge mode
 
+## Current video route: your Twitch channel versus local AI
+
+The user selected a solo-presenter submission video using `hongshan333`, then
+requested a local game AI for the other side. This is one real Twitch channel
+versus a labelled AI actor; it is not a second Twitch broadcaster. Keep the
+two-channel mode available as `DODGE_MODE=duel`.
+
+Private configuration for this recording route:
+
+```dotenv
+DODGE_LIVE=1
+DODGE_MODE=ai-demo
+DODGE_CHANNEL_A=hongshan333
+```
+
+Use your existing valid user token. Channel B is ignored in this mode. Run
+`npm run doctor:dodge`, `npm run verify:dodge`, then `npm run dodge`. Only the
+actual A stream must be confirmed live with a fresh viewer sample; zero actual
+viewers is allowed for a solo presenter, while offline/missing samples still
+block Start. The UI shows the real raw count; normalization retains its floor of
+20. AI does not supply a fake count. No command starts broadcasting.
+
+Open the controller, enable/calibrate camera A in its side panel and keep that
+page visible. Close the old camera B page; B is server-controlled AI. Ordinary
+real chat in A attacks the AI arena. The AI steers to avoid shots and releases
+labelled attacks at a fixed test cadence; move your physical marker to dodge.
+Collisions/health/settlement remain authoritative. Real viewers may use the
+existing halftime `!switch` to back the AI, retaining their cooldown.
+
+For the easiest recording setup, use OBS Window Capture of the controller's
+browser window, which includes the actual camera preview and clearly labelled
+AI. This avoids opening the webcam directly in OBS while the tracker uses it.
+Keep the controller visible. Alternatively compose your matching camera plus
+`/overlay/a`, with `/overlay/b` alongside it. Each overlay is 960x540; B includes
+its own local-AI background and figure. Do not call it a second live streamer.
+
+Follow the current [video shoot plan](demo-runbook.md). Real chat-to-game footage,
+the delivered Twitch picture, Codex evidence and final editing are still needed;
+automated tests and a subscribed chat do not finish the video.
+
 This mode is the PK game itself: both streamers dodge in equal arenas, and
 opponent-community messages scroll through the arena as bullets. It is not a
 transparent interference layer over an arbitrary game, drawing session, or quiz.

@@ -6,6 +6,9 @@
 真实输入配置后依次运行 `npm run doctor:dodge`、`npm run verify:dodge`、
 `npm run dodge`。前两步分别检查配置和只读聊天/观众数连接，均不会代替你开播。
 实时就绪清单和聊天接收/拒绝原因帮助定位缺口。
+单人视频演示可设 `DODGE_MODE=ai-demo`、`DODGE_LIVE=1`，只配置真实频道 A，
+由明确标注的本地游戏 AI 操作另一侧；仍需 A 开播、有实际观众并校准摄像头 A。
+默认 `DODGE_MODE=duel` 保留双频道模式。见 [拍摄脚本](docs/demo-runbook.md)。
 详见 [真实联调步骤](docs/dodge-runbook.md#real-twitch-input-private-configuration)。
 当前仍是同机原型；远程双电脑和特定 VTuber 软件接口未实现。
 
@@ -235,6 +238,6 @@ progress.md             给组员看的进度、验证结果与待办
 
 ## Hackathon 交付
 
-仍需两位主播真实演练、OBS 视觉验证、公开 YouTube 视频（最长 3 分钟）、完整仓库、项目描述和主要开发 thread 的 Codex Session ID。代码完成不等于比赛已提交。
+仍需所选模式的真实 Twitch / OBS 演示录像、三分钟以内的视频、完整仓库、项目描述和主要开发 thread 的 Codex Session ID。当前拍摄路线是一位真人与明确标注的本地 AI 对手；双真人模式的完整实测另待完成。代码完成不等于比赛已提交。
 
 官方参考：[Chatbot Guide](https://dev.twitch.tv/docs/chat/chatbot-guide/)、[聊天授权](https://dev.twitch.tv/docs/chat/authenticating/)、[EventSub WebSocket](https://dev.twitch.tv/docs/eventsub/handling-websocket-events/)、[比赛页面](https://twitchcon-codex.devpost.com/)。
