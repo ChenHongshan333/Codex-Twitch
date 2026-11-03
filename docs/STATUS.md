@@ -1,5 +1,11 @@
 # Verified status — audit spanning 2026-10-30–31 (Asia/Singapore)
 
+README documentation update, 2026-11-03: complete English translation on
+`codex/docs-readme-english`, base `fca6841c8f4597fece09a50f658b92265e3bc89d`.
+Content/local-link and diff checks PASS. No runtime/contract changes or fresh
+runtime tests; live acceptance status is unchanged. Google mirror pending no
+connected document sessions. See the [translation record](../records/2026-11-03_unassigned_readme-english_pending.md).
+
 Latest reference-style update, 2026-11-03: same face-only MP4 now runs 135s with
 new first-person conversational English narration, action-aligned pauses and short
 bold subtitles/violet keywords. Moving face-only masks and body visibility are

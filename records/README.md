@@ -9,6 +9,7 @@ Google tab mirrors the session identity, contribution, checks, blockers, and nex
 
 | Record | Session identity | Kind |
 | --- | --- | --- |
+| [English README translation](2026-11-03_unassigned_readme-english_pending.md) | Pending; current conversation ID unobserved | Documentation translation; content/local-link/diff checks; Google mirror pending |
 | [Live checks, OBS, local AI and narrated video](2026-11-02_unassigned_live-acceptance_pending.md) | Pending; current conversation ID unobserved | OBS installed/cleaned; real broadcast capture; labelled AI implementation, 126/126 tests; latest 135s MP4 uses reference-informed conversational narration/phrase captions, small moving face mask and visible body. Previous 142s cut backed up. Real chat-to-game recording, main session ID and Google mirror pending |
 | [Project status, scope and live-dodge implementation](2026-11-01_unassigned_status-run-guide_pending.md) | `01a197c3-77bd-72b1-a450-ca1147bf6c53` (user supplied; local session metadata confirmed) | Source review, scope decisions, live setup/diagnostics, tests and publication |
 | [Current codebase review and dodge implementation](2026-10-31_unassigned_codebase-review_pending.md) | Pending; no observed thread ID | Source audit, horizontal-lane dodge implementation, tests and handoff |
